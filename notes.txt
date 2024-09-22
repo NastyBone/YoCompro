@@ -1,0 +1,135 @@
+VIEWS
+
+### BASIC
+	## DASHBOARD - Dashboard X
+		- Popular Products on City (Limited) X
+		- Popular Bussiness on City X (Limited)
+		- Nearest Bussiness X (Limited)
+		- Most Discounts Bussiness on City X (Limited)
+		- Recent Added Products X (Limited)
+		- Top Rated Bussiness (Limited)
+		- Top Rated Products (Limited)
+
+	## SEARCH - Search X
+		* Pagination
+		* Products and Bussiness 
+		* Tagging
+
+	## PRODUCTS DETAIL - Products/{slug} X
+		- Bussiness which have that product X
+			* At which price
+			* At which distance
+		- Brand basic info X
+		- Load Images
+		- Load ratings for products
+ 
+
+	## BUSSINESS DETAILS - Bussiness/{slug} X 
+		* Distance
+		- Popular Products of that bussiness (limited) X
+		- Popular Brands of that bussiness (limited) X
+		- Top discounts of that bussiness  (limited) X
+		- Load ratings for bussiness X
+
+	## PRODUCTS MAIN - Products (add pagination) X
+		- Popular Products on City X /popular
+		- Recent Added Products X /newest
+		- Top Rated Products X 
+	
+	## BUSSINESS MAIN - Bussiness (add pagination)
+		- Popular Bussiness on City X / popular X
+		- Nearest Bussiness X / nearest X
+		- Most Discounts Bussiness on City X /discounts X
+		- Top Rated Bussiness X
+		- Newest Bussiness added X
+		- All Products X
+			- Popular
+			- Newes
+			- Top Rated
+		
+
+	## BRAND DETAILS - Brands
+		- Popular Products by Brand X
+		- Popular Bussiness with that brand X
+		- All Products
+			- Popular
+			- Newes
+			- Top Rated
+		
+
+### CLIENT
+	
+	* Become Owner
+	## PROFILE INFO - User
+		- Edit mail
+		- Change Basic Info
+
+	## LIST 	- User/List X
+		- Drop item
+	## RATINGS	- User/Ratings
+		- Get by user X
+		- Delete
+		- Update
+
+### OWNER		- Owner
+	
+	* CRUD For Product
+	* CRUD For Brand
+	* CRUD For Bussiness
+	* CRUD For Stock
+
+	## DASHBOARD 	- Owner/Dashboard (Limited)
+		- Popular Products of that bussiness X
+		- Popular Brands of that bussiness X
+		- Less popular Products X (try polymorph)
+		
+
+	## BUSSINESS 	- Owner / Bussiness (Pagination)
+		- All Bussiness of the owner X
+		- Top Rated / Less ratedX
+		- Popular / unpopularX
+		
+		
+
+	## STOCKS	- Owner / StocksX
+	
+### ADMIN		- Admin
+
+	## BUSSINESS	- Admin / Bussiness
+		- Popular Bussiness X
+		- New Products X
+		- Get Tags (distribute them on controller)
+	
+	## MANAGE MENU	- Admin / Manage
+		# BUSSINESS
+		# TAGS
+		# PRODUCTS 
+		# BRANDS
+
+### AUTH	
+	# LOGIN 	- Login
+	# REGISTER	- Register
+	# RESET PASSWORD - Reset
+	# CHANGE PASSWORD
+
+### MISC
+
+- Not found view
+- Allow location view
+- Forbiden view
+
+### NOTES
+- Add joins on relations
+- Add security layer using user_id (might be a route decorator, might not) (ratings, lists, bussiness, stocks) (take it from )
+- Add guard to just make a single review
+- Separate all ratings from avg ratings. Add pagination to ratings
+X Review pagination
+- Review where implement search
+- Restrictions for tags unavailables, Restrictions for same tags
+- Restriction for a single combination between user_id and b_id or p_id for ratings
+- Restriction for a single combination between product_id and bussiness id for stocks
+- Restriction for a single combination between list_id and stock_id 
+- Create lists along users
+- slug handler: generate and verify that does not exist
+- Verify not existing email
+
