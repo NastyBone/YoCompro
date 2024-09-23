@@ -20,19 +20,20 @@ def find_all():
 
 
 @ratings_bp.route('/', methods=['POST'])
+@secure_access()
 def create():
     data = request.get_json()
     response = insert(data)
     return jsonify(response)
 
 
-@ratings_bp.route('/', methods=['PUT'])
-@secure_access()
-def edit():
-    id = request.args.get('id')
-    data = request.get_json()
-    response = update(id, data)
-    return jsonify(response)
+# @ratings_bp.route('/', methods=['PUT'])
+# @secure_access()
+# def edit():
+#     id = request.args.get('id')
+#     data = request.get_json()
+#     response = update(id, data)
+#     return jsonify(response)
 
 
 @ratings_bp.route('/', methods=['DELETE'])

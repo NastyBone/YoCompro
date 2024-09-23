@@ -36,7 +36,7 @@ def insert(obj):
         with sqlite3.connect('database.db') as connection:
             connection.row_factory = dict_factory
         res = connection.execute('INSERT INTO ratings (score, comment, user_id, bussiness_id, product_id) VALUES (?, ?, ?, ?, ?) RETURNING *', (
-            obj['score'], obj['comment'], obj['user_id'], obj.get('bussiness_id', None), obj.get('product_id', None))).fetchall()
+            obj['score'], obj.get('comment', None), obj['user_id'], obj.get('bussiness_id', None), obj.get('product_id', None))).fetchall()
 
         connection.commit()
         return res
@@ -96,7 +96,7 @@ def get_by_bussiness(bussiness_id, page_start, page_end):
         with sqlite3.connect('database.db') as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            'SELECT *, AVG(score) as avg_score FROM ratings WHERE bussiness_id = ? LIMIT ?  OFFSET ?', (bussiness_id, page_start, page_end)).fetchall()
+            'SELECT *, AVG(score) as avg_score FROM ratings WHERE bussiness_id = ? GROUP BY id LIMIT ?  OFFSET ?', (bussiness_id, page_end, page_start)).fetchall()
 
         connection.commit()
         return res
@@ -111,7 +111,7 @@ def get_by_product(product_id, page_start, page_end):
         with sqlite3.connect('database.db') as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            'SELECT *, AVG(score) as avg_score FROM ratings WHERE product_id = ?  LIMIT ? OFFSET ?', (product_id, page_start, page_end)).fetchall()
+            'SELECT *, AVG(score) as avg_score FROM ratings WHERE product_id = ? GROUP BY id LIMIT ? OFFSET ?', (product_id, page_end, page_start)).fetchall()
 
         connection.commit()
         return res
@@ -144,7 +144,7 @@ def get_average_by_product(product_id):
         with sqlite3.connect('database.db') as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            '''SELECT *, AVG(score) as avg_score FROM products p
+            '''SELECT COUNT(score) as count, AVG(score) as avg_score FROM products p
                 JOIN ratings r ON r.product_id = p.id
                 WHERE product_id = ?''', (product_id, )).fetchall()
 

@@ -1,7 +1,7 @@
 
 from functools import wraps
 from flask_login import current_user
-from flask import abort, request
+from flask import abort, request, redirect
 
 
 def role_required(role_name):
@@ -27,6 +27,7 @@ def login_required():
         def check_log(*args, **kwargs):
             if not current_user:
                 print('redirect to log in')
+                redirect('/auth/login')
             return func(*args, **kwargs)
         return check_log
     return decorator
@@ -38,6 +39,7 @@ def logged_in_guard():
         def check_no_log(*args, **kwargs):
             if current_user.is_authenticated:
                 print('redirect to dashboard')
+                redirect('/auth/dashboard')
             return func(*args, **kwargs)
         return check_no_log
     return decorator
@@ -50,7 +52,7 @@ def secure_access():
             logged_id = current_user.get_id()
             id = request.args.get('user_id', request.args.get('owner_id', 0))
             if (int(id) != logged_id):
-                print('unauthorized')
+                abort(401)
             return func(*args, **kwargs)
         return check_if_belongs
     return decorator
