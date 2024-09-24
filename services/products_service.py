@@ -518,15 +518,26 @@ def get_by_search_tags(word, tags, start_page, end_page):
     try:
         with sqlite3.connect('database.db') as connection:
             connection.row_factory = dict_factory
-        res = connection.execute(f"""
+            if (tags):
+                tag_field = "IN ({0})".format(",".join(["?"] * len(tags)))
+                res = connection.execute(f"""
             SELECT p.* FROM products p
-            JOIN tags_products tp ON tp.products_id = p.id
-            WHERE tp.tag_id IN ? AND
-            p.slug LIKE ?
+            JOIN tags_products tp ON tp.product_id = p.id
+            WHERE tp.tag_id {tag_field} AND
+            p.name LIKE ?
             GROUP BY p.id
             LIMIT ?
             OFFSET ?
-                """, (tags, '%' + word + '%', end_page, start_page)).fetchall()
+                """, (*tags, like_string(word), end_page, start_page)).fetchall()
+            else:
+                res = connection.execute(f"""
+           SELECT p.* FROM products p
+           WHERE
+           p.name LIKE ?
+           GROUP BY p.id
+           LIMIT ?
+           OFFSET ?
+               """, (like_string(word), end_page, start_page)).fetchall()
 
         connection.commit()
         return res

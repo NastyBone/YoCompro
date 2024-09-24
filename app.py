@@ -19,6 +19,7 @@ app.register_blueprint(stocks_bp, url_prefix='/stocks')
 app.register_blueprint(owner_bp, url_prefix='/owner')
 app.register_blueprint(tags_bp, url_prefix='/tags')
 app.register_blueprint(users_bp, url_prefix='/users')
+app.register_blueprint(search_bp, url_prefix='/search')
 app.register_blueprint(dashboard_bp, url_prefix='/dashboard')
 # SESSION
 app.config['SESSION_TYPE'] = 'filesystem'
