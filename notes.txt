@@ -58,7 +58,7 @@ VIEWS
 		
 
 ### CLIENT
-	
+
 	* Become Owner
 	## PROFILE INFO - User
 		- Edit mail
@@ -119,17 +119,25 @@ VIEWS
 - Forbiden view
 
 ### NOTES
-- Add joins on relations
-- Add security layer using user_id (might be a route decorator, might not) (ratings, lists, bussiness, stocks) (take it from )
-- Add guard to just make a single review
-- Separate all ratings from avg ratings. Add pagination to ratings
+- Add joins on relations -- Be modified where needed
+X Add security layer using user_id (might be a route decorator, might not) (ratings, lists, bussiness, stocks) (take it from request)
+
+X Add guard to just make a single review
+X Restriction for a single combination between user_id and b_id or p_id for ratings
+X Restriction for a single combination between product_id and bussiness id for stocks
+X Restriction for a single combination between list_id and stock_id 
+
+X Separate all ratings from avg ratings. Add pagination to ratings
+
 X Review pagination
-- Review where implement search
+
 - Restrictions for tags unavailables, Restrictions for same tags
-- Restriction for a single combination between user_id and b_id or p_id for ratings
-- Restriction for a single combination between product_id and bussiness id for stocks
-- Restriction for a single combination between list_id and stock_id 
-- Create lists along users
+
+X Create lists along users
 - Discard slug 
-- Verify not existing email
+X Verify not existing email
+X Verify not existing bussiness name
+X Verify not existing product name
+X Verify not existing brand name
+X Become owner should redirect to create bussiness, that endpoint should call the change of user.role
 

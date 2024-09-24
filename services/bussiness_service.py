@@ -1,7 +1,6 @@
 import sqlite3
 from classes.bussiness_class import *
-from helpers import status_list, dict_factory, like_string
-import math
+from helpers import status_list, dict_factory, like_string, slug_builder
 
 
 def get(id):
@@ -42,7 +41,7 @@ def insert(obj):
             (name, email, description, slug, address,
              phone, rif, lat, lon, city, user_id)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING *
-            """, (obj['name'], obj['email'], obj['description'], obj['slug'],
+            """, (obj['name'], obj['email'], obj['description'], slug_builder(obj['name']),
                   obj['address'],
                   obj['phone'], obj['rif'],
                   obj['lat'], obj['lon'],
@@ -62,7 +61,7 @@ def update(id, obj):
         with sqlite3.connect('database.db') as connection:
             connection.row_factory = dict_factory
         res = connection.execute('UPDATE bussiness SET name = ?, email = ?,description = ?, address = ?, phone = ?, rif = ?, lat = ?, lon = ?, city = ?, slug = ? WHERE id = ? RETURNING *', (
-            obj['name'], obj['email'], obj['description'], obj['address'], obj['phone'], obj['rif'], obj['lat'], obj['lon'], obj['city'], obj['slug'], id)).fetchall()
+            obj['name'], obj['email'], obj['description'], obj['address'], obj['phone'], obj['rif'], obj['lat'], obj['lon'], obj['city'], slug_builder(obj['slug']), id)).fetchall()
 
         connection.commit()
         print(res)

@@ -23,6 +23,10 @@ def find_all():
 @secure_access()
 def create():
     data = request.get_json()
+    user_id = request.args.get('user_id')
+    data['user_id'] = user_id
+    delete_duplicate_ratings(user_id, data.get(
+        'bussiness_id'), data.get('product_id'))
     response = insert(data)
     return jsonify(response)
 

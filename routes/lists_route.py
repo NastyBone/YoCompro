@@ -41,6 +41,7 @@ def create():
 
 
 @lists_bp.route('/', methods=['DELETE'])
+@secure_access()
 def remove():
     id = request.args.get('id')
     response = delete(id)
@@ -48,6 +49,7 @@ def remove():
 
 
 @lists_bp.route('/add', methods=['POST'])
+@secure_access()
 def add_product():
     id = request.args.get('id')
     stock_id = request.args.get('stock_id')
@@ -56,6 +58,7 @@ def add_product():
 
 
 @lists_bp.route('/remove', methods=['POST'])
+@secure_access()
 def remove_product():
     id = request.args.get('id')
     stock_id = request.args.get('stock_id')
@@ -64,7 +67,7 @@ def remove_product():
 
 
 @lists_bp.route('/user', methods=['GET'])
-# @secure_access()
+@secure_access()
 def find_by_user():
     id = request.args.get('user_id')
     response = get_by_user(id)

@@ -153,3 +153,17 @@ def get_average_by_product(product_id):
     except Exception as error:
         print(error)
         raise Exception(error)
+
+
+def delete_duplicate_ratings(user_id, bussiness_id, product_id):
+    try:
+        with sqlite3.connect('database.db') as connection:
+            connection.row_factory = dict_factory
+        res = connection.execute(
+            'DELETE FROM ratings WHERE user_id = ? AND bussiness_id = ? OR product_id = ? RETURNING *', (user_id, bussiness_id, product_id)).fetchall()
+
+        connection.commit()
+        return res
+    except Exception as error:
+        print(error)
+        raise Exception(error)

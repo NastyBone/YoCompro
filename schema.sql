@@ -67,7 +67,8 @@ CREATE TABLE stocks (
     product_id INTEGER NOT NULL,
     bussiness_id INTEGER NOT NULL,
     FOREIGN KEY (bussiness_id) REFERENCES bussiness(id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+    CONSTRAINT unique_product_bussiness UNIQUE (product_id, bussiness_id)
 );
 
 
@@ -84,7 +85,8 @@ CREATE TABLE lists_stocks (
     list_id INTEGER NOT NULL,
     stock_id INTEGER NOT NULL,
     FOREIGN KEY (list_id) REFERENCES lists(id) ON DELETE CASCADE,
-    FOREIGN KEY (stock_id) REFERENCES stocks(id) ON DELETE CASCADE
+    FOREIGN KEY (stock_id) REFERENCES stocks(id) ON DELETE CASCADE,
+    CONSTRAINT unique_list_stock UNIQUE (list_id, stock_id)
 );
 
 -- CREATE TABLE promotions (

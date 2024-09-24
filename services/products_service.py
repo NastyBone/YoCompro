@@ -1,7 +1,7 @@
 import sqlite3
 from helpers import type_list
 from classes.product_class import *
-from helpers import status_list, dict_factory, like_string
+from helpers import status_list, dict_factory, like_string, slug_builder
 
 
 def get(id):
@@ -40,7 +40,7 @@ def insert(obj):
             VALUES (?, ?, ?, ?) RETURNING *
             """, (obj['name'],
                   obj['description'],
-                  obj['slug'], obj['brand_id'])).fetchall()
+                  slug_builder(obj['name']), obj['brand_id'])).fetchall()
         connection.commit()
         return res
     except Exception as error:
@@ -54,7 +54,7 @@ def update(id, obj):
         with sqlite3.connect('database.db') as connection:
             connection.row_factory = dict_factory
         res = connection.execute('UPDATE products SET name = ?, description = ?, slug = ?, brand_id = ? WHERE id = ? RETURNING *', (
-            obj['name'], obj['description'], obj['slug'], obj['brand_id'], id)).fetchall()
+            obj['name'], obj['description'], slug_builder(obj['name']), obj['brand_id'], id)).fetchall()
         connection.commit()
         return res
     except Exception as error:

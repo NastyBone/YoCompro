@@ -1,6 +1,6 @@
 import sqlite3
 from classes.brand_class import *
-from helpers import status_list, dict_factory
+from helpers import status_list, dict_factory, slug_builder
 
 
 def get(id):
@@ -37,7 +37,7 @@ def insert(obj):
         with sqlite3.connect('database.db') as connection:
             connection.row_factory = dict_factory
         res = connection.execute('INSERT INTO brands (name, slug, country) VALUES (?, ?, ?) RETURNING *', (
-            obj['name'], obj['slug'], obj['country'])).fetchall()
+            obj['name'], slug_builder(obj['name']), obj['country'])).fetchall()
 
         connection.commit()
         return res
@@ -53,7 +53,7 @@ def update(id, obj):
         with sqlite3.connect('database.db') as connection:
             connection.row_factory = dict_factory
         res = connection.execute('UPDATE brands SET name = ?, slug = ?, country = ? WHERE id = ? RETURNING *', (
-            obj['name'], obj['slug'], obj['country'], id)).fetchall()
+            obj['name'], slug_builder(obj['name']), obj['country'], id)).fetchall()
 
         connection.commit()
         return res

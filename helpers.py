@@ -11,8 +11,8 @@ def to_tag_ids(tags):
     return tags_ids
 
 
-def slug_builder():
-    return ''
+def slug_builder(name):
+    return name.strip().lower().replace(' ', '-')
 
 
 def set_pagination(page: str | None = None):

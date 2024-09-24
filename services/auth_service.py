@@ -2,6 +2,8 @@ from services.users_service import get_id_by_email, insert, get_with_password, u
 from flask_login import login_user, logout_user, current_user
 from classes.users_class import UserLogin
 import bcrypt
+from helpers import dict_factory
+import sqlite3
 
 
 def login(email, password):
@@ -39,6 +41,18 @@ def change_password(id, old_password, new_password):
             update_password(id, new_password)
         else:
             return ValueError('Password Does Not Match')
+    except Exception as error:
+        print(error)
+        raise Exception(error)
+
+
+def verify_existing_email(email):
+    try:
+        with sqlite3.connect('database.db') as connection:
+            connection.row_factory = dict_factory
+            res = connection.execute(
+                'SELECT * FROM users WHERE email = ?', (email,)).fetchall()
+            return res != []
     except Exception as error:
         print(error)
         raise Exception(error)
