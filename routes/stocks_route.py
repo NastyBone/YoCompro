@@ -1,6 +1,7 @@
 from flask import Blueprint, request, render_template, jsonify
 from services.stocks_service import *
 from helpers import set_pagination
+from guard import secure_access
 
 stocks_bp = Blueprint("stocks", __name__)
 
@@ -58,11 +59,12 @@ def edit_form():
 
 
 @stocks_bp.route('/bussiness', methods=['GET'])
+@secure_access()
 def find_by_bussiness():
-    id = request.args.get('id')
-    slug = request.get_json()['slug']
+    owner_id = request.args.get('owner_id')
+    bussiness_id = request.args.get('bussiness_id')
     page = request.args.get('page', None)
     [start_pagination, end_pagination] = set_pagination(page)
-    response = get_by_bussiness(slug, id, start_pagination, end_pagination)
-    print(response)
-    return 'Hello Stocks!'
+    response = get_by_bussiness(
+        bussiness_id, owner_id, start_pagination, end_pagination)
+    return jsonify(response)

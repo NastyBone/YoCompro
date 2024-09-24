@@ -74,9 +74,8 @@ def delete(id):
         raise Exception(error)
 
 
-def get_by_bussiness(slug, owner_id, page_start, page_end):
+def get_by_bussiness(id, owner_id, page_start, page_end):
     try:
-        print(like_string(slug))
         with sqlite3.connect('database.db') as connection:
             connection.row_factory = dict_factory
         res = connection.execute("""
@@ -84,12 +83,12 @@ def get_by_bussiness(slug, owner_id, page_start, page_end):
             JOIN bussiness b ON s.bussiness_id = b.id
             JOIN products p ON s.product_id = p.id
             WHERE 
-            b.slug LIKE ? AND
+            b.id = ? AND
             b.user_id = ?
             ORDER BY quantity
             LIMIT ? 
             OFFSET ?
-            """, (f"%{slug}%", owner_id, page_end, page_start)).fetchall()
+            """, (id, owner_id, page_end, page_start)).fetchall()
 
         connection.commit()
         return res

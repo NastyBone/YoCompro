@@ -130,6 +130,6 @@ X Review pagination
 - Restriction for a single combination between product_id and bussiness id for stocks
 - Restriction for a single combination between list_id and stock_id 
 - Create lists along users
-- slug handler: generate and verify that does not exist
+- Discard slug 
 - Verify not existing email
 
