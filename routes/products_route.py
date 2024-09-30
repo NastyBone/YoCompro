@@ -74,7 +74,7 @@ def edit_form():
 # CLIENT
 
 
-@products_bp.route('/<slug>', methods=['GET'])
+@products_bp.route('/search/<slug>', methods=['GET'])
 def find_by_slug(slug):
     product = get_by_slug(slug)[0]
     print(product)

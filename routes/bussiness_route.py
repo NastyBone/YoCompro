@@ -1,6 +1,6 @@
 from flask import Blueprint, request, render_template, jsonify
 from services.bussiness_service import *
-from services.products_service import get_popular_by_bussiness_limited as products_popular_limited, get_newest_by_bussiness as newest_products, get_popular_by_bussiness as popular_products, get_top_rated_by_bussiness as top_rated_products
+from services.products_service import get_popular_by_bussiness_limited as products_popular_limited, get_newest_by_bussiness as newest_products, get_popular_by_bussiness as popular_products, get_top_rated_by_bussiness as top_rated_products, search_on_bussiness as search_products
 from services.brands_service import get_popular_by_bussiness as brands_popular
 from services.ratings_service import get_average_by_bussiness as rating_bussiness
 from helpers import set_pagination, roles_list, filter_list, type_list
@@ -71,7 +71,7 @@ def edit_form():
 # CLIENT
 
 
-@bussiness_bp.route('/<slug>', methods=['GET'])
+@bussiness_bp.route('/search/<slug>', methods=['GET'])
 def find_by_slug(slug):
     print(slug)
     bussiness = get_by_slug(slug)
@@ -90,6 +90,16 @@ def find_by_slug(slug):
         "top_discounts": top_discounts,
         "rating": rating
     })  # render_template('', bussiness=bussiness, popular_brands=popular_brands, popular_products=popular_products, top_discounts=top_discounts, rating=rating)
+
+
+@bussiness_bp.route('/search/product/<slug>', methods=['GET'])
+def find_by_slug_product(slug):
+    bussiness_id = request.args.get('bussiness_id')
+    page = request.args.get('page', None)
+    [start_pagination, end_pagination] = set_pagination(page)
+    products = search_products(
+        slug, bussiness_id, start_pagination, end_pagination)
+    return jsonify(products)
 
 
 @bussiness_bp.route('/popular', methods=['GET'])

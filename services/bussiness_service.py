@@ -500,6 +500,29 @@ def get_newest(city, start_page, end_page):
         raise Exception(error)
 
 
+def search_on_bussiness(word, bussiness_id, start_page, end_page):
+    try:
+        with sqlite3.connect('database.db') as connection:
+            connection.row_factory = dict_factory
+            res = connection.execute(f"""
+           SELECT p.* FROM products p
+           JOIN stocks s on s.product_id = p.id
+           JOIN bussiness b on b.id = s.bussiness_id
+           WHERE
+           p.name LIKE ?
+           AND b.id = ?
+           GROUP BY p.id
+           LIMIT ?
+           OFFSET ?
+               """, (like_string(word), bussiness_id, end_page, start_page)).fetchall()
+
+        connection.commit()
+        return res
+    except Exception as error:
+        print(error)
+        raise Exception(error)
+
+
 def tags_setter(bussiness_id, tags):
     try:
         with sqlite3.connect('database.db') as connection:

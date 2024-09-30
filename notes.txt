@@ -1,18 +1,18 @@
-VIEWS
+VIEWS -------------------------- base.html navbar.html footer.html
 
 ### BASIC
-	## DASHBOARD - Dashboard X
+	## DASHBOARD - Dashboard X --- mostly cards carousel
 		- Popular Products on City (Limited) X
-		- Popular Bussiness on City X (Limited)
-		- Nearest Bussiness X (Limited)
+		- Popular Bussiness on City X (Limited) -------- carousel
+		- Nearest Bussiness X (Limited)       	
 		- Most Discounts Bussiness on City X (Limited)
 		- Recent Added Products X (Limited)
 		- Top Rated Bussiness (Limited)
 		- Top Rated Products (Limited)
 
-	## SEARCH - Search X
+	## SEARCH - Search X -------------- add sidebar for tags, sub div for search
 		* Pagination
-		* Products and Bussiness 
+		* Products and Bussiness ------ cards
 		* Tagging
 
 	## PRODUCTS DETAIL - Products/{slug} X
@@ -131,7 +131,7 @@ X Separate all ratings from avg ratings. Add pagination to ratings
 
 X Review pagination
 
-- Restrictions for tags unavailables, Restrictions for same tags
+- Restrictions for tags unavailables, Restrictions for same tags 
 
 X Create lists along users
 - Discard slug 
