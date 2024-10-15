@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_login import LoginManager
 from flask_session import Session
 from services.users_service import get_with_password
@@ -39,7 +39,7 @@ def load_user(userid):
 
 @app.route('/')
 def index():
-    return 'Hello App!'
+    return render_template('base.html')
 
 
 if __name__ == '__app__':

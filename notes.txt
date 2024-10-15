@@ -16,13 +16,13 @@ VIEWS -------------------------- base.html navbar.html footer.html
 		* Tagging
 
 	## PRODUCTS DETAIL - Products/{slug} X
-		- Bussiness which have that product X
+		- Bussiness which have that product X -- cards carousel
 			* At which price
 			* At which distance
 		- Brand basic info X
 		- Load Images
 		- Load ratings for products
- 
+
 
 	## BUSSINESS DETAILS - Bussiness/{slug} X 
 		* Distance

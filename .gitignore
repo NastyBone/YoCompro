@@ -2,3 +2,6 @@ __pycache__
 .vscode
 flask_session
 *.pyc
+bootstrap
+bootstrap-icons
+routes/__pycache__

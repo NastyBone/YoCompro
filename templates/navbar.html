@@ -1,0 +1,91 @@
+{% block navbar %}
+
+<nav class="navbar navbar-dark navbar-expand-lg bg-primary bg-gradient">
+    <div class="container-fluid pl-2">
+        <a class="navbar-brand" href="#">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" width="45" height="40"
+                class="d-inline-block align-text-top">
+            <span class="align-middle ms-2">Promo Radar</span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+    </div>
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse navbarSupportedContent just">
+            <ul class="navbar-nav m-auto mb-2 mb-lg-0">
+                <li class="nav-item d-flex align-items-center">
+
+                    <a class="nav-link active" aria-current="page" href="#">
+                        <img src="{{ url_for('static', filename='bootstrap-icons/house-fill.svg') }}" alt="Logo"
+                            width="24" height="18" class="d-inline-block text-light mb-1">
+                        Home
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <img src="{{ url_for('static', filename='bootstrap-icons/search.svg') }}" alt="Logo" width="24"
+                            height="18" class="d-inline-block text-light mb-1">
+                        Search
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">
+                                <img src="{{ url_for('static', filename='bootstrap-icons/gift-fill.svg') }}" alt="Logo"
+                                    width="20" height="15" class="d-inline-block mb-1">
+                                Producs</a></li>
+                        <li><a class="dropdown-item" href="#">
+                                <img src="{{ url_for('static', filename='bootstrap-icons/building-fill.svg') }}"
+                                    alt="Logo" width="20" height="15" class="d-inline-block mb-1">
+                                Bussiness</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <img src="{{ url_for('static', filename='bootstrap-icons/person-fill.svg') }}" alt="Logo"
+                            width="24" height="18" class="d-inline-block text-light mb-1">
+                        Profile
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">
+                                <img src="{{ url_for('static', filename='bootstrap-icons/star.svg') }}" alt="Logo"
+                                    width="20" height="15" class="d-inline-block mb-1">
+                                My List</a></li>
+                        <li><a class="dropdown-item" href="#">
+                                <img src="{{ url_for('static', filename='bootstrap-icons/list-ul.svg') }}" alt="Logo"
+                                    width="20" height="15" class="d-inline-block mb-1">
+                                My Profile</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="justify-content-end collapse navbar-collapse navbarSupportedContent">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Log Out</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Sign In</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Log In</a>
+                </li>
+                {% endif %}
+                {% if current_user.role == "CLIENT"%}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Become Owner</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+{% endblock %}
