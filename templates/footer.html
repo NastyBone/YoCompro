@@ -1,0 +1,59 @@
+{% block footer %}
+
+<footer class="text-primary vh-50 container-fluid bg-primary-subtle w-100 p-4">
+    <div class="row">
+        <div class="col">
+            <p class="fs-4 fw-light">About Us</p>
+            <p class="fs-6 fw-light">Promo Radar is a project made from the people to the people. Looking foward to
+                make
+                the life a little
+                bit easier. </p>
+        </div>
+        <div class="col">
+            <p class="fs-4 fw-light">Frecuent Questions</p>
+            <ul class="list-inline">
+                <li> <a href="#" class="fw-light text-decoration-none">
+                        Why you made this project?
+                    </a></li>
+                <li>
+                    <a href="#" class="fw-light text-decoration-none">
+                        What inspired you to make this?
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="fw-light text-decoration-none">Who paid for this
+                        project?</a>
+                </li>
+                <li><a href="#" class="fw-light text-decoration-none">Which is your next
+                        step?</a></li>
+
+            </ul>
+        </div>
+        <div class="col">
+            <p class="fs-4 fw-light">Contact Us</p>
+            <div class="list-inline d-flex flex-column justify-content-around" style="height: 65%;">
+
+                <a class="nav-link active" aria-current="page" href="#">
+                    <img src="{{ url_for('static', filename='bootstrap-icons/envelope.svg') }}" alt="Logo" width="24"
+                        height="18" class="d-inline-block text-light mb-1">
+                    client-services@promoradar.org
+                </a>
+
+                <a class="nav-link active" aria-current="page" href="#">
+                    <img src="{{ url_for('static', filename='bootstrap-icons/twitter-x.svg') }}" alt="Logo" width="24"
+                        height="18" class="d-inline-block text-light mb-1">
+                    @promoradar
+                </a>
+
+                <a class="nav-link active" aria-current="page" href="#">
+                    <img src="{{ url_for('static', filename='bootstrap-icons/telephone.svg') }}" alt="Logo" width="24"
+                        height="18" class="d-inline-block text-light mb-1">
+                    +(305)446-24-66
+                </a>
+            </div>
+        </div>
+    </div>
+
+</footer>
+
+{% endblock %}

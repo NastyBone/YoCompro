@@ -11,11 +11,21 @@
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 </head>
 
-<body>
+<body class="position-relative">
+    {% if loading %}
+    {% include 'misc/loading_spinner.html' %}
+    {% block loading %}
+    {% endblock %}
+    {% endif %}
     {% include 'navbar.html' %}
     {% block navbar %}
     {% endblock %}
-    {% block content %}
+    <div class="jumbotron p-3">
+        {% block content %}
+        {% endblock %}
+    </div>
+    {% include 'footer.html' %}
+    {% block footer %}
     {% endblock %}
 </body>
 
