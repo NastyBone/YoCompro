@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid d-flex justify-content-center align-items-center h-100 flex-column">
+    <span class="fs-2 text-primary fw-light">Please Allow Location</span>
+    <img src="{{ url_for('static', filename='bootstrap-icons/pin-map.svg') }}" alt="Logo" width="250" height="225"
+        class="d-inline-block text-light m-5">
+    <p class="text-primary fw-light">This site will neither store your location or store it</p>
+    <button class="btn btn-outline-primary btn-sm">Back Home</button>
+</div>
+{% endblock content %}

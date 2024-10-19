@@ -39,10 +39,8 @@ def load_user(userid):
 
 @app.route('/')
 def index():
-    return render_template('questions.html')
+    return render_template('misc/allow_location.html')
 
 
 if __name__ == '__app__':
     app.run(debug=True)
-
-# TODO: Change jsonify from routes to actual render an html
