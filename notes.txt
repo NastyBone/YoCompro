@@ -140,4 +140,5 @@ X Verify not existing bussiness name
 X Verify not existing product name
 X Verify not existing brand name
 X Become owner should redirect to create bussiness, that endpoint should call the change of user.role
+X Store user location on session
 

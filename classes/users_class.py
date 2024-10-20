@@ -20,12 +20,15 @@ class ResponseUser:
 
 
 class UserLogin(object):
-    def __init__(self, id, name, email, password, role):
+    def __init__(self, id, name, email, password, role, city, lat, lon):
         self.name = name
         self.email = email
         self.password = password
         self.role = role
         self.id = id
+        self.city = city
+        self.lat = lat
+        self.lon = lon
 
     def __getitem__(self, key):
         return getattr(self, key)
@@ -44,6 +47,15 @@ class UserLogin(object):
 
     def get_id(self):
         return self.id
+
+    def get_city(self):
+        return self.city
+
+    def get_lat(self):
+        return self.lat
+
+    def get_lon(self):
+        return self.lon
 
     def has_role(self, role):
         return role == self.role

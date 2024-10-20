@@ -135,13 +135,13 @@ def get_popular_limited(city):
         res = connection.execute("""
             SELECT p.*, COUNT(l.id) as count FROM products p
             JOIN stocks s on s.product_id = p.id
-            JOIN bussiness b on s.bussiness_id = s.id
+            JOIN bussiness b on s.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id
-            WHERE b.city = ?
+            WHERE b.city LIKE ?
             GROUP BY p.id
             ORDER BY count
             LIMIT 5
-            """, (city, )).fetchall()
+            """, (like_string(city), )).fetchall()
         connection.commit()
         return res
     except Exception as error:
@@ -270,11 +270,14 @@ def get_top_rated(city, start_page, end_page):
 # DONE: (Limited) Top Rated Products on City
 def get_top_rated_limited(city):
     try:
+        print(city)
         with sqlite3.connect('database.db') as connection:
             connection.row_factory = dict_factory
         res = connection.execute("""
             SELECT p.*, AVG(r.score) as avg_score FROM products p
             JOIN ratings r ON r.product_id = p.id
+            JOIN stocks s ON s.product_id = p.id
+            JOIN bussiness b ON b.id = s.bussiness_id
             WHERE b.city = ?
             ORDER BY avg_score DESC
             LIMIT 5
@@ -361,7 +364,7 @@ def get_newest_limited(city):
         with sqlite3.connect('database.db') as connection:
             connection.row_factory = dict_factory
         res = connection.execute("""
-            SELECT p.*, FROM products p
+            SELECT p.* FROM products p
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = s.id
             WHERE b.city = ?

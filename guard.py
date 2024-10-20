@@ -9,12 +9,12 @@ def role_required(role_name):
         @wraps(func)
         def authorize(*args, **kwargs):
             if not current_user.is_authenticated:
-                print('redirect to access denied page')
                 abort(401)  # Unauthorized access
+                redirect('/unauthorized')
 
             if not current_user.has_role(role_name):
-                print('User does not have the required role')
                 abort(403)  # Forbidden access (wrong role)
+                redirect('/forbidden')
 
             return func(*args, **kwargs)
         return authorize
@@ -53,6 +53,7 @@ def secure_access():
             id = request.args.get('user_id', request.args.get('owner_id', 0))
             if (int(id) != logged_id):
                 abort(401)
+                redirect('/unauthorized')
             return func(*args, **kwargs)
         return check_if_belongs
     return decorator

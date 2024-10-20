@@ -42,5 +42,30 @@ def index():
     return render_template('misc/allow_location.html')
 
 
+@app.route('/allow-location', methods=['GET'])
+def allow_location():
+    return render_template('misc/allow_location.html')
+
+
+@app.route('/not-found', methods=['GET'])
+def not_found():
+    return render_template('misc/not_found.html')
+
+
+@app.route('/unauthorized', methods=['GET'])
+def unauthorized():
+    return render_template('misc/not_authorized.html')
+
+
+@app.route('/forbidden', methods=['GET'])
+def forbidden():
+    return render_template('misc/forbidden.html')
+
+
+@app.route('/error', methods=['GET'])
+def exception():
+    return render_template('misc/error.html')
+
+
 if __name__ == '__app__':
     app.run(debug=True)
