@@ -3,5 +3,4 @@ __pycache__
 flask_session
 *.pyc
 bootstrap
-bootstrap-icons
 routes/__pycache__

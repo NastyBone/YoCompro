@@ -10,6 +10,44 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    {% if not session['city'] and not session['location_requested'] %}
+    <script>
+        function geoFindMe() {
+            async function success(position) {
+                // Send data and keep navigating
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                const response = await fetch('/handle_location', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ latitude: latitude, longitude: longitude })
+                })
+                if (response.status == 201) {
+                    window.location.href = '/dashboard'
+                    return
+                } else {
+                    window.location.href = '/error'
+                }
+            }
+
+            function error() {
+                // Redirect to allow location
+                window.location.href = '/allow-location'
+            }
+
+            if (!navigator.geolocation) {
+                // Alert warning // exit somewhere
+                alert("Geolocation is not supported by your browser")
+            } else {
+                navigator.geolocation.getCurrentPosition(success, error);
+            }
+        }
+        geoFindMe()
+    </script>
+    {% endif %}
 </head>
 
 <body class="position-relative">
@@ -22,6 +60,7 @@
     {% block navbar %}
     {% endblock %}
     <div class="jumbotron p-3 vh-100">
+
         {% block content %}
         {% endblock %}
     </div>

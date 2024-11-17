@@ -7,4 +7,12 @@
     <p class="text-primary fw-light">This site will neither store your location or store it</p>
     <button class="btn btn-outline-primary btn-sm">Back Home</button>
 </div>
+<script>
+    async function refreshLocation() {
+        const response = await fetch('/refresh-location', {
+            method: 'GET',
+        })
+    }
+    refreshLocation()
+</script>
 {% endblock content %}
