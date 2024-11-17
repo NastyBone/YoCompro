@@ -28,7 +28,7 @@ def main():
     popular_bussiness = bussiness_popular(city)
     most_discount = get_by_most_discount_limited(city)
     top_products = product_top_rated(city)
-    print(popular_products)
+    print("new", newest_products)
     return render_template(
         "dashboards/client_dashboard.html",
         popular_products=popular_products,

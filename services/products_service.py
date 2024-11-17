@@ -153,13 +153,12 @@ def get_popular_limited(city):
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-            SELECT p.*, b.city, COUNT(l.id) as count FROM products p
+            SELECT p.*, b.city, COUNT(l.id) as count, RANK() OVER (ORDER BY COUNT(l.id) DESC) as rank FROM products p
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.city LIKE ?
             GROUP BY p.id
-            ORDER BY count
             LIMIT 5
             """,
             (like_string(city),),
@@ -313,12 +312,12 @@ def get_top_rated_limited(city):
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-            SELECT p.*, AVG(r.score) as avg_score FROM products p
+            SELECT p.*, AVG(r.score) as avg_score, RANK() OVER (ORDER BY AVG(r.score) DESC) as rank
+ FROM products p
             JOIN ratings r ON r.product_id = p.id
             JOIN stocks s ON s.product_id = p.id
             JOIN bussiness b ON b.id = s.bussiness_id
             WHERE b.city = ?
-            ORDER BY avg_score DESC
             LIMIT 5
             """,
             (city,),
@@ -416,12 +415,11 @@ def get_newest_limited(city):
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-            SELECT p.* FROM products p
+            SELECT p.*, RANK() OVER (ORDER BY p.created_at) as rank FROM products p
             JOIN stocks s on s.product_id = p.id
-            JOIN bussiness b on s.bussiness_id = s.id
+            JOIN bussiness b on s.bussiness_id = b.id
             WHERE b.city = ?
             GROUP BY p.id
-            ORDER BY p.created_at
             LIMIT 5
             """,
             (city,),
