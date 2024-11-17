@@ -4,3 +4,4 @@ flask_session
 *.pyc
 bootstrap
 routes/__pycache__
+node_modules
