@@ -6,10 +6,9 @@ from helpers import status_list, dict_factory
 def get(id):
     try:
         int(id)
-        with sqlite3.connect('database.db') as connection:
+        with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
-        res = connection.execute(
-            'SELECT * FROM tags WHERE id = ?', (id,)).fetchall()
+        res = connection.execute("SELECT * FROM tags WHERE id = ?", (id,)).fetchall()
         connection.commit()
         return res
     except Exception as error:
@@ -19,9 +18,25 @@ def get(id):
 
 def get_all():
     try:
-        with sqlite3.connect('database.db') as connection:
+        with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
-        res = connection.execute('SELECT * FROM tags').fetchall()
+        res = connection.execute("SELECT * FROM tags").fetchall()
+        connection.commit()
+        return res
+    except Exception as error:
+        print(error)
+        raise Exception(error)
+
+
+def get_by_status(status):
+    try:
+        if status not in status_list:
+            raise ValueError("Not in list")
+        with sqlite3.connect("database.db") as connection:
+            connection.row_factory = dict_factory
+        res = connection.execute(
+            "SELECT * FROM tags WHERE status = ?", (status,)
+        ).fetchall()
         connection.commit()
         return res
     except Exception as error:
@@ -32,10 +47,12 @@ def get_all():
 def insert(obj):
     try:
         CreateTag(obj)
-        with sqlite3.connect('database.db') as connection:
+        with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
-        res = connection.execute('INSERT INTO tags (name, description) VALUES (?, ?) RETURNING *', (
-            obj['name'], obj['description'])).fetchall()
+        res = connection.execute(
+            "INSERT INTO tags (name, description) VALUES (?, ?) RETURNING *",
+            (obj["name"], obj["description"]),
+        ).fetchall()
         connection.commit()
         return res
     except Exception as error:
@@ -46,10 +63,12 @@ def insert(obj):
 def update(id, obj):
     try:
         UpdateTag(*obj)
-        with sqlite3.connect('database.db') as connection:
+        with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
-        res = connection.execute('UPDATE tags SET name = ?, description = ? WHERE id = ? RETURNING *', (
-            obj['name'], obj['description'], id)).fetchall()
+        res = connection.execute(
+            "UPDATE tags SET name = ?, description = ? WHERE id = ? RETURNING *",
+            (obj["name"], obj["description"], id),
+        ).fetchall()
         connection.commit()
         return res
     except Exception as error:
@@ -60,10 +79,11 @@ def update(id, obj):
 def delete(id):
     try:
         int(id)
-        with sqlite3.connect('database.db') as connection:
+        with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            'DELETE * FROM tags WHERE id = ? RETURNING *', (id, )).fetchall()
+            "DELETE * FROM tags WHERE id = ? RETURNING *", (id,)
+        ).fetchall()
         connection.commit()
         return res
     except Exception as error:
@@ -74,22 +94,25 @@ def delete(id):
 def update_status(id, status):
     try:
         int(id)
-        if (status not in status_list):
+        if status not in status_list:
             raise ValueError()
-        with sqlite3.connect('database.db') as connection:
+        with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            'UPDATE tags SET status = ? WHERE id = ? RETURNING *', (status, id)).fetchall()
+            "UPDATE tags SET status = ? WHERE id = ? RETURNING *", (status, id)
+        ).fetchall()
         connection.commit()
         return res
     except Exception as error:
         print(error)
         raise Exception(error)
 
-# def tag_handler(tags):
-#     try:
-#         with sqlite3.connect('database.db') as connection:
+        # def tag_handler(tags):
+        #     try:
+        #         with sqlite3.connect('database.db') as connection:
         connection.row_factory = dict_factory
+
+
 #             res = []
 #             for tag in tags:
 #                 tag_result = connection.execute(
