@@ -3,7 +3,7 @@ VIEWS -------------------------- base.html navbar.html footer.html
 ### BASIC
 	## DASHBOARD - Dashboard X --- mostly cards carousel
 		- Popular Products on City (Limited) X
-		- Popular Bussiness on City X (Limited) -------- carousel
+		- Popular Bussiness on City X (Limited)
 		- Nearest Bussiness X (Limited)       	
 		- Most Discounts Bussiness on City X (Limited)
 		- Recent Added Products X (Limited)
@@ -133,10 +133,9 @@ X Separate all ratings from avg ratings. Add pagination to ratings
 
 X Review pagination
 
-- Restrictions for tags unavailables, Restrictions for same tags 
+X Restrictions for tags unavailables, Restrictions for same tags 
 
 X Create lists along users
-- Discard slug 
 X Verify not existing email
 X Verify not existing bussiness name
 X Verify not existing product name

@@ -5,3 +5,4 @@ flask_session
 bootstrap
 routes/__pycache__
 node_modules
+database.db

@@ -10,6 +10,7 @@ from services.bussiness_service import (
     get_popular_limited as bussiness_popular,
     get_by_nearest_limited,
     get_by_most_discount_limited,
+    get_top_rated_limited as bussiness_top_rated,
 )
 
 dashboard_bp = Blueprint("dashboard", __name__)
@@ -28,6 +29,7 @@ def main():
     popular_bussiness = bussiness_popular(city)
     most_discount = get_by_most_discount_limited(city)
     top_products = product_top_rated(city)
+    top_bussiness = bussiness_top_rated(city)
     print("new", newest_products)
     return render_template(
         "dashboards/client_dashboard.html",
@@ -36,5 +38,6 @@ def main():
         nearest_bussiness=nearest_bussiness,
         popular_bussiness=popular_bussiness,
         most_discount=most_discount,
+        top_bussiness=top_bussiness,
         top_products=top_products,
     )

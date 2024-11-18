@@ -283,11 +283,11 @@ def get_top_rated_limited(city):
         res = connection.execute(
             """
             SELECT b.*, AVG(r.score) as avg_score FROM bussiness b
-            JOIN ratings ON r.bussiness_id = b.id
+            JOIN ratings r ON r.bussiness_id = b.id
             WHERE b.city LIKE ?
             AND b.status = "APPROVED"
             GROUP BY b.id 
-            ORDER BY count
+            ORDER BY avg_score
             LIMIT 5
             """,
             (like_string(city),),

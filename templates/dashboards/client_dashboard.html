@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container tw-flex tw-flex-col tw-gap-5">
+<div class="container tw-flex tw-flex-col tw-gap-6">
     <!-- popular products -->
     <div class="container">
         <div class="container-title tw-flex">
@@ -12,86 +12,6 @@
         </div>
         <div class="tw-container tw-flex gap-3">
             {% for item in popular_products %}
-            <div class="card tw-grow tw-shrink tw-max-w-[25%]">
-                <div class="card-body tw-flex tw-flex-col tw-gap-1">
-                    <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
-                    <p class="card-title tw-text-lg tw-font-semibold">{{item.rank}}. {{item.name}}</p>
-                    <p class="card-text">{{item.description}}</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    <!-- newest products -->
-    <div class="container">
-        <div class="container-title tw-flex">
-            <h1 class="tw-font-semibold tw-text-4xl tw-mb-4 tw-inline-block">Newest products in your area</h1>
-            <div
-                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
-            </div>
-        </div>
-        <div class="container tw-flex tw-gap-3">
-            {% for item in newest_products %}
-            <div class="card tw-grow tw-shrink tw-max-w-[25%]">
-                <div class="card-body tw-flex tw-flex-col tw-gap-1">
-                    <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
-                    <p class="card-title tw-text-lg tw-font-semibold">{{item.rank}}. {{item.name}}</p>
-                    <p class="card-text">{{item.description}}</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    <!-- nearest bussiness -->
-    <div class="container">
-        <div class="container-title tw-flex">
-            <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Nearest bussiness to you</h1>
-            <div
-                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
-            </div>
-        </div>
-        <div class="container tw-flex tw-gap-3">
-            {% for item in nearest_bussiness %}
-            <div class="card tw-grow tw-shrink tw-max-w-[25%]">
-                <div class="card-body tw-flex tw-flex-col tw-gap-1">
-                    <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
-                    <p class="card-title tw-text-lg tw-font-semibold">{{item.rank}}. {{item.name}}</p>
-                    <p class="card-text">{{item.description}}</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    <!-- popular bussiness -->
-    <div class="container">
-        <div class="container-title tw-flex">
-            <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Popular bussiness in your area</h1>
-            <div
-                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
-            </div>
-        </div>
-        <div class="container tw-flex tw-gap-3">
-            {% for item in popular_bussiness %}
-            <div class="card tw-grow tw-shrink tw-max-w-[25%]">
-                <div class="card-body tw-flex tw-flex-col tw-gap-1">
-                    <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
-                    <p class="card-title tw-text-lg tw-font-semibold">{{item.rank}}. {{item.name}}</p>
-                    <p class="card-text">{{item.description}}</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    <!-- most discount -->
-    <div class="container">
-        <div class="container-title tw-flex">
-            <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Most discounted products in your area</h1>
-            <div
-                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
-            </div>
-        </div>
-        <div class="container tw-flex tw-gap-3">
-            {% for item in most_discount %}
             <div class="card tw-grow tw-shrink tw-max-w-[25%]">
                 <div class="card-body tw-flex tw-flex-col tw-gap-1">
                     <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
@@ -122,6 +42,114 @@
             {% endfor %}
         </div>
     </div>
+    <!-- newest products -->
+    <div class="container">
+        <div class="container-title tw-flex">
+            <h1 class="tw-font-semibold tw-text-4xl tw-mb-4 tw-inline-block">Newest products in your area</h1>
+            <div
+                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
+            </div>
+        </div>
+        <div class="container tw-flex tw-gap-3">
+            {% for item in newest_products %}
+            <div class="card tw-grow tw-shrink tw-max-w-[25%]">
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
+                    <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
+                    <p class="card-title tw-text-lg tw-font-semibold">{{item.rank}}. {{item.name}}</p>
+                    <p class="card-text">{{item.description}}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- nearest bussiness -->
+    <div class="container">
+        <div class="container-title tw-flex">
+            <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Nearest bussiness to you</h1>
+            <div
+                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
+            </div>
+        </div>
+        <div class="container tw-flex tw-gap-3">
+            {% for item in nearest_bussiness %}
+            <div class="card tw-grow tw-shrink tw-max-w-[25%]">
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
+                    <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
+                    <p class="card-title tw-text-lg tw-font-semibold">{{item.rank}}. {{item.name}}</p>
+                    <p class="card-text">{{item.description}}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- popular bussiness -->
+    <div class="container">
+        <div class="container-title tw-flex">
+            <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Popular bussiness in your area</h1>
+            <div
+                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
+            </div>
+        </div>
+        <div class="container tw-flex tw-gap-3">
+            {% for item in popular_bussiness %}
+            <div class="card tw-grow tw-shrink tw-max-w-[25%]">
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
+                    <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
+                    <p class="card-title tw-text-lg tw-font-semibold">{{item.rank}}. {{item.name}}</p>
+                    <p class="card-text">{{item.description}}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- top rated bussiness -->
+    <div class="container">
+        <div class="container-title tw-flex">
+            <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Top rated bussiness in your area</h1>
+            <div
+                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
+            </div>
+        </div>
+        <div class="container tw-flex tw-gap-3">
+            {% for item in top_bussiness %}
+            <div class="card tw-grow tw-shrink tw-max-w-[25%]">
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
+                    <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
+                    <p class="card-title tw-text-lg tw-font-semibold">{{item.rank}}. {{item.name}}</p>
+                    <p class="card-text">{{item.description}}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+    <!-- most discount -->
+    <div class="container">
+        <div class="container-title tw-flex">
+            <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Bussiness with most discounts in your area
+            </h1>
+            <div
+                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
+            </div>
+        </div>
+        <div class="container tw-flex tw-gap-3">
+            {% for item in most_discount %}
+            <div class="card tw-grow tw-shrink tw-max-w-[25%]">
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
+                    <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
+                    <p class="card-title tw-text-lg tw-font-semibold">{{item.rank}}. {{item.name}}</p>
+                    <p class="card-text">{{item.description}}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
 </div>
 
 {% endblock %}
