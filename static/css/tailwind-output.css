@@ -554,234 +554,142 @@ video {
   display: none;
 }
 
-.container {
+.tw-container {
   width: 100%;
 }
 
 @media (min-width: 640px) {
-  .container {
+  .tw-container {
     max-width: 640px;
   }
 }
 
 @media (min-width: 768px) {
-  .container {
+  .tw-container {
     max-width: 768px;
   }
 }
 
 @media (min-width: 1024px) {
-  .container {
+  .tw-container {
     max-width: 1024px;
   }
 }
 
 @media (min-width: 1280px) {
-  .container {
+  .tw-container {
     max-width: 1280px;
   }
 }
 
 @media (min-width: 1536px) {
-  .container {
+  .tw-container {
     max-width: 1536px;
   }
 }
 
-.collapse {
-  visibility: collapse;
-}
-
-.static {
-  position: static;
-}
-
-.m-2 {
-  margin: 0.5rem;
-}
-
-.m-5 {
-  margin: 1.25rem;
-}
-
-.m-auto {
-  margin: auto;
-}
-
-.m-1 {
-  margin: 0.25rem;
-}
-
-.my-1 {
-  margin-top: 0.25rem;
-  margin-bottom: 0.25rem;
-}
-
-.my-2 {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.my-4 {
-  margin-top: 1rem;
+.tw-mb-4 {
   margin-bottom: 1rem;
 }
 
-.mb-1 {
-  margin-bottom: 0.25rem;
+.tw-ml-\[20px\] {
+  margin-left: 20px;
 }
 
-.mb-2 {
-  margin-bottom: 0.5rem;
-}
-
-.ms-2 {
-  margin-inline-start: 0.5rem;
-}
-
-.mb-4 {
-  margin-bottom: 1rem;
-}
-
-.mt-2 {
+.tw-mt-2 {
   margin-top: 0.5rem;
 }
 
-.block {
-  display: block;
+.tw-mt-\[-5px\] {
+  margin-top: -5px;
 }
 
-.flex {
+.tw-mt-\[-10px\] {
+  margin-top: -10px;
+}
+
+.tw-inline-block {
+  display: inline-block;
+}
+
+.tw-flex {
   display: flex;
 }
 
-.h-full {
+.tw-h-\[5px\] {
+  height: 5px;
+}
+
+.tw-h-full {
   height: 100%;
 }
 
-.h-1\/2 {
-  height: 50%;
-}
-
-.max-w-\[50\%\] {
-  max-width: 50%;
-}
-
-.max-w-\[30\%\] {
-  max-width: 30%;
-}
-
-.max-w-\[25\%\] {
+.tw-max-w-\[25\%\] {
   max-width: 25%;
 }
 
-.shrink {
+.tw-shrink {
   flex-shrink: 1;
 }
 
-.grow {
+.tw-grow {
   flex-grow: 1;
 }
 
-.flex-col {
+.tw-flex-col {
   flex-direction: column;
 }
 
-.gap-3 {
-  gap: 0.75rem;
-}
-
-.gap-2 {
-  gap: 0.5rem;
-}
-
-.gap-1 {
-  gap: 0.25rem;
-}
-
-.gap-5 {
+.tw-gap-5 {
   gap: 1.25rem;
 }
 
-.divide-x > :not([hidden]) ~ :not([hidden]) {
-  --tw-divide-x-reverse: 0;
-  border-right-width: calc(1px * var(--tw-divide-x-reverse));
-  border-left-width: calc(1px * calc(1 - var(--tw-divide-x-reverse)));
+.tw-gap-1 {
+  gap: 0.25rem;
 }
 
-.divide-y > :not([hidden]) ~ :not([hidden]) {
-  --tw-divide-y-reverse: 0;
-  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
-  border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
+.tw-gap-3 {
+  gap: 0.75rem;
 }
 
-.p-3 {
-  padding: 0.75rem;
+.tw-self-center {
+  align-self: center;
 }
 
-.p-4 {
-  padding: 1rem;
+.tw-bg-baseblue {
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 110 253 / var(--tw-bg-opacity, 1));
 }
 
-.px-3 {
+.tw-bg-slate-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(241 245 249 / var(--tw-bg-opacity, 1));
+}
+
+.tw-px-3 {
   padding-left: 0.75rem;
   padding-right: 0.75rem;
 }
 
-.py-6 {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
-}
-
-.py-8 {
+.tw-py-8 {
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
 
-.pl-2 {
-  padding-left: 0.5rem;
-}
-
-.align-middle {
-  vertical-align: middle;
-}
-
-.align-text-top {
-  vertical-align: text-top;
-}
-
-.font-sans {
+.tw-font-sans {
   font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
-.text-4xl {
+.tw-text-4xl {
   font-size: 2.25rem;
   line-height: 2.5rem;
 }
 
-.text-lg {
+.tw-text-lg {
   font-size: 1.125rem;
   line-height: 1.75rem;
 }
 
-.text-2xl {
-  font-size: 1.5rem;
-  line-height: 2rem;
-}
-
-.text-3xl {
-  font-size: 1.875rem;
-  line-height: 2.25rem;
-}
-
-.font-bold {
-  font-weight: 700;
-}
-
-.font-semibold {
+.tw-font-semibold {
   font-weight: 600;
-}
-
-.opacity-50 {
-  opacity: 0.5;
 }

@@ -1,16 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container flex flex-col gap-5 divide-y">
+<div class="container tw-flex tw-flex-col tw-gap-5">
     <!-- popular products -->
     <div class="container">
-        <h1 class="font-semibold text-4xl mt-2 mb-4">Popular products in your area</h1>
-        <div class="container flex gap-3">
+        <div class="container-title tw-flex">
+            <h1 class="tw-font-semibold tw-text-4xl tw-mt-2 tw-mb-4 tw-inline-block">Popular products in your area</h1>
+            <div
+                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-5px] tw-bg-baseblue">
+            </div>
+        </div>
+        <div class="tw-container tw-flex gap-3">
             {% for item in popular_products %}
-            <div class="card grow shrink max-w-[25%]">
-                <div class="card-body flex flex-col gap-1">
+            <div class="card tw-grow tw-shrink tw-max-w-[25%]">
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
                     <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
-                    <p class="card-title text-lg font-semibold">{{item.rank}}. {{item.name}}</p>
+                    <p class="card-title tw-text-lg tw-font-semibold">{{item.rank}}. {{item.name}}</p>
                     <p class="card-text">{{item.description}}</p>
                 </div>
             </div>
@@ -19,13 +24,18 @@
     </div>
     <!-- newest products -->
     <div class="container">
-        <h1 class="font-semibold text-4xl my-4">Newest products in your area</h1>
-        <div class="container flex gap-3">
+        <div class="container-title tw-flex">
+            <h1 class="tw-font-semibold tw-text-4xl tw-mb-4 tw-inline-block">Newest products in your area</h1>
+            <div
+                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
+            </div>
+        </div>
+        <div class="container tw-flex tw-gap-3">
             {% for item in newest_products %}
-            <div class="card grow shrink max-w-[25%]">
-                <div class="card-body flex flex-col gap-1">
+            <div class="card tw-grow tw-shrink tw-max-w-[25%]">
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
                     <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
-                    <p class="card-title text-lg font-semibold">{{item.rank}}. {{item.name}}</p>
+                    <p class="card-title tw-text-lg tw-font-semibold">{{item.rank}}. {{item.name}}</p>
                     <p class="card-text">{{item.description}}</p>
                 </div>
             </div>
@@ -34,13 +44,18 @@
     </div>
     <!-- nearest bussiness -->
     <div class="container">
-        <h1 class="font-semibold text-4xl my-4">Nearest bussiness to you</h1>
-        <div class="container flex gap-3">
+        <div class="container-title tw-flex">
+            <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Nearest bussiness to you</h1>
+            <div
+                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
+            </div>
+        </div>
+        <div class="container tw-flex tw-gap-3">
             {% for item in nearest_bussiness %}
-            <div class="card grow shrink max-w-[25%]">
-                <div class="card-body flex flex-col gap-1">
+            <div class="card tw-grow tw-shrink tw-max-w-[25%]">
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
                     <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
-                    <p class="card-title text-lg font-semibold">{{item.rank}}. {{item.name}}</p>
+                    <p class="card-title tw-text-lg tw-font-semibold">{{item.rank}}. {{item.name}}</p>
                     <p class="card-text">{{item.description}}</p>
                 </div>
             </div>
@@ -49,13 +64,18 @@
     </div>
     <!-- popular bussiness -->
     <div class="container">
-        <h1 class="font-semibold text-4xl my-4">Popular bussiness in your area</h1>
-        <div class="container flex gap-3">
+        <div class="container-title tw-flex">
+            <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Popular bussiness in your area</h1>
+            <div
+                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
+            </div>
+        </div>
+        <div class="container tw-flex tw-gap-3">
             {% for item in popular_bussiness %}
-            <div class="card grow shrink max-w-[25%]">
-                <div class="card-body flex flex-col gap-1">
+            <div class="card tw-grow tw-shrink tw-max-w-[25%]">
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
                     <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
-                    <p class="card-title text-lg font-semibold">{{item.rank}}. {{item.name}}</p>
+                    <p class="card-title tw-text-lg tw-font-semibold">{{item.rank}}. {{item.name}}</p>
                     <p class="card-text">{{item.description}}</p>
                 </div>
             </div>
@@ -64,13 +84,18 @@
     </div>
     <!-- most discount -->
     <div class="container">
-        <h1 class="font-semibold text-4xl my-4">Most discounted products in your area</h1>
-        <div class="container flex gap-3">
+        <div class="container-title tw-flex">
+            <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Most discounted products in your area</h1>
+            <div
+                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
+            </div>
+        </div>
+        <div class="container tw-flex tw-gap-3">
             {% for item in most_discount %}
-            <div class="card grow shrink max-w-[25%]">
-                <div class="card-body flex flex-col gap-1">
+            <div class="card tw-grow tw-shrink tw-max-w-[25%]">
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
                     <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
-                    <p class="card-title text-lg font-semibold">{{item.rank}}. {{item.name}}</p>
+                    <p class="card-title tw-text-lg tw-font-semibold">{{item.rank}}. {{item.name}}</p>
                     <p class="card-text">{{item.description}}</p>
                 </div>
             </div>
@@ -79,13 +104,18 @@
     </div>
     <!-- top products -->
     <div class="container">
-        <h1 class="font-semibold text-4xl my-4">Top products in your area</h1>
-        <div class="container flex gap-3">
+        <div class="container-title tw-flex">
+            <h1 class="tw-font-semibold tw-text-4xl tw-mb-4 tw-inline-block">Top products in your area</h1>
+            <div
+                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
+            </div>
+        </div>
+        <div class="container tw-flex tw-gap-3">
             {% for item in top_products %}
-            <div class="card grow shrink max-w-[25%]">
-                <div class="card-body flex flex-col gap-1">
+            <div class="card tw-grow tw-shrink tw-max-w-[25%]">
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
                     <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
-                    <p class="card-title text-lg font-semibold">{{item.rank}}. {{item.name}}</p>
+                    <p class="card-title tw-text-lg tw-font-semibold">{{item.rank}}. {{item.name}}</p>
                     <p class="card-text">{{item.description}}</p>
                 </div>
             </div>
