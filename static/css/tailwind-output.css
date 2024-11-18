@@ -624,6 +624,10 @@ video {
   height: 100%;
 }
 
+.tw-min-h-full {
+  min-height: 100%;
+}
+
 .tw-max-w-\[25\%\] {
   max-width: 25%;
 }
@@ -638,6 +642,18 @@ video {
 
 .tw-flex-col {
   flex-direction: column;
+}
+
+.tw-content-center {
+  align-content: center;
+}
+
+.tw-items-center {
+  align-items: center;
+}
+
+.tw-justify-center {
+  justify-content: center;
 }
 
 .tw-gap-5 {

@@ -51,7 +51,7 @@
     {% endif %}
 </head>
 
-<body class="tw-position-relative tw-h-full">
+<body class="tw-position-relative tw-min-h-full tw-flex tw-flex-col">
     {% if loading %}
     {% include 'misc/loading_spinner.html' %}
     {% block loading %}
@@ -60,7 +60,8 @@
     {% include 'navbar.html' %}
     {% block navbar %}
     {% endblock %}
-    <div class="jumbotron tw-py-8 tw-px-3 tw-h-full tw-font-sans tw-bg-slate-100">
+    <div
+        class="jumbotron tw-py-8 tw-px-3 tw-h-full tw-font-sans tw-bg-slate-100 tw-grow tw-shrink tw-flex tw-content-center tw-items-center">
 
         {% block content %}
         {% endblock %}
