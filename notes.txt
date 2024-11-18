@@ -114,9 +114,9 @@ VIEWS -------------------------- base.html navbar.html footer.html
 
 ### MISC
 
-- Not found view
-- Allow location view
-- Forbiden view
+X Not found view 
+X Allow location view
+X Forbiden view
 
 ### NOTES
 - Add joins on relations -- Be modified where needed

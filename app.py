@@ -1,6 +1,7 @@
 from flask import Flask, redirect, render_template, request, url_for, session as sess
 from flask_login import LoginManager
 from flask_session import Session
+import werkzeug
 from services.users_service import get_with_password
 from classes.users_class import UserLogin
 from routes.__index__ import *
@@ -68,6 +69,11 @@ def not_found():
     return render_template("misc/not_found.html")
 
 
+@app.errorhandler(werkzeug.exceptions.NotFound)
+def handle_bad_request(e):
+    return redirect("/not-found")
+
+
 @app.route("/unauthorized", methods=["GET"])
 def unauthorized():
     return render_template("misc/not_authorized.html")
@@ -78,9 +84,19 @@ def forbidden():
     return render_template("misc/forbidden.html")
 
 
+@app.errorhandler(werkzeug.exceptions.Forbidden)
+def handle_bad_request(e):
+    return redirect("/forbidden")
+
+
 @app.route("/error", methods=["GET"])
 def exception():
     return render_template("misc/error.html")
+
+
+@app.errorhandler(werkzeug.exceptions.InternalServerError)
+def handle_bad_request(e):
+    return redirect("/error")
 
 
 @app.route("/handle_location", methods=["POST"])
