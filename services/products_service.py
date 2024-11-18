@@ -132,6 +132,7 @@ def get_popular(city, start_page, end_page):
             JOIN bussiness b ON s.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.city LIKE ?
+            AND p.status = "APPROVED"
             GROUP BY p.id
             ORDER BY count DESC
             LIMIT ?
@@ -158,6 +159,7 @@ def get_popular_limited(city):
             JOIN bussiness b on s.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.city LIKE ?
+            AND p.status = "APPROVED"
             GROUP BY p.id
             LIMIT 5
             """,
@@ -181,13 +183,13 @@ def get_popular_by_bussiness(slug, start_page, end_page):
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = s.id
             JOIN lists_stocks l on l.stock_id = s.id
-            WHERE b.slug = ?
+            WHERE b.slug LIKE ?
             GROUP BY p.id
             ORDER BY count
             LIMIT ?
             OFFSET ?
             """,
-            (slug, end_page, start_page),
+            (like_string(slug), end_page, start_page),
         ).fetchall()
         connection.commit()
         return res
@@ -239,6 +241,7 @@ def get_popular_by_bussiness_limited(id):
             JOIN bussiness b on s.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.id = ?
+            AND p.status = "APPROVED"
             GROUP BY p.id
             ORDER BY count
             LIMIT 5
@@ -264,6 +267,7 @@ def get_popular_by_brand_limited(brand_id, city):
             JOIN lists_stocks l on l.stock_id = s.id
             JOIN brands br on p.brand_id = br.id
             WHERE b.city LIKE ? AND br.id = ?
+            AND p.status = "APPROVED"
             GROUP BY p.id
             ORDER BY count
             LIMIT 5
@@ -292,6 +296,7 @@ def get_top_rated(city, start_page, end_page):
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = b.id
             WHERE b.city LIKE ?
+            AND p.status = "APPROVED"
             ORDER BY avg_score DESC
             LIMIT ?
             OFFSET ? 
@@ -317,10 +322,11 @@ def get_top_rated_limited(city):
             JOIN ratings r ON r.product_id = p.id
             JOIN stocks s ON s.product_id = p.id
             JOIN bussiness b ON b.id = s.bussiness_id
-            WHERE b.city = ?
+            WHERE b.city LIKE ?
+            AND p.status = "APPROVED"
             LIMIT 5
             """,
-            (city,),
+            (like_string(city),),
         ).fetchall()
         connection.commit()
         return res
@@ -341,6 +347,7 @@ def get_top_rated_by_brand(slug, start_page, end_page):
             JOIN ratings r ON r.product_id = p.id
             JOIN brands br on p.brand_id = br.id
             WHERE br.slug LIKE ?
+            AND p.status = "APPROVED"
             GROUP BY p.id
             ORDER BY avg_score DESC
             LIMIT ?
@@ -366,12 +373,13 @@ def get_top_rated_by_bussiness(slug, start_page, end_page):
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = s.id
             JOIN ratings r ON r.product_id = p.id
-            WHERE b.slug = ?
+            WHERE b.slug LIKE ?
+            AND p.status = "APPROVED"
             ORDER BY avg_score DESC
             LIMIT ?
             OFFSET ? 
             """,
-            (slug, end_page, start_page),
+            (like_string(slug), end_page, start_page),
         ).fetchall()
         connection.commit()
         return res
@@ -394,6 +402,7 @@ def get_newest(city, start_page, end_page):
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = b.id
             WHERE b.city LIKE ?
+            AND p.status = "APPROVED"
             GROUP BY p.id
             ORDER BY p.created_at DESC
             LIMIT ?
@@ -418,11 +427,12 @@ def get_newest_limited(city):
             SELECT p.*, RANK() OVER (ORDER BY p.created_at) as rank FROM products p
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = b.id
-            WHERE b.city = ?
+            WHERE b.city LIKE ?
+            AND p.status = "APPROVED"
             GROUP BY p.id
             LIMIT 5
             """,
-            (city,),
+            (like_string(city),),
         ).fetchall()
         connection.commit()
         return res
@@ -441,6 +451,7 @@ def get_newest_by_brand(slug, start_page, end_page):
             SELECT p.* FROM products p
             JOIN brands br on p.brand_id = br.id
             WHERE br.slug LIKE ?
+            AND p.status = "APPROVED"
             GROUP BY p.id
             ORDER BY p.created_at
             LIMIT ?
@@ -469,13 +480,13 @@ def get_newest_by_bussiness(slug, start_page, end_page):
             SELECT p.*, FROM products p
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = s.id
-            WHERE b.slug = ?
+            WHERE b.slug LIKE ?
             GROUP BY p.id
             ORDER BY p.created_at
             LIMIT ?
             OFFSET ? 
             """,
-            (slug, end_page, start_page),
+            (like_string(slug), end_page, start_page),
         ).fetchall()
         connection.commit()
         return res
@@ -493,7 +504,9 @@ def get_with_details(id):
             connection.row_factory = dict_factory
         res = connection.execute(
             """SELECT * FROM products p
-                   WHERE id = ?""",
+                   WHERE id = ?
+            AND p.status = "APPROVED"
+                      """,
             (id,),
         ).fetchall()
         connection.commit()
@@ -513,6 +526,7 @@ def get_by_brand(id):
             SELECT p.*, FROM products p
             JOIN brands br on p.brand_id = br.id
             WHERE br.id = ?
+            AND p.status = "APPROVED"
             GROUP BY p.id
             ORDER BY p.name
             """,
@@ -550,6 +564,7 @@ def get_popular_by_owner(
             JOIN bussiness b on s.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.user_id = ?
+            AND p.status = "APPROVED"
             GROUP BY p.id
             ORDER BY count {order}
             {limited_clause}
@@ -584,6 +599,7 @@ def get_top_rated_by_owner(
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = b.id
             WHERE b.user_id = ?
+            AND p.status = "APPROVED"
             GROUP BY p.id
             ORDER BY avg_score {order}
             {limited_clause}
@@ -610,6 +626,7 @@ def get_by_search_tags(word, tags, start_page, end_page):
             JOIN tags_products tp ON tp.product_id = p.id
             WHERE tp.tag_id {tag_field} AND
             p.name LIKE ?
+            AND p.status = "APPROVED"
             GROUP BY p.id
             LIMIT ?
             OFFSET ?
@@ -622,6 +639,7 @@ def get_by_search_tags(word, tags, start_page, end_page):
            SELECT p.* FROM products p
            WHERE
            p.name LIKE ?
+            AND p.status = "APPROVED"
            GROUP BY p.id
            LIMIT ?
            OFFSET ?
@@ -648,11 +666,12 @@ def get_by_filter(type, slug, filter, start_page, end_page):
                 connection.row_factory = dict_factory
         res = connection.execute(
             f"""SELECT * FROM products,
-                WHERE slug = ?
+                WHERE slug LIKE ?
+                AND p.status = "APPROVED"
                 LIMIT ?
                 OFFSET ?
                 """,
-            (slug, end_page, start_page),
+            (like_string(slug), end_page, start_page),
         ).fetchall()
 
         connection.commit()
@@ -670,6 +689,7 @@ def get_by_discounts(id):
             """SELECT * FROM products p
             JOIN stocks s ON s.product_id = p.id
             WHERE p.id = ?
+            AND p.status = "APPROVED"
             GROUP BY s.id
             ORDER BY s.discount DESC
             """,
@@ -692,6 +712,7 @@ def get_all_by_discounts(city):
             JOIN stocks s ON s.product_id = p.id
             JOIN bussiness b ON b.id = s.bussiness_id
             WHERE b.city LIKE ?
+            AND p.status = "APPROVED"
             GROUP BY s.id
             ORDER BY s.discount DESC
             """,
@@ -716,9 +737,10 @@ SELECT *,
 JOIN stocks s ON p.id = s.product_id
 JOIN bussiness b ON b.id = s.bussiness_id
 FROM products p
-WHERE city = ?
+WHERE city LIKE ?
+AND p.status = "APPROVED"
 ORDER BY distance ASC""",
-            (lat, lon, lat, city),
+            (lat, lon, lat, like_string(city)),
         ).fetchall()
 
         connection.commit()

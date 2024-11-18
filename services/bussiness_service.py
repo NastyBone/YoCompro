@@ -137,7 +137,8 @@ def get_by_slug(slug):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            "SELECT * FROM bussiness WHERE slug LIKE ?", (like_string(slug),)
+            "SELECT * FROM bussiness WHERE slug LIKE ? AND status = 'APPROVED'",
+            (like_string(slug),),
         ).fetchone()
 
         connection.commit()
@@ -163,6 +164,7 @@ def get_popular_by_brand(city, slug, page_start, page_end):
             JOIN products p on s.product_id = p.id
             JOIN brands br on p.brand_id = br.id
             WHERE city LIKE ? AND br.slug LIKE ?
+            AND b.status = "APPROVED"
             GROUP BY b.id 
             ORDER BY count DESC
             LIMIT ?
@@ -205,6 +207,7 @@ def get_popular(city, start_page, end_page):
             JOIN stocks s on s.bussiness_id = b.id 
             JOIN lists_stocks l on l.stock_id = s.id 
             WHERE b.city LIKE ?
+            AND b.status = "APPROVED"
             GROUP BY b.id 
             ORDER BY count
             LIMIT ?
@@ -231,11 +234,12 @@ def get_popular_limited(city):
  FROM bussiness b
             JOIN stocks s on s.bussiness_id = b.id 
             JOIN lists_stocks l on l.stock_id = s.id 
-            WHERE b.city = ?
+            WHERE b.city LIKE ?
+            AND b.status = "APPROVED"
             GROUP BY b.id 
             LIMIT 5
             """,
-            (city,),
+            (like_string(city),),
         ).fetchall()
 
         connection.commit()
@@ -254,13 +258,14 @@ def get_top_rated(city, start_page, end_page):
             """
             SELECT b.*, AVG(r.score) as avg_score FROM bussiness b
             JOIN ratings ON r.bussiness_id = b.id
-            WHERE b.city = ?
+            WHERE b.city LIKE ?
+            AND b.status = "APPROVED"
             GROUP BY b.id 
             ORDER BY count
             LIMIT ?
             OFFSET ?
             """,
-            (city, end_page, start_page),
+            (like_string(city), end_page, start_page),
         ).fetchall()
 
         connection.commit()
@@ -279,12 +284,13 @@ def get_top_rated_limited(city):
             """
             SELECT b.*, AVG(r.score) as avg_score FROM bussiness b
             JOIN ratings ON r.bussiness_id = b.id
-            WHERE b.city = ?
+            WHERE b.city LIKE ?
+            AND b.status = "APPROVED"
             GROUP BY b.id 
             ORDER BY count
             LIMIT 5
             """,
-            (city,),
+            (like_string(city),),
         ).fetchall()
 
         connection.commit()
@@ -305,6 +311,7 @@ def get_by_most_discount(city, start_page, end_page):
             SELECT b.*, AVG(s.discount) as avg_disc FROM bussiness b
             JOIN stocks s ON s.bussiness_id = b.id
             WHERE b.city LIKE ?
+            AND b.status = "APPROVED"
             GROUP BY b.id
             ORDER BY avg_disc DESC
             LIMIT ?
@@ -331,10 +338,11 @@ def get_by_most_discount_limited(city):
             SELECT b.*, AVG(s.discount) as avg_disc, RANK() OVER (ORDER BY AVG(s.discount) DESC) as rank
             FROM bussiness b
             JOIN stocks s ON s.bussiness_id = b.id
-            WHERE b.city = ?
+            WHERE b.city LIKE ?
+            AND b.status = "APPROVED"
             LIMIT 5
             """,
-            (city,),
+            ((like_string(city)),),
         ).fetchall()
 
         connection.commit()
@@ -356,6 +364,7 @@ def get_most_discount_by_bussiness(bussiness_id):
             JOIN stocks s ON s.product_id = p.id
             JOIN bussiness b ON b.id = s.bussinesS_id
             WHERE b.id = ?
+            AND b.status = "APPROVED"
             ORDER BY avg_disc DESC
             """,
             (bussiness_id,),
@@ -388,6 +397,7 @@ def get_by_owner_popular(
             JOIN stocks s on s.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.user_id = ?
+            AND b.status = "APPROVED"
             GROUP BY b.id
             ORDER BY count {order}
             {limited_clause}
@@ -422,6 +432,7 @@ def get_by_owner_top_rated(
             SELECT b.*, AVG(score) as avg_score FROM bussiness b
             JOIN ratings ON ratings.bussiness_id = b.id
             WHERE b.user_id = ?
+            AND b.status = "APPROVED"
             ORDER BY avg_score {order}
             {limited_clause}
             {pagination_clause}
@@ -443,7 +454,9 @@ def get_by_owner(owner_id, start_page, end_page):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            "SELECT * FROM bussiness WHERE user_id = ? LIMIT ? OFFSET ? ",
+            """SELECT * FROM bussiness WHERE user_id = ? 
+            AND b.status = "APPROVED"
+            LIMIT ? OFFSET ? """,
             (owner_id, end_page, start_page),
         ).fetchall()
 
@@ -470,6 +483,7 @@ def get_by_search_tags(word, tags, start_page, end_page):
             WHERE
             tb.tag_id {tag_field} AND
             b.name LIKE ?
+            AND b.status = "APPROVED"
             GROUP BY b.id
             LIMIT ?
             OFFSET ?
@@ -482,6 +496,7 @@ def get_by_search_tags(word, tags, start_page, end_page):
             SELECT b.* FROM bussiness b
             WHERE
             b.name LIKE ?
+            AND b.status = "APPROVED"
             GROUP BY b.id
             LIMIT ?
             OFFSET ?
@@ -508,6 +523,7 @@ def get_by_nearest(lat, lon, city, start_page, end_page):
     SELECT b.*, ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance
     FROM bussiness b
     WHERE city LIKE ?
+    AND b.status = "APPROVED"
     ORDER BY distance ASC
     LIMIT ?
     OFFSET ?
@@ -533,10 +549,10 @@ def get_by_nearest_limited(lat, lon, city):
             """
 SELECT * , RANK() OVER (ORDER BY ( 3959 * acos( cos( radians(?) ) * cos( radians(lat) ) * cos( radians(lon) - radians(?) ) + sin( radians(?) ) * sin( radians(lat) ) ) )  DESC) as rank
 FROM bussiness
-WHERE city = ?
+WHERE city LIKE ?
 
 LIMIT 5""",
-            (lat, lon, lat, city),
+            (lat, lon, lat, like_string(city)),
         ).fetchall()
 
         connection.commit()
@@ -557,6 +573,7 @@ def get_bussiness_has_product(product_id):
             JOIN stocks s on s.bussiness_id = b.id 
             JOIN products p on s.product_id = p.id
             WHERE p.id = ?
+            AND b.status = "APPROVED"
             GROUP BY b.id
             """,
             (product_id,),
@@ -576,12 +593,12 @@ def get_newest(city, start_page, end_page):
         res = connection.execute(
             """
             SELECT p.*, FROM bussiness b
-            WHERE b.city = ?
+            WHERE b.city LIKE ?
             ORDER BY b.created_at
             LIMIT ?
             OFFSET ? 
             """,
-            (city, end_page, start_page),
+            (like_string(city), end_page, start_page),
         ).fetchall()
         connection.commit()
         return res
@@ -602,6 +619,7 @@ def search_on_bussiness(word, bussiness_id, start_page, end_page):
            WHERE
            p.name LIKE ?
            AND b.id = ?
+           AND b.status = "APPROVED"
            GROUP BY p.id
            LIMIT ?
            OFFSET ?
