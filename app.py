@@ -47,7 +47,7 @@ def load_user(userid):
 
 @app.route("/")
 def index():
-    return render_template("misc/allow_location.html")
+    return redirect("/dashboard")
 
 
 @app.route("/allow-location", methods=["GET"])
