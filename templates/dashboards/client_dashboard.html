@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container tw-flex tw-flex-col tw-gap-6">
+<div class="container tw-flex tw-flex-col tw-gap-20">
     <!-- popular products -->
     <div class="container">
-        <div class="container-title tw-flex">
+        <div class="container-title tw-flex tw-gap-6">
             <h1 class="tw-font-semibold tw-text-4xl tw-mt-2 tw-mb-4 tw-inline-block">Popular products in your area</h1>
-            <div
-                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-5px] tw-bg-baseblue">
+            <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center">View More</a>
         </div>
         <div class="tw-container tw-flex gap-3">
             {% for item in popular_products %}
@@ -24,11 +24,11 @@
     </div>
     <!-- top products -->
     <div class="container">
-        <div class="container-title tw-flex">
+        <div class="container-title tw-flex tw-gap-6">
             <h1 class="tw-font-semibold tw-text-4xl tw-mb-4 tw-inline-block">Top products in your area</h1>
-            <div
-                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
+            <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center">View More</a>
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in top_products %}
@@ -44,11 +44,11 @@
     </div>
     <!-- newest products -->
     <div class="container">
-        <div class="container-title tw-flex">
+        <div class="container-title tw-flex tw-gap-6">
             <h1 class="tw-font-semibold tw-text-4xl tw-mb-4 tw-inline-block">Newest products in your area</h1>
-            <div
-                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
+            <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center">View More</a>
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in newest_products %}
@@ -65,11 +65,11 @@
 
     <!-- nearest bussiness -->
     <div class="container">
-        <div class="container-title tw-flex">
+        <div class="container-title tw-flex tw-gap-6">
             <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Nearest bussiness to you</h1>
-            <div
-                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
+            <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center">View More</a>
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in nearest_bussiness %}
@@ -86,11 +86,11 @@
 
     <!-- popular bussiness -->
     <div class="container">
-        <div class="container-title tw-flex">
+        <div class="container-title tw-flex tw-gap-6">
             <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Popular bussiness in your area</h1>
-            <div
-                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
+            <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center">View More</a>
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in popular_bussiness %}
@@ -106,11 +106,11 @@
     </div>
     <!-- top rated bussiness -->
     <div class="container">
-        <div class="container-title tw-flex">
+        <div class="container-title tw-flex tw-gap-6">
             <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Top rated bussiness in your area</h1>
-            <div
-                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
+            <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center">View More</a>
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in top_bussiness %}
@@ -125,16 +125,14 @@
         </div>
     </div>
 
-
-
     <!-- most discount -->
     <div class="container">
-        <div class="container-title tw-flex">
+        <div class="container-title tw-flex tw-gap-6">
             <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Bussiness with most discounts in your area
             </h1>
-            <div
-                class="tw-inline-block tw-h-[5px] tw-grow tw-shrink tw-self-center tw-ml-[20px] tw-mt-[-10px] tw-bg-baseblue">
+            <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center">View More</a>
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in most_discount %}

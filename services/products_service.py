@@ -420,7 +420,6 @@ def get_newest(city, start_page, end_page):
 # DONE (Limited) Recent Added Products
 def get_newest_limited(city):
     try:
-        print(city)
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(

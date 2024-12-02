@@ -142,7 +142,6 @@ def get_by_slug(slug):
         ).fetchone()
 
         connection.commit()
-        print("aaaaaa")
         print(res)
         return res
     except Exception as error:
@@ -639,7 +638,6 @@ def tags_setter(bussiness_id, tags):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         cursor = connection.cursor()
-        print(bussiness_id)
         connection.execute(
             """DELETE FROM tags_bussiness WHERE bussiness_id = ?
             """,
