@@ -588,28 +588,24 @@ video {
   }
 }
 
-.tw-mb-4 {
-  margin-bottom: 1rem;
+.tw-m-1 {
+  margin: 0.25rem;
 }
 
-.tw-ml-\[20px\] {
-  margin-left: 20px;
+.tw-m-3 {
+  margin: 0.75rem;
+}
+
+.tw-mb-4 {
+  margin-bottom: 1rem;
 }
 
 .tw-mt-2 {
   margin-top: 0.5rem;
 }
 
-.tw-mt-\[-10px\] {
-  margin-top: -10px;
-}
-
-.tw-mt-\[-5px\] {
-  margin-top: -5px;
-}
-
-.tw-mt-\[5px\] {
-  margin-top: 5px;
+.tw-mt-4 {
+  margin-top: 1rem;
 }
 
 .tw-inline-block {
@@ -620,8 +616,12 @@ video {
   display: flex;
 }
 
-.tw-h-\[5px\] {
-  height: 5px;
+.tw-grid {
+  display: grid;
+}
+
+.tw-h-\[3px\] {
+  height: 3px;
 }
 
 .tw-h-fit {
@@ -633,16 +633,25 @@ video {
   height: 100%;
 }
 
-.tw-h-\[2px\] {
-  height: 2px;
-}
-
-.tw-h-\[3px\] {
-  height: 3px;
-}
-
 .tw-min-h-full {
   min-height: 100%;
+}
+
+.tw-w-1\/5 {
+  width: 20%;
+}
+
+.tw-w-4\/5 {
+  width: 80%;
+}
+
+.tw-w-full {
+  width: 100%;
+}
+
+.tw-min-w-min {
+  min-width: -moz-min-content;
+  min-width: min-content;
 }
 
 .tw-max-w-\[25\%\] {
@@ -657,6 +666,18 @@ video {
   flex-grow: 1;
 }
 
+.tw-grid-cols-\[repeat\(auto-fill\,_minmax\(200px\,_1fr\)\)\] {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.tw-grid-rows-\[repeat\(10\,_auto\)\] {
+  grid-template-rows: repeat(10, auto);
+}
+
+.tw-grid-rows-\[repeat\(auto\,_auto\)\] {
+  grid-template-rows: repeat(auto, auto);
+}
+
 .tw-flex-col {
   flex-direction: column;
 }
@@ -669,8 +690,20 @@ video {
   align-items: center;
 }
 
+.tw-justify-center {
+  justify-content: center;
+}
+
 .tw-gap-1 {
   gap: 0.25rem;
+}
+
+.tw-gap-2 {
+  gap: 0.5rem;
+}
+
+.tw-gap-20 {
+  gap: 5rem;
 }
 
 .tw-gap-3 {
@@ -681,28 +714,12 @@ video {
   gap: 1.5rem;
 }
 
-.tw-gap-12 {
-  gap: 3rem;
-}
-
-.tw-gap-36 {
-  gap: 9rem;
-}
-
-.tw-gap-32 {
-  gap: 8rem;
-}
-
-.tw-gap-28 {
-  gap: 7rem;
-}
-
-.tw-gap-20 {
-  gap: 5rem;
-}
-
 .tw-self-center {
   align-self: center;
+}
+
+.tw-rounded-\[10px\] {
+  border-radius: 10px;
 }
 
 .tw-bg-baseblue {
@@ -725,8 +742,17 @@ video {
   padding-bottom: 2rem;
 }
 
+.tw-text-center {
+  text-align: center;
+}
+
 .tw-font-sans {
   font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.tw-text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
 }
 
 .tw-text-4xl {
@@ -736,6 +762,11 @@ video {
 
 .tw-text-lg {
   font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.tw-text-xl {
+  font-size: 1.25rem;
   line-height: 1.75rem;
 }
 

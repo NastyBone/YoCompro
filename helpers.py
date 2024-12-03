@@ -15,13 +15,13 @@ def slug_builder(name):
     return name.strip().lower().replace(" ", "-")
 
 
-def set_pagination(page: str | None = None):
-    if page == None:
+def set_pagination(page: str | None = None, perPage: int | None = 12):
+    if page == None or page == 1:
         start_pagination = 0
-        end_pagination = 10
+        end_pagination = perPage
     else:
-        start_pagination = (int(page, 10) - 1) * 10
-        end_pagination = start_pagination + 10
+        start_pagination = (int(page) - 1) * perPage
+        end_pagination = start_pagination + perPage
     return [start_pagination, end_pagination]
 
 

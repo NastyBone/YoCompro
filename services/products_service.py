@@ -619,20 +619,32 @@ def get_by_search_tags(word, tags, start_page, end_page):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
             if tags:
-                tag_field = "IN ({0})".format(",".join(["?"] * len(tags)))
+                tag_field = ",".join(["?"] * len(tags))
                 res = connection.execute(
                     f"""
             SELECT p.* FROM products p
             JOIN tags_products tp ON tp.product_id = p.id
-            WHERE tp.tag_id {tag_field} AND
+            WHERE tp.tag_id IN ({tag_field}) AND
             p.name LIKE ?
             AND p.status = "APPROVED"
             GROUP BY p.id
+            HAVING COUNT(DISTINCT tp.tag_id) = ?
             LIMIT ?
             OFFSET ?
                 """,
-                    (*tags, like_string(word), end_page, start_page),
+                    (*tags, like_string(word), len(tags), end_page, start_page),
                 ).fetchall()
+                count = connection.execute(
+                    f""" 
+                SELECT COUNT(*) as count FROM products p
+            JOIN tags_products tp ON tp.product_id = p.id
+            WHERE tp.tag_id IN ({tag_field}) AND
+            p.name LIKE ?
+            AND p.status = "APPROVED"
+            GROUP BY p.id
+            HAVING COUNT(DISTINCT tp.tag_id) = ?""",
+                    (*tags, like_string(word), len(tags)),
+                ).fetchone()
             else:
                 res = connection.execute(
                     f"""
@@ -646,9 +658,16 @@ def get_by_search_tags(word, tags, start_page, end_page):
                """,
                     (like_string(word), end_page, start_page),
                 ).fetchall()
-
+            count = connection.execute(
+                f""" 
+            SELECT COUNT(*) as count FROM products p
+            WHERE p.status = "APPROVED"
+            AND p.name LIKE ?
+            """,
+                (like_string(word),),
+            ).fetchone()
         connection.commit()
-        return res
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)

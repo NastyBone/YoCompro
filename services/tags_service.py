@@ -35,7 +35,7 @@ def get_by_status(status):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            "SELECT * FROM tags WHERE status = ?", (status,)
+            "SELECT * FROM tags WHERE status = ? ORDER BY name", (status_list[status],)
         ).fetchall()
         connection.commit()
         return res

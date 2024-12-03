@@ -474,21 +474,32 @@ def get_by_search_tags(word, tags, start_page, end_page):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
             if tags:
-                tag_field = "IN ({0})".format(",".join(["?"] * len(tags)))
+                tag_field = ",".join(["?"] * len(tags))
                 res = connection.execute(
                     f"""
             SELECT b.* FROM bussiness b
             JOIN tags_bussiness tb ON tb.bussiness_id = b.id
-            WHERE
-            tb.tag_id {tag_field} AND
+            WHERE tb.tag_id IN ({tag_field}) AND
             b.name LIKE ?
             AND b.status = "APPROVED"
             GROUP BY b.id
+            HAVING COUNT(DISTINCT tb.tag_id) = ?
             LIMIT ?
             OFFSET ?
                 """,
-                    (*tags, like_string(word), end_page, start_page),
+                    (*tags, like_string(word), len(tags), end_page, start_page),
                 ).fetchall()
+                count = connection.execute(
+                    f""" 
+                SELECT COUNT(*) as count FROM bussiness b
+           JOIN tags_bussiness tb ON tb.bussiness_id = b.id
+            WHERE tb.tag_id IN ({tag_field}) AND
+            b.name LIKE ?
+            AND b.status = "APPROVED"
+            GROUP BY b.id
+            HAVING COUNT(DISTINCT tb.tag_id) = ?""",
+                    (*tags, like_string(word), len(tags)),
+                ).fetchone()
             else:
                 res = connection.execute(
                     f"""
@@ -503,7 +514,15 @@ def get_by_search_tags(word, tags, start_page, end_page):
                     (like_string(word), end_page, start_page),
                 ).fetchall()
         connection.commit()
-        return res
+        count = connection.execute(
+            f""" 
+            SELECT COUNT(*) as count FROM bussiness b
+            WHERE b.status = "APPROVED"
+            AND b.name LIKE ? 
+            """,
+            (like_string(word),),
+        ).fetchone()
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)

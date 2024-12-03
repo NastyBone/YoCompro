@@ -1,7 +1,7 @@
 VIEWS -------------------------- base.html navbar.html footer.html
 
 ### BASIC
-	## DASHBOARD - Dashboard X --- mostly cards carousel
+	## DASHBOARD - Dashboard X --- DONE
 		- Popular Products on City (Limited) X
 		- Popular Bussiness on City X (Limited)
 		- Nearest Bussiness X (Limited)       	
@@ -112,17 +112,20 @@ VIEWS -------------------------- base.html navbar.html footer.html
 	# RESET PASSWORD - Reset
 	# CHANGE PASSWORD
 
-### MISC
+### MISC - DONE
 
 X Not found view 
 X Allow location view
 X Forbiden view
 
 ### NOTES
-- Add view more button to dashboards components, it will lead to full views (not limited)
+
+- Add view more button to dashboards components, it will lead to full views (not limited, but paginated)
+- Add links to card items
 - Add joins on relations -- Be modified where needed
 - Use slug only in searchs and gets specifics. Verify like_string searchs
-- Remove status filtering from gets which requires approvation
+- Add status filtering from gets which requires approvation
+- Connect images
 X Add security layer using user_id (might be a route decorator, might not) (ratings, lists, bussiness, stocks) (take it from request)
 
 X Add guard to just make a single review
