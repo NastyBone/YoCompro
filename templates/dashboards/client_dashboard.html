@@ -8,7 +8,8 @@
             <h1 class="tw-font-semibold tw-text-4xl tw-mt-2 tw-mb-4 tw-inline-block">Popular products in your area</h1>
             <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
-            <a class="btn btn-outline-primary tw-h-fit tw-self-center">View More</a>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center"
+                href="{{ url_for('search.general_search', type='products', filter='popular')}}">View More</a>
         </div>
         <div class="tw-container tw-flex gap-3">
             {% for item in popular_products %}
@@ -28,7 +29,8 @@
             <h1 class="tw-font-semibold tw-text-4xl tw-mb-4 tw-inline-block">Top products in your area</h1>
             <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
-            <a class="btn btn-outline-primary tw-h-fit tw-self-center">View More</a>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center"
+                href="{{ url_for('search.general_search', type='products', filter='top_rated')}}">View More</a>
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in top_products %}
@@ -48,7 +50,8 @@
             <h1 class="tw-font-semibold tw-text-4xl tw-mb-4 tw-inline-block">Newest products in your area</h1>
             <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
-            <a class="btn btn-outline-primary tw-h-fit tw-self-center">View More</a>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center"
+                href="{{ url_for('search.general_search', type='products', filter='newest')}}">View More</a>
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in newest_products %}
@@ -69,7 +72,8 @@
             <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Nearest bussiness to you</h1>
             <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
-            <a class="btn btn-outline-primary tw-h-fit tw-self-center">View More</a>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center"
+                href="{{ url_for('search.general_search', type='bussiness', filter='nearest')}}">View More</a>
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in nearest_bussiness %}
@@ -90,7 +94,8 @@
             <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Popular bussiness in your area</h1>
             <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
-            <a class="btn btn-outline-primary tw-h-fit tw-self-center">View More</a>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center"
+                href="{{ url_for('search.general_search', type='bussiness', filter='popular')}}">View More</a>
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in popular_bussiness %}
@@ -110,7 +115,8 @@
             <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Top rated bussiness in your area</h1>
             <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
-            <a class="btn btn-outline-primary tw-h-fit tw-self-center">View More</a>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center"
+                href="{{ url_for('search.general_search', type='bussiness', filter='top_rated')}}">View More</a>
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in top_bussiness %}
@@ -132,7 +138,8 @@
             </h1>
             <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
-            <a class="btn btn-outline-primary tw-h-fit tw-self-center">View More</a>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center"
+                href="{{ url_for('search.general_search', type='bussiness', filter='most_discount')}}">View More</a>
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in most_discount %}

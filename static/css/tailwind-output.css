@@ -608,6 +608,10 @@ video {
   margin-top: 1rem;
 }
 
+.tw-mb-2 {
+  margin-bottom: 0.5rem;
+}
+
 .tw-inline-block {
   display: inline-block;
 }
@@ -668,10 +672,6 @@ video {
 
 .tw-grid-cols-\[repeat\(auto-fill\,_minmax\(200px\,_1fr\)\)\] {
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-}
-
-.tw-grid-rows-\[repeat\(10\,_auto\)\] {
-  grid-template-rows: repeat(10, auto);
 }
 
 .tw-grid-rows-\[repeat\(auto\,_auto\)\] {

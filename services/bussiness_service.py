@@ -215,8 +215,20 @@ def get_popular(city, start_page, end_page):
             (like_string(city), end_page, start_page),
         ).fetchall()
 
+        count = connection.execute(
+            f""" 
+            SELECT COUNT(*) as count FROM bussiness b
+            JOIN stocks s on s.bussiness_id = b.id 
+            JOIN lists_stocks l on l.stock_id = s.id 
+            WHERE b.city LIKE ?
+            AND b.status = "APPROVED"
+            GROUP BY b.id 
+            """,
+            (like_string(city),),
+        ).fetchone()
+
         connection.commit()
-        return res
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)
@@ -256,19 +268,28 @@ def get_top_rated(city, start_page, end_page):
         res = connection.execute(
             """
             SELECT b.*, AVG(r.score) as avg_score FROM bussiness b
-            JOIN ratings ON r.bussiness_id = b.id
+            JOIN ratings r ON r.bussiness_id = b.id
             WHERE b.city LIKE ?
             AND b.status = "APPROVED"
             GROUP BY b.id 
-            ORDER BY count
+            ORDER BY avg_score
             LIMIT ?
             OFFSET ?
             """,
             (like_string(city), end_page, start_page),
         ).fetchall()
-
+        count = connection.execute(
+            f"""
+            SELECT COUNT(*) as count FROM bussiness b
+            JOIN ratings r ON r.bussiness_id = b.id
+            WHERE b.city LIKE ?
+            AND b.status = "APPROVED"
+            GROUP BY b.id
+            """,
+            (like_string(city),),
+        ).fetchone()
         connection.commit()
-        return res
+        return [res, 1]
     except Exception as error:
         print(error)
         raise Exception(error)
@@ -318,9 +339,18 @@ def get_by_most_discount(city, start_page, end_page):
             """,
             (like_string(city), end_page, start_page),
         ).fetchall()
-
+        count = connection.execute(
+            f""" 
+            SELECT COUNT(*) as count FROM bussiness b
+           JOIN stocks s ON s.bussiness_id = b.id
+            WHERE b.city LIKE ?
+            AND b.status = "APPROVED"
+            GROUP BY b.id
+            """,
+            (like_string(city),),
+        ).fetchone()
         connection.commit()
-        return res
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)
@@ -548,9 +578,17 @@ def get_by_nearest(lat, lon, city, start_page, end_page):
      """,
             (lat, lat, lon, like_string(city), end_page, start_page),
         ).fetchall()
-
+        count = connection.execute(
+            f""" 
+            SELECT COUNT(*) as count FROM bussiness b
+            WHERE b.city LIKE ?
+            AND b.status = "APPROVED"
+            GROUP BY b.id
+            """,
+            (like_string(city),),
+        ).fetchone()
         connection.commit()
-        return res
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)

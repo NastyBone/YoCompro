@@ -79,7 +79,7 @@ def edit_form():
 @products_bp.route("/search/<slug>", methods=["GET"])
 def find_by_slug(slug):
     product = get_by_slug(slug)[0]
-    print(product)
+    print("***************************", product)
     bussiness = get_bussiness_has_product(int(product["id"]))
     brand = brand_by_product(int(product["id"]))[0]
     rating = rating_by_product(int(product["id"]))[0]

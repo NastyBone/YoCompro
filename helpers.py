@@ -2,7 +2,13 @@ from unidecode import unidecode
 
 status_list = {"approved": "APPROVED", "in_review": "IN REVIEW", "rejected": "REJECTED"}
 roles_list = {"client": "CLIENT", "owner": "OWNER", "admin": "ADMIN"}
-filter_list = {"top_rated": "TOP_RATED", "newest": "NEWEST", "popular": "POPULAR"}
+filter_list = {
+    "top_rated": "TOP_RATED",
+    "newest": "NEWEST",
+    "popular": "POPULAR",
+    "nearest": "NEAREST",
+    "most_discount": "MOST_DISCOUNT",
+}
 type_list = {"brand": "BRAND", "bussiness": "BUSSINESS"}
 
 

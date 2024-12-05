@@ -140,8 +140,20 @@ def get_popular(city, start_page, end_page):
             """,
             (like_string(city), end_page, start_page),
         ).fetchall()
+        count = connection.execute(
+            f""" 
+            SELECT COUNT(*) as count FROM products p
+            JOIN stocks s ON s.product_id = p.id
+            JOIN bussiness b ON s.bussiness_id = b.id
+            JOIN lists_stocks l on l.stock_id = s.id
+            WHERE b.city LIKE ?
+            AND p.status = "APPROVED"
+            GROUP BY p.id
+            """,
+            (like_string(city),),
+        ).fetchone()
         connection.commit()
-        return res
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)
@@ -303,8 +315,19 @@ def get_top_rated(city, start_page, end_page):
             """,
             (like_string(city), end_page, start_page),
         ).fetchall()
+        count = connection.execute(
+            f""" 
+            SELECT COUNT(*) as count FROM products p
+            JOIN ratings r ON r.product_id = p.id
+            JOIN stocks s on s.product_id = p.id
+            JOIN bussiness b on s.bussiness_id = b.id
+            WHERE b.city LIKE ?
+            AND p.status = "APPROVED"
+            """,
+            (like_string(city),),
+        ).fetchone()
         connection.commit()
-        return res
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)
@@ -410,8 +433,19 @@ def get_newest(city, start_page, end_page):
             """,
             (like_string(city), end_page, start_page),
         ).fetchall()
+        count = connection.execute(
+            f""" 
+            SELECT COUNT(*) as count FROM products p
+           JOIN stocks s on s.product_id = p.id
+            JOIN bussiness b on s.bussiness_id = b.id
+            WHERE b.city LIKE ?
+            AND p.status = "APPROVED"
+            GROUP BY p.id
+            """,
+            (like_string(city),),
+        ).fetchone()
         connection.commit()
-        return res
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)

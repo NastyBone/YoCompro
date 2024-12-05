@@ -1,37 +1,46 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div id="search__for" class="tw-flex tw-flex-col tw-w-full">
+<form id="search__for" class="tw-flex tw-flex-col tw-w-full"
+    onsubmit="event.preventDefault(); return getResults(this);">
     <div class="container tw-mb-4">
         <!-- Search bar -->
-        <form id="search__input" class="input-group mb-3" onsubmit="event.preventDefault(); return getResults(this);">
+        <p class="tw-text-xl tw-mb-2">
+            Enter something you're looking for </p>
+        <div id="search__input" class="input-group mb-3">
 
             <button class="btn btn-primary" id="submit__search__button" type="submit">Search</button>
             <!-- Switch from products to bussiness -->
-            <select class="form-select flex-grow-0 w-auto" aria-label=".form-select-lg example" name="type">
+            <select class="form-select flex-grow-0 w-auto" aria-label=".form-select-lg example" name="type"
+                id="type__options" onchange="event.preventDefault(); return optionsFilterSetter(event.target.value)">
                 <option value="products" selected="selected">Products</option>
                 <option value="bussiness">Bussiness</option>
             </select>
 
             <input type="text" name="name" value="{{keyword}}" class="form-control">
             <input type="number" name="page" id="input_page" hidden="true">
-        </form>
+        </div>
 
-        <p class="tw-text-xl">{% if keyword %} Showing the results of: <span
-                class="tw-font-semibold">"{{keyword}}"</span>
-            {% else %} Enter something you're
-            looking
-            for
-            {% endif %}</p>
+
     </div>
     <div class="tw-flex">
         <!-- Sidebar -->
         <div id="search__sidebar"
             class="bg-primary-subtle text-color-baseblue p-2 tw-w-1/5 tw-rounded-[10px] tw-min-w-min">
+            <p class="tw-text-center tw-text-xl tw-font-semibold tw-m-3">Filters</p>
+            <select class="form-select flex-grow" aria-label=".form-select-lg example" name="filter"
+                id="filter__options">
+                <option class="filter-option" value="None" selected="selected">-- None --</option>
+                <option class="filter-option" value="popular">Popular</option>
+                <option class="filter-option" value="top_rated">Top Rated</option>
+                <option class="filter-option" value="newest">Newest</option>
+
+            </select>
             <p class="tw-text-center tw-text-xl tw-font-semibold tw-m-3">Tags</p>
             <div id="tags-area">
                 {% for tag in tag_list %}
-                <button id="{{ tag.id }}" class="btn btn-sm btn-outline-primary tw-m-1 tag-button">{{ tag.name
+                <button id="{{ tag.id }}" class="btn btn-sm btn-outline-primary tw-m-1 tag-button" type="button">{{
+                    tag.name
                     }}</button>
                 {% endfor %}
             </div>
@@ -44,15 +53,20 @@
                 id="search__elements">
 
                 {% for item in items %}
-                <div class="card">
-                    <div class="card-body tw-flex tw-flex-col tw-gap-1">
-                        <img src="{{ url_for('static', filename='images/generic.png') }}" alt=""
-                            class="img-card-top mb-2">
-                        <p class="card-title tw-text-lg tw-font-semibold"> {{item.name}}</p>
-                        <p class="card-text">{{item.description}}</p>
-                    </div>
-                </div>
-                {% endfor %}
+                {% if item.brand_id %}
+                <a class="card" href="{{url_for('products.find_by_slug', slug=item.slug)}}">
+                    {% else %}
+                    <a class="card" href="{{url_for('bussiness.find_by_slug', slug=item.slug)}}">
+
+                        {% endif %}
+                        <div class="card-body tw-flex tw-flex-col tw-gap-1">
+                            <img src="{{ url_for('static', filename='images/generic.png') }}" alt=""
+                                class="img-card-top mb-2">
+                            <p class="card-title tw-text-lg tw-font-semibold"> {{item.name}}</p>
+                            <p class="card-text">{{item.description}}</p>
+                        </div>
+                    </a>
+                    {% endfor %}
 
 
 
@@ -68,7 +82,7 @@
     </div>
 
 
-</div>
+</form>
 
 <!-- Pagination : EXPORT SCRIPT -->
 <script>
@@ -76,7 +90,6 @@
 
         const paginationArea = document.getElementById('pagination');
         const pagesCount = pages < 1 ? 1 : pages;
-        console.log(pagesCount)
         // Clear previous pagination
         paginationArea.innerHTML = '';
 
@@ -155,7 +168,52 @@
             });
         });
     });
+
+
     setPaginationElement(`{{pages}}`, 1)
+</script>
+<!-- Filter Options Setter -->
+<script>
+    function optionsFilterSetter(type) {
+        const optionsSelect = document.getElementById('filter__options');
+        optionsSelect.innerHTML = '';
+
+        const noneOption = document.createElement('option');
+        noneOption.innerText = "-- None --";
+        noneOption.value = "None"
+        optionsSelect.appendChild(noneOption)
+
+        const popularOption = document.createElement('option');
+        popularOption.innerText = "Popular";
+        popularOption.value = "popular"
+        optionsSelect.appendChild(popularOption)
+
+        const topRatedOption = document.createElement('option');
+        topRatedOption.innerText = "Top Rated"
+        topRatedOption.value = "top_rated"
+        optionsSelect.appendChild(topRatedOption)
+
+        if (type == 'products') {
+            const newestOption = document.createElement('option');
+            newestOption.innerText = "Newest";
+            newestOption.value = "newest"
+            optionsSelect.appendChild(newestOption)
+
+        } else {
+            const nearestOption = document.createElement('option');
+            nearestOption.innerText = "Nearest";
+            nearestOption.value = "nearest"
+            optionsSelect.appendChild(nearestOption)
+
+            const mostDiscountOption = document.createElement('option');
+            mostDiscountOption.innerText = "Most Discount";
+            mostDiscountOption.value = "most_discount"
+            optionsSelect.appendChild(mostDiscountOption)
+        }
+
+        setPaginationElement(`{{pages}}`, 1)
+        document.getElementById('input_page').value = 1
+    }
 </script>
 <!-- Requests -->
 <script>
@@ -167,9 +225,9 @@
                 tags.push(btn.id)
             }
         });
-
         const page = e.page.value
-        const response = await fetch(`/search/${e.type.value}?name=${e.name.value}${page > 1 ? '&page=' + page : ''}`, {
+        const toSearch = e.name.value ? `name=${e.name.value}` : `filter=${e.filter.value}`
+        const response = await fetch(`/search/${e.type.value}?${toSearch}${page > 1 ? '&page=' + page : ''}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -181,14 +239,14 @@
         const data = content.data
         const cardContainer = document.getElementById('search__elements')
         cardContainer.innerHTML = '';
-        const htmlContent = data.map(item => `<div class="card">
+        const htmlContent = data.map(item => `<a class="card" href=../${e.type.value}/search/${item.slug}>
                     <div class="card-body tw-flex tw-flex-col tw-gap-1">
                         <img src="{{ url_for('static', filename='images/generic.png') }}" alt=""
                             class="img-card-top mb-2">
                         <p class="card-title tw-text-lg tw-font-semibold"> ${item.name}</p>
                         <p class="card-text">${item.description}</p>
                     </div>
-                </div>`).join('')
+                </a>`).join('')
         cardContainer.innerHTML = htmlContent;
         const noResultsContainer = document.getElementById('not-results')
         if (data.length > 0) {
@@ -203,5 +261,11 @@
         return false
     }
 </script>
-
+<!-- Set Selects  -->
+<script>
+    const filterSelect = document.getElementById('filter__options');
+    filterSelect.value = `{{request.args.get("filter")}}` || "None"
+    const typeSelect = document.getElementById("type__options")
+    typeSelect.value = `{{request.args.get("type")}}` || "products"
+</script>
 {% endblock %}

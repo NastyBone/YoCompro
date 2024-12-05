@@ -20,8 +20,9 @@ VIEWS -------------------------- base.html navbar.html footer.html
 			* At which price
 			* At which distance
 		- Brand basic info X
-		- Load Images
+		- Load Images 
 		- Load ratings for products
+		- Load comments (another endpoint w pagination)
 
 
 	## BUSSINESS DETAILS - Bussiness/{slug} X 
@@ -30,10 +31,11 @@ VIEWS -------------------------- base.html navbar.html footer.html
 		- Popular Brands of that bussiness (limited) X
 		- Top discounts of that bussiness  (limited) X
 		- Load ratings for bussiness X
+		- Load comments (another endpoint w pagination)
 
-	## PRODUCTS MAIN - Products (add pagination) X
-		- Popular Products on City X /popular
-		- Recent Added Products X /newest
+	## PRODUCTS MAIN - Products (add pagination) X -- INSERT THIS INTO SEARCH
+		- Popular Products on City X /popular	   -- MODIFY SEARCH FOR PARAMS
+		- Recent Added Products X /newest		   -- PRODUCTS FROM BS/BR APART
 		- Top Rated Products X 
 	
 	## BUSSINESS MAIN - Bussiness (add pagination)
@@ -47,12 +49,10 @@ VIEWS -------------------------- base.html navbar.html footer.html
 			- Newes
 			- Top Rated
 		
-
 	## BRAND DETAILS - Brands
 		- Popular Products by Brand X
 		- Popular Bussiness with that brand X
-		- All Products
-			- Popular
+		- Products
 			- Newes
 			- Top Rated
 		
@@ -122,10 +122,11 @@ X Forbiden view
 
 - Add view more button to dashboards components, it will lead to full views (not limited, but paginated)
 - Add links to card items
-- Add joins on relations -- Be modified where needed
+- Add joins on relations and extra info -- Be modified where needed
 - Use slug only in searchs and gets specifics. Verify like_string searchs
 - Add status filtering from gets which requires approvation
 - Connect images
+- Export scripts
 X Add security layer using user_id (might be a route decorator, might not) (ratings, lists, bussiness, stocks) (take it from request)
 
 X Add guard to just make a single review
