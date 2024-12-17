@@ -184,3 +184,21 @@ def get_by_product_id(product_id):
     except Exception as error:
         print(error)
         raise Exception(error)
+
+
+def get_with_details(id):
+    try:
+        with sqlite3.connect("database.db") as connection:
+            connection.row_factory = dict_factory
+        res = connection.execute(
+            """SELECT * FROM brands br
+           WHERE br.id = 1
+            AND br.status = "APPROVED"
+                      """,
+            (id,),
+        ).fetchall()
+        connection.commit()
+        return res
+    except Exception as error:
+        print(error)
+        raise Exception(error)

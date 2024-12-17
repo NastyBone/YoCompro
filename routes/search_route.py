@@ -13,7 +13,7 @@ from services.bussiness_service import (
     get_popular as bussiness_popular,
     get_by_most_discount as bussiness_discount,
 )
-from services.tags_service import get_by_status
+from services.tags_service import get_all_by_status
 from helpers import to_tag_ids, set_pagination, filter_list
 
 search_bp = Blueprint("search", __name__)
@@ -67,7 +67,7 @@ def general_search():
                 [response, count] = bussiness_popular(
                     city, start_pagination, end_pagination
                 )
-    available_tags = get_by_status("approved")
+    available_tags = get_all_by_status("approved")
     return render_template(
         "search.html",
         items=response,

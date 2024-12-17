@@ -33,21 +33,17 @@ VIEWS -------------------------- base.html navbar.html footer.html
 		- Load ratings for bussiness X
 		- Load comments (another endpoint w pagination)
 
-	## PRODUCTS MAIN - Products (add pagination) X -- INSERT THIS INTO SEARCH
-		- Popular Products on City X /popular	   -- MODIFY SEARCH FOR PARAMS
-		- Recent Added Products X /newest		   -- PRODUCTS FROM BS/BR APART
+	## PRODUCTS MAIN - Products (add pagination) X -- DONE (SEARCH)
+		- Popular Products on City X /popular	   
+		- Recent Added Products X /newest		   
 		- Top Rated Products X 
 	
-	## BUSSINESS MAIN - Bussiness (add pagination)
+	## BUSSINESS MAIN - Bussiness (add pagination) X -- DONE (SEARCH)
 		- Popular Bussiness on City X / popular X
 		- Nearest Bussiness X / nearest X
 		- Most Discounts Bussiness on City X /discounts X
 		- Top Rated Bussiness X
 		- Newest Bussiness added X
-		- All Products X
-			- Popular
-			- Newes
-			- Top Rated
 		
 	## BRAND DETAILS - Brands
 		- Popular Products by Brand X
@@ -56,6 +52,7 @@ VIEWS -------------------------- base.html navbar.html footer.html
 			- Newes
 			- Top Rated
 		
+	## STILL REMAINS A LOT OF VIEWS, CHECK ENDPOINTS
 
 ### CLIENT
 
@@ -120,8 +117,8 @@ X Forbiden view
 
 ### NOTES
 
-- Add view more button to dashboards components, it will lead to full views (not limited, but paginated)
-- Add links to card items
+X Add view more button to dashboards components, it will lead to full views (not limited, but paginated)
+X Add links to card items
 - Add joins on relations and extra info -- Be modified where needed
 - Use slug only in searchs and gets specifics. Verify like_string searchs
 - Add status filtering from gets which requires approvation
@@ -148,3 +145,185 @@ X Verify not existing brand name
 X Become owner should redirect to create bussiness, that endpoint should call the change of user.role
 X Store user location on session
 
+-------------------- Review
+----------- DB
+users
+bussiness
+brands
+products
+ratings
+stocks
+lists
+	list_stocks
+tags
+	tags_bussiness
+	tags_products
+images
+	images_bussiness
+	images_brands
+	images_products
+	documents_owners
+	documents_bussiness
+
+----------- SERVICES
+users (purple)
+- CRUDs
+- get id by email
+- update role
+- get w password
+- update password
+
+bussiness (blue)
+- CRUDs
+- Change status
+- Get by slug
+- Get popular by brand
+- Get popular by city & limited
+- Get top by city & limited
+- Get most discount & limited
+- Get nearest & limited
+- Get most discount by bussness
+- Get by owner all, popular & top 
+- Get bussiness by product
+- Get newest 
+- Get search by bussiness
+
+brands (green)
+- CRUDs
+- Change status
+- Get by name
+- Get popular
+- Get by product id
+
+products (red)
+- CRUDs
+- Change Status
+- Get by slug
+- Get popular by city & limited & bussiness & bussiness limited & brand & brand limited & owner
+- Get top by city & limited & brand & bussiness & owner
+- Get newest & limited & brand & bussiness 
+- Get details
+- Get by brand
+- Get by filter (discard)
+- Get by discounts 
+- Get all by discounts
+- Get nearest (discard?)
+
+ratings (yellow)
+- CRUDs
+- Get by user, product, bussiness
+- Get avg by product, bussiness
+stocks (gray)
+- CRUDs
+- Get by business
+lists  (orange)
+- CRD
+- Get by user
+- Insert product
+- Remove product
+
+tags
+images
+
+----------- ENDPOINTS
+users
+- CRUDs
+- become owner
+- edit profile
+- get list
+- get ratings
+
+bussiness
+- CRUDs
+- Edit status
+- create & edit form
+- find by slug & product slug & most discount & popular & nearest & top rated & newest & product filter
+
+brands
+- CRUDs
+- edit status
+- create & edit form
+- popular bussiness
+- find by product filter
+
+products
+- CRUDs
+- edit status
+- edit & create form
+- find by slug & popular & newest & top rated & discount & all discount 
+
+ratings
+- CRUD
+- get by user & bussiness & product & avg bussiness & avg product
+
+stocks
+- CRUDs
+- edit & create form
+- find by bussiness
+
+lists
+- CRUD
+- find by user
+- add prod
+- remove prod
+
+dashboard white 
+	- main
+
+tags
+
+search cyan
+- general
+- by product & by bussiness
+
+owner (lila)
+- main
+- all
+- find by pop bussiness & unpop bussiness & less rated bussiness & top rated bussiness & (top less) rated products & (pop & unpop) products & stocks by slug
+
+--------------- VIEWS
+admin
+- brand manager
+- bussiness manager
+- product manager
+- tag manager
+
+dashboard
+- admin dashboard
+- client dashboard
+- owner dashboard
+
+- search
+
+details (green)
+- products details
+- brand details
+- bussiness details
+
+forms create (red)
+- create brand
+- create bussiness
+- create stock
+- create product
+
+forms edit (purple)
+- edit brand
+- edit bussiness
+- edit stock
+- edit product
+
+lists 
+- list bussiness
+- list products
+
+search
+- bussiness -> products 
+- brands -> bussiness & products
+- clients -> bussiness & products
+- owners -> bussiness & products
+- admin -> bussiness, brands, products, tags, users
+- products -> bussiness
+
+user 
+- edit profile
+- become owner

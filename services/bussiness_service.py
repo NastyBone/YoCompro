@@ -690,6 +690,50 @@ def search_on_bussiness(word, bussiness_id, start_page, end_page):
         raise Exception(error)
 
 
+def get_by_status(status, start_page, end_page, word=""):
+    try:
+        if status not in status_list:
+            raise ValueError("Not in list")
+        with sqlite3.connect("database.db") as connection:
+            connection.row_factory = dict_factory
+        res = connection.execute(
+            """
+            SELECT * FROM bussiness WHERE status = ? AND name LIKE ? ORDER BY name  
+            LIMIT ?
+            OFFSET ?
+           """,
+            (status_list[status], word, end_page, start_page),
+        ).fetchall()
+        count = connection.execute(
+            """
+        SELECT COUNT(*) as count FROM bussiness WHERE status = ? AND name LIKE ?
+        """
+        )
+        connection.commit()
+        return [res, count["count"]]
+    except Exception as error:
+        print(error)
+        raise Exception(error)
+
+
+def get_with_details(id):
+    try:
+        with sqlite3.connect("database.db") as connection:
+            connection.row_factory = dict_factory
+        res = connection.execute(
+            """SELECT b.*, u.name as user_name, u.email as user_email FROM bussiness b
+JOIN users u ON b.user_id = u.id
+           WHERE b.id = ?
+            AND b.status = "APPROVED""",
+            (id,),
+        ).fetchall()
+        connection.commit()
+        return res
+    except Exception as error:
+        print(error)
+        raise Exception(error)
+
+
 def tags_setter(bussiness_id, tags):
     try:
         with sqlite3.connect("database.db") as connection:

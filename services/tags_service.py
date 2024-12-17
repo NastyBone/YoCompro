@@ -28,15 +28,43 @@ def get_all():
         raise Exception(error)
 
 
-def get_by_status(status):
+def get_by_status(status, start_page, end_page, word=""):
     try:
         if status not in status_list:
             raise ValueError("Not in list")
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            "SELECT * FROM tags WHERE status = ? ORDER BY name", (status_list[status],)
+            """
+            SELECT * FROM tags WHERE status = ? AND name LIKE ? ORDER BY name  
+            LIMIT ?
+            OFFSET ?
+           """,
+            (status_list[status], word, end_page, start_page),
         ).fetchall()
+        count = connection.execute(
+            """
+        SELECT COUNT(*) as count FROM tags WHERE status = ? AND name LIKE ?
+        """
+        )
+        connection.commit()
+        return [res, count["count"]]
+    except Exception as error:
+        print(error)
+        raise Exception(error)
+
+
+def get_all_by_status(status):
+    try:
+        if status not in status_list:
+            raise ValueError("Not in list")
+        with sqlite3.connect("database.db") as connection:
+            connection.row_factory = dict_factory
+        res = connection.execute(
+            """SELECT * FROM tags WHERE status = ?  ORDER BY name""",
+            (status_list[status]),
+        ).fetchall()
+
         connection.commit()
         return res
     except Exception as error:

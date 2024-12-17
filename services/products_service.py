@@ -537,8 +537,9 @@ def get_with_details(id):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """SELECT * FROM products p
-                   WHERE id = ?
+            """SELECT p.*, br.name as brand_name, br.slug as brand_slug, br.country as brand_country FROM products p
+JOIN brands br ON br.id = p.brand_id
+           WHERE p.id = ?
             AND p.status = "APPROVED"
                       """,
             (id,),
@@ -798,6 +799,32 @@ ORDER BY distance ASC""",
 
         connection.commit()
         return res
+    except Exception as error:
+        print(error)
+        raise Exception(error)
+
+
+def get_by_status(status, start_page, end_page, word=""):
+    try:
+        if status not in status_list:
+            raise ValueError("Not in list")
+        with sqlite3.connect("database.db") as connection:
+            connection.row_factory = dict_factory
+        res = connection.execute(
+            """
+            SELECT * FROM products WHERE status = ? AND name LIKE ? ORDER BY name  
+            LIMIT ?
+            OFFSET ?
+           """,
+            (status_list[status], word, end_page, start_page),
+        ).fetchall()
+        count = connection.execute(
+            """
+        SELECT COUNT(*) as count FRON products WHERE status = ? AND name LIKE ?
+        """
+        )
+        connection.commit()
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)
