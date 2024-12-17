@@ -124,6 +124,7 @@ X Add links to card items
 - Add status filtering from gets which requires approvation
 - Connect images
 - Export scripts
+- SQL injection on end_date and start_date
 X Add security layer using user_id (might be a route decorator, might not) (ratings, lists, bussiness, stocks) (take it from request)
 
 X Add guard to just make a single review
@@ -144,6 +145,7 @@ X Verify not existing product name
 X Verify not existing brand name
 X Become owner should redirect to create bussiness, that endpoint should call the change of user.role
 X Store user location on session
+
 
 -------------------- Review
 ----------- DB

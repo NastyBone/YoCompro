@@ -150,13 +150,20 @@ def get_by_slug(slug):
 
 
 # DONE: Popular Bussiness with that brand
-def get_popular_by_brand(city, slug, page_start, page_end):
+def get_popular_by_brand(
+    city, slug, limited=False, start_page=None, end_page=None, order="DESC"
+):
     try:
-
+        limited_clause = "LIMIT 5" if limited else ""
+        pagination_clause = (
+            f"LIMIT {end_page} OFFSET {start_page}"
+            if start_page is not None and end_page is not None
+            else ""
+        )
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """
+            f"""
             SELECT b.*, COUNT(l.id) as count FROM bussiness b
             JOIN stocks s on s.bussiness_id = b.id 
             JOIN lists_stocks l on l.stock_id = s.id 
@@ -165,15 +172,13 @@ def get_popular_by_brand(city, slug, page_start, page_end):
             WHERE city LIKE ? AND br.slug LIKE ?
             AND b.status = "APPROVED"
             GROUP BY b.id 
-            ORDER BY count DESC
-            LIMIT ?
-            OFFSET ?
+            ORDER BY count {order}
+            {limited_clause}
+            {pagination_clause}
             """,
             (
                 like_string(city),
                 like_string(slug),
-                page_end,
-                page_start,
             ),
         ).fetchall()
         connection.commit()
@@ -382,19 +387,28 @@ def get_by_most_discount_limited(city):
 
 
 # DONE Top discounts of that bussiness
-def get_most_discount_by_bussiness(bussiness_id):
+def get_most_discount_by_bussiness(
+    bussiness_id, limited=False, start_page=None, end_page=None, order="DESC"
+):
     try:
-
+        limited_clause = "LIMIT 5" if limited else ""
+        pagination_clause = (
+            f"LIMIT {end_page} OFFSET {start_page}"
+            if start_page is not None and end_page is not None
+            else ""
+        )
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """
+            f"""
             SELECT p.*, AVG(s.discount) as avg_disc FROM products p
             JOIN stocks s ON s.product_id = p.id
             JOIN bussiness b ON b.id = s.bussinesS_id
             WHERE b.id = ?
             AND b.status = "APPROVED"
-            ORDER BY avg_disc DESC
+            ORDER BY avg_disc {order}
+            {limited_clause}
+            {pagination_clause}
             """,
             (bussiness_id,),
         ).fetchall()

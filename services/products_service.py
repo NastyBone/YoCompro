@@ -185,23 +185,31 @@ def get_popular_limited(city):
 
 
 # DONE: Popular Products of that bussiness
-def get_popular_by_bussiness(slug, start_page, end_page):
+def get_popular_by_bussiness(
+    slug, limited=False, start_page=None, end_page=None, order="DESC"
+):
     try:
+        limited_clause = "LIMIT 5" if limited else ""
+        pagination_clause = (
+            f"LIMIT {end_page} OFFSET {start_page}"
+            if start_page is not None and end_page is not None
+            else ""
+        )
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """
+            f"""
             SELECT p.*, COUNT(l.id) as count FROM products p
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = s.id
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.slug LIKE ?
             GROUP BY p.id
-            ORDER BY count
-            LIMIT ?
-            OFFSET ?
+            ORDER BY count {order}
+            {limited_clause}
+            {pagination_clause}
             """,
-            (like_string(slug), end_page, start_page),
+            (like_string(slug),),
         ).fetchall()
         connection.commit()
         return res
@@ -211,23 +219,31 @@ def get_popular_by_bussiness(slug, start_page, end_page):
 
 
 # DONE: Popular Products by Brand
-def get_popular_by_brand(slug, start_page, end_page):
+def get_popular_by_brand(
+    slug, limited=False, start_page=None, end_page=None, order="DESC"
+):
     try:
+        limited_clause = "LIMIT 5" if limited else ""
+        pagination_clause = (
+            f"LIMIT {end_page} OFFSET {start_page}"
+            if start_page is not None and end_page is not None
+            else ""
+        )
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """
+            f"""
             SELECT p.*, COUNT(l.id) as count FROM products p
             JOIN stocks s on s.product_id = p.id
             JOIN lists_stocks l on l.stock_id = s.id
             JOIN brands br on p.brand_id = br.id
             AND br.slug LIKE ?
             GROUP BY p.id
-            ORDER BY count DESC
-            LIMIT ?
-            OFFSET ?
+            ORDER BY count {order}
+            {limited_clause}
+            {pagination_clause}
             """,
-            (like_string(slug), end_page, start_page),
+            (like_string(slug),),
         ).fetchall()
         connection.commit()
         print(res)
@@ -242,55 +258,55 @@ def get_popular_by_brand(slug, start_page, end_page):
 # DONE: Popular Products by Bussiness (limited)
 
 
-def get_popular_by_bussiness_limited(id):
-    try:
-        with sqlite3.connect("database.db") as connection:
-            connection.row_factory = dict_factory
-        res = connection.execute(
-            """
-            SELECT p.*, COUNT(l.id) as count FROM products p
-            JOIN stocks s on s.product_id = p.id
-            JOIN bussiness b on s.bussiness_id = b.id
-            JOIN lists_stocks l on l.stock_id = s.id
-            WHERE b.id = ?
-            AND p.status = "APPROVED"
-            GROUP BY p.id
-            ORDER BY count
-            LIMIT 5
-            """,
-            (id,),
-        ).fetchall()
-        connection.commit()
-        return res
-    except Exception as error:
-        print(error)
-        raise Exception(error)
+# def get_popular_by_bussiness_limited(id):
+#     try:
+#         with sqlite3.connect("database.db") as connection:
+#             connection.row_factory = dict_factory
+#         res = connection.execute(
+#             """
+#             SELECT p.*, COUNT(l.id) as count FROM products p
+#             JOIN stocks s on s.product_id = p.id
+#             JOIN bussiness b on s.bussiness_id = b.id
+#             JOIN lists_stocks l on l.stock_id = s.id
+#             WHERE b.id = ?
+#             AND p.status = "APPROVED"
+#             GROUP BY p.id
+#             ORDER BY count
+#             LIMIT 5
+#             """,
+#             (id,),
+#         ).fetchall()
+#         connection.commit()
+#         return res
+#     except Exception as error:
+#         print(error)
+#         raise Exception(error)
 
 
 # DONE: Popular Products by Brand (limited)
-def get_popular_by_brand_limited(brand_id, city):
-    try:
-        with sqlite3.connect("database.db") as connection:
-            connection.row_factory = dict_factory
-        res = connection.execute(
-            """
-            SELECT p.*, COUNT(l.id) as count FROM products p
-            JOIN stocks s on s.product_id = p.id
-            JOIN lists_stocks l on l.stock_id = s.id
-            JOIN brands br on p.brand_id = br.id
-            WHERE b.city LIKE ? AND br.id = ?
-            AND p.status = "APPROVED"
-            GROUP BY p.id
-            ORDER BY count
-            LIMIT 5
-            """,
-            (like_string(city), brand_id),
-        ).fetchall()
-        connection.commit()
-        return res
-    except Exception as error:
-        print(error)
-        raise Exception(error)
+# def get_popular_by_brand_limited(brand_id, city):
+#     try:
+#         with sqlite3.connect("database.db") as connection:
+#             connection.row_factory = dict_factory
+#         res = connection.execute(
+#             """
+#             SELECT p.*, COUNT(l.id) as count FROM products p
+#             JOIN stocks s on s.product_id = p.id
+#             JOIN lists_stocks l on l.stock_id = s.id
+#             JOIN brands br on p.brand_id = br.id
+#             WHERE b.city LIKE ? AND br.id = ?
+#             AND p.status = "APPROVED"
+#             GROUP BY p.id
+#             ORDER BY count
+#             LIMIT 5
+#             """,
+#             (like_string(city), brand_id),
+#         ).fetchall()
+#         connection.commit()
+#         return res
+#     except Exception as error:
+#         print(error)
+#         raise Exception(error)
 
 
 #############################################
@@ -359,24 +375,31 @@ def get_top_rated_limited(city):
 
 
 # DONE: Top Rated Products By Brand
-def get_top_rated_by_brand(slug, start_page, end_page):
+def get_top_rated_by_brand(
+    slug, limited=False, start_page=None, end_page=None, order="DESC"
+):
     try:
-
+        limited_clause = "LIMIT 5" if limited else ""
+        pagination_clause = (
+            f"LIMIT {end_page} OFFSET {start_page}"
+            if start_page is not None and end_page is not None
+            else ""
+        )
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """
+            f"""
             SELECT p.*, AVG(r.score) as avg_score, COUNT(r.score) as count FROM products p
             JOIN ratings r ON r.product_id = p.id
             JOIN brands br on p.brand_id = br.id
             WHERE br.slug LIKE ?
             AND p.status = "APPROVED"
             GROUP BY p.id
-            ORDER BY avg_score DESC
-            LIMIT ?
-            OFFSET ?
+            ORDER BY avg_score {order}
+            {limited_clause}
+            {pagination_clause}
             """,
-            (like_string(slug), end_page, start_page),
+            (like_string(slug),),
         ).fetchall()
         connection.commit()
         return res
@@ -386,23 +409,31 @@ def get_top_rated_by_brand(slug, start_page, end_page):
 
 
 # DONE: Top Rated Products By Bussiness
-def get_top_rated_by_bussiness(slug, start_page, end_page):
+def get_top_rated_by_bussiness(
+    slug, limited=False, start_page=None, end_page=None, order="DESC"
+):
     try:
+        limited_clause = "LIMIT 5" if limited else ""
+        pagination_clause = (
+            f"LIMIT {end_page} OFFSET {start_page}"
+            if start_page is not None and end_page is not None
+            else ""
+        )
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """
+            f"""
             SELECT p.*, AVG(r.score) as avg_score FROM products p
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = s.id
             JOIN ratings r ON r.product_id = p.id
             WHERE b.slug LIKE ?
             AND p.status = "APPROVED"
-            ORDER BY avg_score DESC
-            LIMIT ?
-            OFFSET ? 
+            ORDER BY avg_score  {order}
+            {limited_clause}
+            {pagination_clause}
             """,
-            (like_string(slug), end_page, start_page),
+            (like_string(slug),),
         ).fetchall()
         connection.commit()
         return res
@@ -476,26 +507,30 @@ def get_newest_limited(city):
 
 
 # DONE Recent Added Products
-def get_newest_by_brand(slug, start_page, end_page):
+def get_newest_by_brand(
+    slug, limited=False, start_page=None, end_page=None, order="DESC"
+):
     try:
+        limited_clause = "LIMIT 5" if limited else ""
+        pagination_clause = (
+            f"LIMIT {end_page} OFFSET {start_page}"
+            if start_page is not None and end_page is not None
+            else ""
+        )
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """
+            f"""
             SELECT p.* FROM products p
             JOIN brands br on p.brand_id = br.id
             WHERE br.slug LIKE ?
             AND p.status = "APPROVED"
             GROUP BY p.id
-            ORDER BY p.created_at
-            LIMIT ?
-            OFFSET ?
+            ORDER BY p.created_at {order}
+            {limited_clause}
+            {pagination_clause}
             """,
-            (
-                like_string(slug),
-                end_page,
-                start_page,
-            ),
+            (like_string(slug),),
         ).fetchall()
         connection.commit()
         return res
@@ -505,22 +540,30 @@ def get_newest_by_brand(slug, start_page, end_page):
 
 
 # DONE Recent Added Products
-def get_newest_by_bussiness(slug, start_page, end_page):
+def get_newest_by_bussiness(
+    slug, limited=False, start_page=None, end_page=None, order="DESC"
+):
     try:
+        limited_clause = "LIMIT 5" if limited else ""
+        pagination_clause = (
+            f"LIMIT {end_page} OFFSET {start_page}"
+            if start_page is not None and end_page is not None
+            else ""
+        )
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """
+            f"""
             SELECT p.*, FROM products p
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = s.id
             WHERE b.slug LIKE ?
             GROUP BY p.id
-            ORDER BY p.created_at
-            LIMIT ?
-            OFFSET ? 
+            ORDER BY p.created_at {order}
+            {limited_clause}
+            {pagination_clause}
             """,
-            (like_string(slug), end_page, start_page),
+            (like_string(slug),),
         ).fetchall()
         connection.commit()
         return res
