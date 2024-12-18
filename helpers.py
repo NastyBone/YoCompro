@@ -40,3 +40,17 @@ def dict_factory(cursor, row):
 
 def like_string(string):
     return "%" + string + "%"
+
+
+def limit_or_pagination(limited, start_page, end_page):
+    if (start_page == None and end_page == None) or not (
+        isinstance(start_page, int) and isinstance(end_page, int)
+    ):
+        raise ValueError("start_page and end_page must be integers.")
+    limited_clause = "LIMIT 5" if limited else ""
+    pagination_clause = (
+        f"LIMIT {int(end_page)} OFFSET {start_page}"
+        if start_page is not None and end_page is not None
+        else ""
+    )
+    return f"{limited_clause} {pagination_clause}"

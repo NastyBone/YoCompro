@@ -1,6 +1,12 @@
 import sqlite3
 from classes.bussiness_class import *
-from helpers import status_list, dict_factory, like_string, slug_builder
+from helpers import (
+    limit_or_pagination,
+    status_list,
+    dict_factory,
+    like_string,
+    slug_builder,
+)
 
 
 def get(id):
@@ -154,12 +160,6 @@ def get_popular_by_brand(
     city, slug, limited=False, start_page=None, end_page=None, order="DESC"
 ):
     try:
-        limited_clause = "LIMIT 5" if limited else ""
-        pagination_clause = (
-            f"LIMIT {end_page} OFFSET {start_page}"
-            if start_page is not None and end_page is not None
-            else ""
-        )
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
@@ -173,16 +173,30 @@ def get_popular_by_brand(
             AND b.status = "APPROVED"
             GROUP BY b.id 
             ORDER BY count {order}
-            {limited_clause}
-            {pagination_clause}
+            {limit_or_pagination(limited, start_page, end_page)}
             """,
             (
                 like_string(city),
                 like_string(slug),
             ),
         ).fetchall()
+        count = {count: ""}
+        if not limited:
+            count = connection.execute(
+                f""" 
+            SELECT COUNT(*) as count FROM bussiness b
+            JOIN stocks s on s.bussiness_id = b.id 
+            JOIN lists_stocks l on l.stock_id = s.id 
+            JOIN products p on s.product_id = p.id
+            JOIN brands br on p.brand_id = br.id
+            WHERE city LIKE ? AND br.slug LIKE ?
+            AND b.status = "APPROVED"
+            GROUP BY b.id 
+            """,
+                (like_string(city),),
+            ).fetchone()
         connection.commit()
-        return res
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)
@@ -391,12 +405,6 @@ def get_most_discount_by_bussiness(
     bussiness_id, limited=False, start_page=None, end_page=None, order="DESC"
 ):
     try:
-        limited_clause = "LIMIT 5" if limited else ""
-        pagination_clause = (
-            f"LIMIT {end_page} OFFSET {start_page}"
-            if start_page is not None and end_page is not None
-            else ""
-        )
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
@@ -407,14 +415,26 @@ def get_most_discount_by_bussiness(
             WHERE b.id = ?
             AND b.status = "APPROVED"
             ORDER BY avg_disc {order}
-            {limited_clause}
-            {pagination_clause}
+            {limit_or_pagination(limited, start_page, end_page)}
             """,
             (bussiness_id,),
         ).fetchall()
 
+        count = {count: ""}
+        if not limited:
+            count = connection.execute(
+                f""" 
+             SELECT p.*, AVG(s.discount) as avg_disc FROM products p
+            JOIN stocks s ON s.product_id = p.id
+            JOIN bussiness b ON b.id = s.bussinesS_id
+            WHERE b.id = ?
+            AND b.status = "APPROVED"
+            GROUP BY b.id 
+            """,
+                (bussiness_id,),
+            ).fetchone()
         connection.commit()
-        return res
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)
@@ -425,12 +445,6 @@ def get_by_owner_popular(
     owner_id, limited=False, start_page=None, end_page=None, order="DESC"
 ):
     try:
-        pagination_clause = ""
-        limited_clause = ""
-        if limited:
-            limited_clause = "LIMIT 5"
-        if start_page and end_page:
-            pagination_clause = f"LIMIT {end_page} OFFSET {start_page}"
         int(owner_id)
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
@@ -443,14 +457,25 @@ def get_by_owner_popular(
             AND b.status = "APPROVED"
             GROUP BY b.id
             ORDER BY count {order}
-            {limited_clause}
-            {pagination_clause}
+            {limit_or_pagination(limited, start_page, end_page)}
             """,
             (owner_id,),
         ).fetchall()
-
+        count = {count: ""}
+        if not limited:
+            count = connection.execute(
+                f""" 
+            SELECT COUNT(*) as count FROM bussiness b
+            JOIN stocks s on s.bussiness_id = b.id
+            JOIN lists_stocks l on l.stock_id = s.id
+            WHERE b.user_id = ?
+            AND b.status = "APPROVED"
+            GROUP BY b.id 
+            """,
+                (owner_id,),
+            ).fetchone()
         connection.commit()
-        return res
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)
@@ -462,12 +487,6 @@ def get_by_owner_top_rated(
 ):
     try:
         int(owner_id)
-        limited_clause = ""
-        pagination_clause = ""
-        if limited:
-            limited_clause = "LIMIT 5"
-        if start_page and end_page:
-            pagination_clause = f"LIMIT {end_page} OFFSET {start_page}"
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
@@ -477,14 +496,24 @@ def get_by_owner_top_rated(
             WHERE b.user_id = ?
             AND b.status = "APPROVED"
             ORDER BY avg_score {order}
-            {limited_clause}
-            {pagination_clause}
+            {limit_or_pagination(limited, start_page, end_page)}
             """,
             (owner_id,),
         ).fetchall()
-
+        count = {count: ""}
+        if not limited:
+            count = connection.execute(
+                f""" 
+            SELECT COUNT(*) as count FROM bussiness b
+            JOIN ratings ON ratings.bussiness_id = b.id
+            WHERE b.user_id = ?
+            AND b.status = "APPROVED"
+            GROUP BY b.id 
+            """,
+                (owner_id,),
+            ).fetchone()
         connection.commit()
-        return res
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)
@@ -632,24 +661,79 @@ LIMIT 5""",
         raise Exception(error)
 
 
-# DONE: Bussiness which have that product
-def get_bussiness_has_product(product_id):
+# DONE: Bussiness which have that product by cheap
+def get_bussiness_has_product_by_price(
+    product_id, limited=False, start_page=None, end_page=None, order="DESC"
+):
     try:
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """
+            f"""
             SELECT b.*, s.price FROM bussiness b
             JOIN stocks s on s.bussiness_id = b.id 
             JOIN products p on s.product_id = p.id
             WHERE p.id = ?
             AND b.status = "APPROVED"
+            ORDER BY s.price {order}
+            {limit_or_pagination(limited, start_page, end_page)}
             GROUP BY b.id
             """,
             (product_id,),
         ).fetchall()
+        count = {count: ""}
+        if not limited:
+            count = connection.execute(
+                f""" 
+            SELECT COUNT(*) as count FROM bussiness b
+            JOIN stocks s on s.bussiness_id = b.id 
+            JOIN products p on s.product_id = p.id
+            WHERE p.id = ?
+            AND b.status = "APPROVED"
+            GROUP BY b.id 
+            """,
+                (product_id,),
+            ).fetchone()
         connection.commit()
-        return res
+        return [res, count["count"]]
+    except Exception as error:
+        print(error)
+        raise Exception(error)
+
+
+# DONE: Bussiness which have that product by distance
+def get_bussiness_has_product_by_distance(
+    product_id, limited=False, start_page=None, end_page=None, order="DESC"
+):
+    try:
+        with sqlite3.connect("database.db") as connection:
+            connection.row_factory = dict_factory
+        res = connection.execute(
+            f"""
+            SELECT b.*, ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance
+            JOIN products p on s.product_id = p.id
+            WHERE p.id = ?
+            AND b.status = "APPROVED"
+            ORDER BY distance {order}
+            {limit_or_pagination(limited, start_page, end_page)}
+            GROUP BY b.id
+            """,
+            (product_id,),
+        ).fetchall()
+        count = {count: ""}
+        if not limited:
+            count = connection.execute(
+                f""" 
+            SELECT COUNT(*) as count FROM bussiness b
+            JOIN products p on s.product_id = p.id
+            WHERE p.id = ?
+            AND b.status = "APPROVED"
+            GROUP BY b.id 
+            """,
+                (product_id,),
+            ).fetchone()
+        connection.commit()
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)

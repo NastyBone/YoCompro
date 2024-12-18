@@ -1,6 +1,6 @@
 import sqlite3
 from classes.rating_class import *
-from helpers import dict_factory
+from helpers import dict_factory, limit_or_pagination
 
 
 def get(id):
@@ -87,16 +87,26 @@ def delete(id):
 # DONE: Get comment by user
 
 
-def get_by_user(user_id):
+def get_by_user(user_id, limited=False, start_page=None, end_page=None, order="DESC"):
     try:
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            "SELECT * FROM ratings WHERE user_id = ?", (user_id,)
+            f"""SELECT * FROM ratings WHERE user_id = ?
+            {limit_or_pagination(limited, start_page, end_page)}
+            """,
+            (user_id,),
         ).fetchall()
-
+        count = {count: ""}
+        if not limited:
+            count = connection.execute(
+                f""" 
+           SELECT COUNT(*) as count FROM ratings WHERE  user_id = ?
+            """,
+                (user_id,),
+            ).fetchone()
         connection.commit()
-        return res
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)
@@ -107,23 +117,23 @@ def get_by_bussiness(
     bussiness_id, limited=False, start_page=None, end_page=None, order="DESC"
 ):
     try:
-        limited_clause = "LIMIT 5" if limited else ""
-        pagination_clause = (
-            f"LIMIT {end_page} OFFSET {start_page}"
-            if start_page is not None and end_page is not None
-            else ""
-        )
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            f"""SELECT *  FROM ratings WHERE bussiness_id = ? {order}
-            {limited_clause}
-            {pagination_clause}""",
+            f"""SELECT *  FROM ratings WHERE bussiness_id = ? ORDER BY score{order}
+            {limit_or_pagination(limited, start_page, end_page)}""",
             (bussiness_id,),
         ).fetchall()
-
+        count = {count: ""}
+        if not limited:
+            count = connection.execute(
+                f""" 
+           SELECT COUNT(*) as count FROM ratings WHERE bussiness_id = ?
+            """,
+                (bussiness_id,),
+            ).fetchone()
         connection.commit()
-        return res
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)
@@ -134,23 +144,23 @@ def get_by_product(
     product_id, limited=False, start_page=None, end_page=None, order="DESC"
 ):
     try:
-        limited_clause = "LIMIT 5" if limited else ""
-        pagination_clause = (
-            f"LIMIT {end_page} OFFSET {start_page}"
-            if start_page is not None and end_page is not None
-            else ""
-        )
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""SELECT * FROM ratings WHERE product_id = ? ORDER BY score {order}
-            {limited_clause}
-            {pagination_clause}""",
+            {limit_or_pagination(limited, start_page, end_page)}""",
             (product_id,),
         ).fetchall()
-
+        count = {count: ""}
+        if not limited:
+            count = connection.execute(
+                f""" 
+           SELECT COUNT(*) as count FROM ratings WHERE product_id = ? 
+            """,
+                (product_id,),
+            ).fetchone()
         connection.commit()
-        return res
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)
