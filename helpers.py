@@ -8,6 +8,7 @@ filter_list = {
     "popular": "POPULAR",
     "nearest": "NEAREST",
     "most_discount": "MOST_DISCOUNT",
+    "cheapest": "CHEAPEST",
 }
 type_list = {"brand": "BRAND", "bussiness": "BUSSINESS"}
 
@@ -39,11 +40,12 @@ def dict_factory(cursor, row):
 
 
 def like_string(string):
-    return "%" + string + "%"
+    return "%" + str(string) + "%"
 
 
 def limit_or_pagination(limited, start_page, end_page):
-    if (start_page == None and end_page == None) or not (
+    print(f"********{start_page}********{end_page}")
+    if (start_page != None and end_page != None) and not (
         isinstance(start_page, int) and isinstance(end_page, int)
     ):
         raise ValueError("start_page and end_page must be integers.")

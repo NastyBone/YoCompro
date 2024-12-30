@@ -111,7 +111,8 @@ def get_by_slug(name):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """SELECT * FROM products WHERE slug LIKE ?""", ((like_string(name)),)
+            """SELECT p.*, AVG(score) FROM products p JOIN ratings r ON r.product_id = p.id WHERE slug LIKE ?""",
+            ((like_string(name)),),
         ).fetchall()
         connection.commit()
         return res
@@ -127,10 +128,11 @@ def get_popular(city, start_page, end_page):
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-            SELECT p.*, COUNT(l.id) as count FROM products p
+            SELECT p.*, score, COUNT(l.id) as count FROM products p
             JOIN stocks s ON s.product_id = p.id
             JOIN bussiness b ON s.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id
+            JOIN ratings r ON r.product_id = p.id
             WHERE b.city LIKE ?
             AND p.status = "APPROVED"
             GROUP BY p.id
@@ -205,7 +207,7 @@ def get_popular_by_bussiness(
             """,
             (like_string(slug),),
         ).fetchall()
-        count = {count: ""}
+        count = {"count": ""}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -246,7 +248,7 @@ def get_popular_by_brand(
             """,
             (like_string(slug),),
         ).fetchall()
-        count = {count: ""}
+        count = {"count": ""}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -408,7 +410,7 @@ def get_top_rated_by_brand(
             """,
             (like_string(slug),),
         ).fetchall()
-        count = {count: ""}
+        count = {"count": ""}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -448,7 +450,7 @@ def get_top_rated_by_bussiness(
             """,
             (like_string(slug),),
         ).fetchall()
-        count = {count: ""}
+        count = {"count": ""}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -552,7 +554,7 @@ def get_newest_by_brand(
             """,
             (like_string(slug),),
         ).fetchall()
-        count = {count: ""}
+        count = {"count": ""}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -580,7 +582,7 @@ def get_newest_by_bussiness(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT p.*, FROM products p
+            SELECT p.* FROM products p
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = s.id
             WHERE b.slug LIKE ?
@@ -591,7 +593,7 @@ def get_newest_by_bussiness(
             """,
             (like_string(slug),),
         ).fetchall()
-        count = {count: ""}
+        count = {"count": ""}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -682,7 +684,7 @@ def get_popular_by_owner(
             """,
             (owner_id,),
         ).fetchall()
-        count = {count: ""}
+        count = {"count": ""}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -724,7 +726,7 @@ def get_top_rated_by_owner(
             """,
             (owner_id,),
         ).fetchall()
-        count = {count: ""}
+        count = {"count": ""}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -900,25 +902,25 @@ ORDER BY distance ASC""",
         raise Exception(error)
 
 
-def get_by_status(status, start_page, end_page, word=""):
+def get_by_status(status, start_page, end_page, word):
     try:
         if status not in status_list:
             raise ValueError("Not in list")
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """
+            f"""
             SELECT * FROM products WHERE status = ? AND name LIKE ? ORDER BY name  
-            LIMIT ?
-            OFFSET ?
+            {limit_or_pagination(False, start_page, end_page)}
            """,
-            (status_list[status], word, end_page, start_page),
+            (status_list[status], like_string(word)),
         ).fetchall()
         count = connection.execute(
             """
-        SELECT COUNT(*) as count FRON products WHERE status = ? AND name LIKE ?
-        """
-        )
+        SELECT COUNT(*) as count FROM products WHERE status = ? AND name LIKE ?
+        """,
+            (status_list[status], like_string(word)),
+        ).fetchone()
         connection.commit()
         return [res, count["count"]]
     except Exception as error:

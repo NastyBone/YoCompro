@@ -10,3 +10,4 @@ from routes.brands_route import brands_bp
 from routes.auth_route import auth_bp
 from routes.dashboard_route import dashboard_bp
 from routes.owner_route import owner_bp
+from routes.admin_route import admin_bp

@@ -62,7 +62,7 @@ def get_all_by_status(status):
             connection.row_factory = dict_factory
         res = connection.execute(
             """SELECT * FROM tags WHERE status = ?  ORDER BY name""",
-            (status_list[status]),
+            (status_list[status],),
         ).fetchall()
 
         connection.commit()

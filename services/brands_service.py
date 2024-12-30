@@ -1,6 +1,12 @@
 import sqlite3
 from classes.brand_class import *
-from helpers import status_list, dict_factory, slug_builder
+from helpers import (
+    like_string,
+    status_list,
+    dict_factory,
+    slug_builder,
+    limit_or_pagination,
+)
 
 
 def get(id):
@@ -186,19 +192,46 @@ def get_by_product_id(product_id):
         raise Exception(error)
 
 
-def get_with_details(id):
+def get_with_details(slug):
     try:
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
             """SELECT * FROM brands br
-           WHERE br.id = 1
+           WHERE br.slug LIKE ?
             AND br.status = "APPROVED"
                       """,
-            (id,),
+            (like_string(slug),),
         ).fetchall()
         connection.commit()
         return res
+    except Exception as error:
+        print(error)
+        raise Exception(error)
+
+
+def get_by_status(status, start_page, end_page, word):
+    try:
+        if status not in status_list:
+            raise ValueError("Not in list")
+        with sqlite3.connect("database.db") as connection:
+            connection.row_factory = dict_factory
+        res = connection.execute(
+            f"""
+            SELECT * FROM brands br WHERE status = ? AND name LIKE ? ORDER BY name  
+            {limit_or_pagination(False, start_page, end_page)}
+           """,
+            (status_list[status], like_string(word)),
+        ).fetchall()
+        count = connection.execute(
+            """
+        SELECT COUNT(*) as count FROM brands WHERE status = ? AND name LIKE ?
+        """,
+            (status_list[status], like_string(word)),
+        ).fetchone()
+        connection.commit()
+        print("statys", status_list[status])
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)

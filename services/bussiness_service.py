@@ -180,7 +180,7 @@ def get_popular_by_brand(
                 like_string(slug),
             ),
         ).fetchall()
-        count = {count: ""}
+        count = {"count": ""}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -402,7 +402,7 @@ def get_by_most_discount_limited(city):
 
 # DONE Top discounts of that bussiness
 def get_most_discount_by_bussiness(
-    bussiness_id, limited=False, start_page=None, end_page=None, order="DESC"
+    slug, limited=False, start_page=None, end_page=None, order="DESC"
 ):
     try:
         with sqlite3.connect("database.db") as connection:
@@ -411,29 +411,33 @@ def get_most_discount_by_bussiness(
             f"""
             SELECT p.*, AVG(s.discount) as avg_disc FROM products p
             JOIN stocks s ON s.product_id = p.id
-            JOIN bussiness b ON b.id = s.bussinesS_id
-            WHERE b.id = ?
+            JOIN bussiness b ON b.id = s.bussiness_id
+            WHERE b.slug LIKE ?
             AND b.status = "APPROVED"
             ORDER BY avg_disc {order}
             {limit_or_pagination(limited, start_page, end_page)}
             """,
-            (bussiness_id,),
+            (like_string(slug),),
         ).fetchall()
+        print(like_string(slug))
+        count = {"count": ""}
+        print("COUNT", count, limited)
 
-        count = {count: ""}
         if not limited:
+            print("u should not be here")
             count = connection.execute(
                 f""" 
-             SELECT p.*, AVG(s.discount) as avg_disc FROM products p
+            SELECT COUNT(*) as count FROM products p
             JOIN stocks s ON s.product_id = p.id
-            JOIN bussiness b ON b.id = s.bussinesS_id
-            WHERE b.id = ?
+            JOIN bussiness b ON b.id = s.bussiness_id
+            -- WHERE b.slug LIKE ?
             AND b.status = "APPROVED"
             GROUP BY b.id 
             """,
-                (bussiness_id,),
+                (like_string(slug),),
             ).fetchone()
         connection.commit()
+        print("COUNT", count, res)
         return [res, count["count"]]
     except Exception as error:
         print(error)
@@ -461,7 +465,7 @@ def get_by_owner_popular(
             """,
             (owner_id,),
         ).fetchall()
-        count = {count: ""}
+        count = {"count": ""}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -500,7 +504,7 @@ def get_by_owner_top_rated(
             """,
             (owner_id,),
         ).fetchall()
-        count = {count: ""}
+        count = {"count": ""}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -675,13 +679,13 @@ def get_bussiness_has_product_by_price(
             JOIN products p on s.product_id = p.id
             WHERE p.id = ?
             AND b.status = "APPROVED"
+            GROUP BY b.id
             ORDER BY s.price {order}
             {limit_or_pagination(limited, start_page, end_page)}
-            GROUP BY b.id
             """,
             (product_id,),
         ).fetchall()
-        count = {count: ""}
+        count = {"count": ""}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -703,7 +707,7 @@ def get_bussiness_has_product_by_price(
 
 # DONE: Bussiness which have that product by distance
 def get_bussiness_has_product_by_distance(
-    product_id, limited=False, start_page=None, end_page=None, order="DESC"
+    product_id, lat, lon, limited=False, start_page=None, end_page=None, order="DESC"
 ):
     try:
         with sqlite3.connect("database.db") as connection:
@@ -711,16 +715,23 @@ def get_bussiness_has_product_by_distance(
         res = connection.execute(
             f"""
             SELECT b.*, ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance
+            FROM bussiness b
+            JOIN stocks s ON s.bussiness_id = b.id
             JOIN products p on s.product_id = p.id
             WHERE p.id = ?
             AND b.status = "APPROVED"
+            GROUP BY b.id
             ORDER BY distance {order}
             {limit_or_pagination(limited, start_page, end_page)}
-            GROUP BY b.id
             """,
-            (product_id,),
+            (
+                lat,
+                lat,
+                lon,
+                product_id,
+            ),
         ).fetchall()
-        count = {count: ""}
+        count = {"count": ""}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -788,25 +799,25 @@ def search_on_bussiness(word, bussiness_id, start_page, end_page):
         raise Exception(error)
 
 
-def get_by_status(status, start_page, end_page, word=""):
+def get_by_status(status, start_page, end_page, word):
     try:
         if status not in status_list:
             raise ValueError("Not in list")
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """
+            f"""
             SELECT * FROM bussiness WHERE status = ? AND name LIKE ? ORDER BY name  
-            LIMIT ?
-            OFFSET ?
+            {limit_or_pagination(False, start_page, end_page)}
            """,
-            (status_list[status], word, end_page, start_page),
+            (status_list[status], like_string(word)),
         ).fetchall()
         count = connection.execute(
             """
         SELECT COUNT(*) as count FROM bussiness WHERE status = ? AND name LIKE ?
-        """
-        )
+        """,
+            (status_list[status], like_string(word)),
+        ).fetchone()
         connection.commit()
         return [res, count["count"]]
     except Exception as error:

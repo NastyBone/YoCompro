@@ -97,7 +97,7 @@ def get_by_user(user_id, limited=False, start_page=None, end_page=None, order="D
             """,
             (user_id,),
         ).fetchall()
-        count = {count: ""}
+        count = {"count": ""}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -124,7 +124,7 @@ def get_by_bussiness(
             {limit_or_pagination(limited, start_page, end_page)}""",
             (bussiness_id,),
         ).fetchall()
-        count = {count: ""}
+        count = {"count": ""}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -151,7 +151,7 @@ def get_by_product(
             {limit_or_pagination(limited, start_page, end_page)}""",
             (product_id,),
         ).fetchall()
-        count = {count: ""}
+        count = {"count": ""}
         if not limited:
             count = connection.execute(
                 f""" 

@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template, redirect, jsonify
 from guard import *
 from flask_login import current_user
-from helpers import roles_list, set_pagination
+from helpers import roles_list, set_pagination, filter_list
 from services.products_service import (
     get_popular_by_owner as products_popular,
     get_top_rated_by_owner as products_top_rated,
@@ -35,14 +35,43 @@ def main():
     #                        unpopular_bussiness=unpopular_bussiness)
 
 
-@owner_bp.route("/search", methods=["GET"])
-def search():
-    page = request.args.get("page", None)
+@owner_bp.route("/search/<type>/<filter>", methods=["GET"])
+def search(type="products", filter="popular"):
     owner = current_user.get_id()
+    order = request.args.get("order", "DESC")
+    page = request.args.get("page", None)
     [start_pagination, end_pagination] = set_pagination(page)
-    response = bussiness_all(owner, start_pagination, end_pagination)
+    if filter == "None":
+        if type == "products":
+            [response, count] = products_popular(
+                owner, False, start_pagination, end_pagination, order
+            )
+        else:
+            [response, count] = bussiness_popular(
+                owner, False, start_pagination, end_pagination, order
+            )
+    else:
+        if filter not in filter_list:
+            raise ValueError("Not in list")
+        if type == "products":
+            if "TOP_RATED" == filter_list[filter]:
+                [response, count] = products_top_rated(
+                    owner, False, start_pagination, end_pagination
+                )
+            else:
+                [response, count] = products_popular(
+                    owner, False, start_pagination, end_pagination
+                )
+        else:
+            if "TOP_RATED" == filter_list[filter]:
+                [response, count] = bussiness_top_rated(
+                    owner, False, start_pagination, end_pagination
+                )
+            else:
+                [response, count] = bussiness_popular(
+                    owner, False, start_pagination, end_pagination
+                )
     return jsonify(response)
-    # return render_template('', bussiness=response)
 
 
 @owner_bp.route("/bussiness/popular", methods=["GET"])

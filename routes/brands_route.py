@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, render_template
+from flask import Blueprint, redirect, request, jsonify, render_template
 from services.brands_service import *
 from helpers import filter_list, roles_list, type_list, set_pagination
 from services.products_service import (
@@ -90,9 +90,37 @@ def find_by_product_filter(slug, filter=filter_list["newest"]):
     page = request.args.get("page", None)
     [start_pagination, end_pagination] = set_pagination(page)
     if filter == "top_rated":
-        response = products_top_rated(slug, start_pagination, end_pagination)
+        response = products_top_rated(slug, False, start_pagination, end_pagination)
     elif filter == "popular":
-        response = products_popular(slug, start_pagination, end_pagination)
+        response = products_popular(slug, False, start_pagination, end_pagination)
     else:
-        response = produscts_newest(slug, start_pagination, end_pagination)
+        response = produscts_newest(slug, False, start_pagination, end_pagination)
     return jsonify(response)  # render_template('', products=response)
+
+
+@brands_bp.route("/search/<slug>", methods=["GET"])
+def find_by_slug(slug):
+    response = get_with_details(slug)
+    popular = products_popular(slug, True)
+    top_rated = products_top_rated(slug, True)
+    newest = produscts_newest(slug, True)
+
+    return jsonify(
+        {
+            "brand": response,
+            "popular": popular,
+            "top_rated": top_rated,
+            "newest": newest,
+        }
+    )
+
+
+@brands_bp.route("/<status>", methods=["GET"])
+def get_brands_by_status(status):
+    if status not in status_list:
+        return "error"
+    word = request.args.get("word", "")
+    page = request.args.get("page", None)
+    [start_pagination, end_pagination] = set_pagination(page)
+    response = get_by_status(status, start_pagination, end_pagination, word)
+    return jsonify(response)

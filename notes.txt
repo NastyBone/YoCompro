@@ -119,11 +119,12 @@ X Forbiden view
 
 X Add view more button to dashboards components, it will lead to full views (not limited, but paginated)
 X Add links to card items
+- Use slug only in searchs and gets specifics. Verify like_string searchs and generate them
+X Add status filtering from gets which requires approvation
 - Add joins on relations and extra info -- Be modified where needed
-- Use slug only in searchs and gets specifics. Verify like_string searchs
-- Add status filtering from gets which requires approvation
 - Connect images
 - Export scripts
+- Remember general endpoint is a get and then rest are posts
 X SQL injection on end_date and start_date
 X Add security layer using user_id (might be a route decorator, might not) (ratings, lists, bussiness, stocks) (take it from request)
 

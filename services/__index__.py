@@ -8,3 +8,4 @@ from auth_service import *
 from stocks_service import *
 from tags_service import *
 from users_service import *
+from stats_service import *

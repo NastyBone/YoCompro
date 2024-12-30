@@ -24,6 +24,8 @@ app.register_blueprint(tags_bp, url_prefix="/tags")
 app.register_blueprint(users_bp, url_prefix="/users")
 app.register_blueprint(search_bp, url_prefix="/search")
 app.register_blueprint(dashboard_bp, url_prefix="/dashboard")
+app.register_blueprint(admin_bp, url_prefix="/admin")
+
 # SESSION
 app.config["SESSION_TYPE"] = "filesystem"
 login_manager = LoginManager()
