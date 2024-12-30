@@ -191,11 +191,11 @@ def get_popular_by_brand(
             JOIN brands br on p.brand_id = br.id
             WHERE city LIKE ? AND br.slug LIKE ?
             AND b.status = "APPROVED"
-            GROUP BY b.id 
             """,
-                (like_string(city),),
+                (like_string(city), like_string(slug)),
             ).fetchone()
         connection.commit()
+        print("POP BY BRAND", res, count, slug, city)
         return [res, count["count"]]
     except Exception as error:
         print(error)

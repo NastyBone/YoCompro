@@ -202,7 +202,7 @@ def get_with_details(slug):
             AND br.status = "APPROVED"
                       """,
             (like_string(slug),),
-        ).fetchall()
+        ).fetchone()
         connection.commit()
         return res
     except Exception as error:

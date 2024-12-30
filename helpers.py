@@ -44,7 +44,6 @@ def like_string(string):
 
 
 def limit_or_pagination(limited, start_page, end_page):
-    print(f"********{start_page}********{end_page}")
     if (start_page != None and end_page != None) and not (
         isinstance(start_page, int) and isinstance(end_page, int)
     ):

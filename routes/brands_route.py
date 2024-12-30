@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, request, jsonify, render_template
+from flask import Blueprint, redirect, request, jsonify, render_template, session
 from services.brands_service import *
 from helpers import filter_list, roles_list, type_list, set_pagination
 from services.products_service import (
@@ -75,8 +75,8 @@ def edit_form():
 
 
 @brands_bp.route("/<slug>/bussiness/")
-def popular_bussines(slug=None):
-    city = request.args.get("city", None)
+def popular_bussines(slug):
+    city = session.get("city")
     page = request.args.get("page", None)
     [start_pagination, end_pagination] = set_pagination(page)
     response = bussiness_popular(city, slug, start_pagination, end_pagination)
@@ -100,18 +100,21 @@ def find_by_product_filter(slug, filter=filter_list["newest"]):
 
 @brands_bp.route("/search/<slug>", methods=["GET"])
 def find_by_slug(slug):
+    city = session.get("city")
     response = get_with_details(slug)
-    popular = products_popular(slug, True)
-    top_rated = products_top_rated(slug, True)
-    newest = produscts_newest(slug, True)
+    [popular, count] = products_popular(slug, True)
+    [top_rated, count] = products_top_rated(slug, True)
+    [newest, count] = produscts_newest(slug, True)
+    [bussiness, count] = bussiness_popular(city, slug, True)
 
-    return jsonify(
-        {
-            "brand": response,
-            "popular": popular,
-            "top_rated": top_rated,
-            "newest": newest,
-        }
+    print(bussiness)
+    return render_template(
+        "details/detail_brand.html",
+        brand=response,
+        popular=popular,
+        top_rated=top_rated,
+        newest=newest,
+        bussiness=bussiness,
     )
 
 
