@@ -241,7 +241,6 @@ def get_popular(city, start_page, end_page):
             JOIN lists_stocks l on l.stock_id = s.id 
             WHERE b.city LIKE ?
             AND b.status = "APPROVED"
-            GROUP BY b.id 
             """,
             (like_string(city),),
         ).fetchone()
@@ -303,7 +302,6 @@ def get_top_rated(city, start_page, end_page):
             JOIN ratings r ON r.bussiness_id = b.id
             WHERE b.city LIKE ?
             AND b.status = "APPROVED"
-            GROUP BY b.id
             """,
             (like_string(city),),
         ).fetchone()
@@ -321,7 +319,7 @@ def get_top_rated_limited(city):
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-            SELECT b.*, AVG(r.score) as avg_score FROM bussiness b
+            SELECT b.*, AVG(r.score) as avg_score, RANK() OVER (ORDER BY AVG(r.score) ASC) as rank FROM bussiness b
             JOIN ratings r ON r.bussiness_id = b.id
             WHERE b.city LIKE ?
             AND b.status = "APPROVED"
@@ -364,7 +362,6 @@ def get_by_most_discount(city, start_page, end_page):
            JOIN stocks s ON s.bussiness_id = b.id
             WHERE b.city LIKE ?
             AND b.status = "APPROVED"
-            GROUP BY b.id
             """,
             (like_string(city),),
         ).fetchone()
@@ -402,7 +399,7 @@ def get_by_most_discount_limited(city):
 
 # DONE Top discounts of that bussiness
 def get_most_discount_by_bussiness(
-    slug, limited=False, start_page=None, end_page=None, order="DESC"
+    slug, bussiness, limited=False, start_page=None, end_page=None, order="DESC"
 ):
     try:
         with sqlite3.connect("database.db") as connection:
@@ -413,26 +410,28 @@ def get_most_discount_by_bussiness(
             JOIN stocks s ON s.product_id = p.id
             JOIN bussiness b ON b.id = s.bussiness_id
             WHERE b.slug LIKE ?
+            AND p.slug LIKE ?
             AND b.status = "APPROVED"
             ORDER BY avg_disc {order}
             {limit_or_pagination(limited, start_page, end_page)}
             """,
-            (like_string(slug),),
+            (
+                like_string(bussiness),
+                like_string(slug),
+            ),
         ).fetchall()
         print(like_string(slug))
         count = {"count": ""}
         print("COUNT", count, limited)
 
         if not limited:
-            print("u should not be here")
             count = connection.execute(
                 f""" 
             SELECT COUNT(*) as count FROM products p
             JOIN stocks s ON s.product_id = p.id
             JOIN bussiness b ON b.id = s.bussiness_id
-            -- WHERE b.slug LIKE ?
+            WHERE b.slug LIKE ?
             AND b.status = "APPROVED"
-            GROUP BY b.id 
             """,
                 (like_string(slug),),
             ).fetchone()
@@ -474,7 +473,6 @@ def get_by_owner_popular(
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.user_id = ?
             AND b.status = "APPROVED"
-            GROUP BY b.id 
             """,
                 (owner_id,),
             ).fetchone()
@@ -512,7 +510,6 @@ def get_by_owner_top_rated(
             JOIN ratings ON ratings.bussiness_id = b.id
             WHERE b.user_id = ?
             AND b.status = "APPROVED"
-            GROUP BY b.id 
             """,
                 (owner_id,),
             ).fetchone()
@@ -630,7 +627,6 @@ def get_by_nearest(lat, lon, city, start_page, end_page):
             SELECT COUNT(*) as count FROM bussiness b
             WHERE b.city LIKE ?
             AND b.status = "APPROVED"
-            GROUP BY b.id
             """,
             (like_string(city),),
         ).fetchone()
@@ -674,7 +670,7 @@ def get_bussiness_has_product_by_price(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT b.*, s.price FROM bussiness b
+            SELECT b.*, s.price, s.quantity, s.discount FROM bussiness b
             JOIN stocks s on s.bussiness_id = b.id 
             JOIN products p on s.product_id = p.id
             WHERE p.id = ?
@@ -694,7 +690,6 @@ def get_bussiness_has_product_by_price(
             JOIN products p on s.product_id = p.id
             WHERE p.id = ?
             AND b.status = "APPROVED"
-            GROUP BY b.id 
             """,
                 (product_id,),
             ).fetchone()
@@ -714,10 +709,10 @@ def get_bussiness_has_product_by_distance(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT b.*, ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance
+            SELECT b.*, s.price as price, s.quantity as quantity, ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance
             FROM bussiness b
             JOIN stocks s ON s.bussiness_id = b.id
-            JOIN products p on s.product_id = p.id
+            JOIN products p ON s.product_id = p.id
             WHERE p.id = ?
             AND b.status = "APPROVED"
             GROUP BY b.id
@@ -736,10 +731,10 @@ def get_bussiness_has_product_by_distance(
             count = connection.execute(
                 f""" 
             SELECT COUNT(*) as count FROM bussiness b
+            JOIN stocks s ON s.bussiness_id = b.id
             JOIN products p on s.product_id = p.id
             WHERE p.id = ?
             AND b.status = "APPROVED"
-            GROUP BY b.id 
             """,
                 (product_id,),
             ).fetchone()

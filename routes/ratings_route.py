@@ -3,31 +3,35 @@ from flask_login import current_user
 from services.ratings_service import *
 from helpers import set_pagination
 from guard import secure_access
+
 ratings_bp = Blueprint("ratings", __name__)
 
 
-@ratings_bp.route('/', methods=['GET'])
+@ratings_bp.route("/", methods=["GET"])
 def find():
-    id = request.args.get('id')
+    id = request.args.get("id")
     response = get(id)
     return jsonify(response)
 
 
-@ratings_bp.route('/all', methods=['GET'])
+@ratings_bp.route("/all", methods=["GET"])
 def find_all():
     response = get_all()
     return jsonify(response)
 
 
-@ratings_bp.route('/', methods=['POST'])
-@secure_access()
+@ratings_bp.route("/", methods=["POST"])
+# @secure_access()
 def create():
+    print("we re here")
     data = request.get_json()
-    user_id = request.args.get('user_id')
-    data['user_id'] = user_id
-    delete_duplicate_ratings(user_id, data.get(
-        'bussiness_id'), data.get('product_id'))
-    response = insert(data)
+    score = data.get("score", None)
+    product_id = data.get("product_id", None)
+    bussiness_id = data.get("bussiness_id", None)
+    user_id = 1  # current_user.get_id()
+    if not user_id:
+        return jsonify({"error": "User not found"}), 404
+    response = insert_rating(user_id, bussiness_id, product_id, score)
     return jsonify(response)
 
 
@@ -40,15 +44,15 @@ def create():
 #     return jsonify(response)
 
 
-@ratings_bp.route('/', methods=['DELETE'])
+@ratings_bp.route("/", methods=["DELETE"])
 @secure_access()
 def remove():
-    id = request.args.get('id')
+    id = request.args.get("id")
     response = delete(id)
     return jsonify(response)
 
 
-@ratings_bp.route('/user', methods=['GET'])
+@ratings_bp.route("/user", methods=["GET"])
 @secure_access()
 def find_by_user():
     user_id = current_user.get_id()
@@ -56,38 +60,38 @@ def find_by_user():
     return jsonify(response)
 
 
-@ratings_bp.route('/bussiness', methods=['GET'])
+@ratings_bp.route("/bussiness", methods=["GET"])
 def find_by_bussiness():
-    id = request.args.get('id')
-    page = request.args.get('page', None)
+    id = request.args.get("id")
+    page = request.args.get("page", None)
     [start_pagination, end_pagination] = set_pagination(page)
     response = get_by_bussiness(id, start_pagination, end_pagination)
     return jsonify(response)
 
 
-@ratings_bp.route('/product', methods=['GET'])
+@ratings_bp.route("/product", methods=["GET"])
 def find_by_product():
-    id = request.args.get('id')
-    page = request.args.get('page', None)
+    id = request.args.get("id")
+    page = request.args.get("page", None)
     [start_pagination, end_pagination] = set_pagination(page)
     response = get_by_product(id, start_pagination, end_pagination)
     return jsonify(response)
 
 
-@ratings_bp.route('/bussiness/average', methods=['GET'])
+@ratings_bp.route("/bussiness/average", methods=["GET"])
 def find_avg_by_bussiness():
-    id = request.args.get('id')
+    id = request.args.get("id")
     response = get_average_by_bussiness(id)
     return jsonify(response)
 
 
-@ratings_bp.route('/product/average', methods=['GET'])
+@ratings_bp.route("/product/average", methods=["GET"])
 def find_avg_by_product():
-    id = request.args.get('id')
+    id = request.args.get("id")
     response = get_average_by_product(id)
     return jsonify(response)
 
 
-@ratings_bp.route('/test', methods=['GET'])
+@ratings_bp.route("/test", methods=["GET"])
 def index():
-    return 'Hello Ratings!'
+    return "Hello Ratings!"

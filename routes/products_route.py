@@ -81,13 +81,18 @@ def edit_form():
 
 @products_bp.route("/search/<slug>", methods=["GET"])
 def find_by_slug(slug):
-    lat = session["lat"]
-    lon = session["lon"]
+    lat = session.get("lat", None)
+    lon = session.get("lon", None)
     product = get_by_slug(slug)[0]
-    bussiness_by_distance = get_bussiness_has_product_by_distance(
+    print(product)
+    [bussiness_by_distance, count] = get_bussiness_has_product_by_distance(
         int(product["id"]), lat, lon, True
     )
-    bussiness_by_price = get_bussiness_has_product_by_price(int(product["id"]), True)
+    [bussiness_by_price, count] = get_bussiness_has_product_by_price(
+        int(product["id"]), True
+    )
+    print(bussiness_by_distance)
+    print(bussiness_by_price)
     brand = brand_by_product(int(product["id"]))[0]
     rating = rating_by_product(int(product["id"]))[0]
 
@@ -96,14 +101,14 @@ def find_by_slug(slug):
     #                        brand=brand,
     #                        rating=rating,
     #                        bussiness=bussiness)
-    return jsonify(
-        {
-            "product": product,
-            "by_distance": bussiness_by_distance,
-            "by_price": bussiness_by_price,
-            "brand": brand,
-            "rating": rating,
-        }
+    print(product)
+    return render_template(
+        "details/detail_product.html",
+        product=product,
+        brand=brand,
+        rating=rating,
+        bussiness_by_distance=bussiness_by_distance,
+        bussiness_by_price=bussiness_by_price,
     )
 
 
@@ -153,16 +158,24 @@ def find_all_by_discount():
 
 @products_bp.route("/<slug>/<filter>", methods=["GET"])
 def find_by_bussiness_filter(slug, filter=filter_list["newest"]):
+    lat = session.get("lat", None)
+    lon = session.get("lon", None)
     page = request.args.get("page", None)
     [start_pagination, end_pagination] = set_pagination(page)
     product = get_by_slug(slug)[0]
     if filter == "nearest":
         response = get_bussiness_has_product_by_distance(
-            product_id=product["id"], start=start_pagination, end=end_pagination
+            product_id=product["id"],
+            lat=lat,
+            lon=lon,
+            start_page=start_pagination,
+            end_page=end_pagination,
         )
     elif filter == "cheapest":
         response = get_bussiness_has_product_by_price(
-            product_id=product["id"], start=start_pagination, end=end_pagination
+            product_id=product["id"],
+            start_page=start_pagination,
+            end_page=end_pagination,
         )
     return jsonify(response)
 

@@ -111,8 +111,8 @@ def get_by_slug(name):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """SELECT p.*, AVG(score) FROM products p JOIN ratings r ON r.product_id = p.id WHERE slug LIKE ?""",
-            ((like_string(name)),),
+            """SELECT p.*, COALESCE(AVG(score), 0) as avg_score FROM products p LEFT JOIN ratings r ON r.product_id = p.id WHERE slug LIKE ?""",
+            (like_string(name),),
         ).fetchall()
         connection.commit()
         return res
@@ -150,7 +150,6 @@ def get_popular(city, start_page, end_page):
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.city LIKE ?
             AND p.status = "APPROVED"
-            GROUP BY p.id
             """,
             (like_string(city),),
         ).fetchone()
@@ -188,7 +187,7 @@ def get_popular_limited(city):
 
 # DONE: Popular Products of that bussiness
 def get_popular_by_bussiness(
-    slug, limited=False, start_page=None, end_page=None, order="DESC"
+    slug, bussiness, limited=False, start_page=None, end_page=None, order="DESC"
 ):
     try:
         with sqlite3.connect("database.db") as connection:
@@ -200,27 +199,35 @@ def get_popular_by_bussiness(
             JOIN bussiness b on s.bussiness_id = s.id
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.slug LIKE ?
+            AND p.slug LIKE ?
             AND p.status = "APPROVED"
             GROUP BY p.id
             ORDER BY count {order}
             {limit_or_pagination(limited, start_page, end_page)}
             """,
-            (like_string(slug),),
+            (
+                like_string(bussiness),
+                like_string(slug),
+            ),
         ).fetchall()
-        count = {"count": ""}
+        count = {"count": 0}
         if not limited:
             count = connection.execute(
                 f""" 
+            SELECT p.*, COUNT(l.id) as count FROM products p
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = s.id
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.slug LIKE ?
             AND p.status = "APPROVED"
-            GROUP BY p.id
             """,
                 (like_string(slug),),
             ).fetchone()
         connection.commit()
+        print(limited)
+        print(res)
+        print(count)
+
         return [res, count["count"]]
     except Exception as error:
         print(error)
@@ -258,7 +265,6 @@ def get_popular_by_brand(
             JOIN brands br on p.brand_id = br.id
             AND br.slug LIKE ?
             AND p.status = "APPROVED"
-            GROUP BY p.id
             """,
                 (like_string(slug),),
             ).fetchone()
@@ -410,7 +416,7 @@ def get_top_rated_by_brand(
             """,
             (like_string(slug),),
         ).fetchall()
-        count = {"count": ""}
+        count = {"count": 0}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -419,7 +425,6 @@ def get_top_rated_by_brand(
             JOIN brands br on p.brand_id = br.id
             WHERE br.slug LIKE ?
             AND p.status = "APPROVED"
-            GROUP BY p.id
             """,
                 (like_string(slug),),
             ).fetchone()
@@ -432,7 +437,7 @@ def get_top_rated_by_brand(
 
 # DONE: Top Rated Products By Bussiness
 def get_top_rated_by_bussiness(
-    slug, limited=False, start_page=None, end_page=None, order="DESC"
+    slug, bussiness, limited=False, start_page=None, end_page=None, order="DESC"
 ):
     try:
         with sqlite3.connect("database.db") as connection:
@@ -444,11 +449,15 @@ def get_top_rated_by_bussiness(
             JOIN bussiness b on s.bussiness_id = s.id
             JOIN ratings r ON r.product_id = p.id
             WHERE b.slug LIKE ?
+            AND p.slug LIKE ?
             AND p.status = "APPROVED"
             ORDER BY avg_score  {order}
             {limit_or_pagination(limited, start_page, end_page)}
             """,
-            (like_string(slug),),
+            (
+                like_string(bussiness),
+                like_string(slug),
+            ),
         ).fetchall()
         count = {"count": ""}
         if not limited:
@@ -460,7 +469,6 @@ def get_top_rated_by_bussiness(
             JOIN ratings r ON r.product_id = p.id
             WHERE b.slug LIKE ?
             AND p.status = "APPROVED"
-            GROUP BY p.id
             """,
                 (like_string(slug),),
             ).fetchone()
@@ -500,7 +508,6 @@ def get_newest(city, start_page, end_page):
             JOIN bussiness b on s.bussiness_id = b.id
             WHERE b.city LIKE ?
             AND p.status = "APPROVED"
-            GROUP BY p.id
             """,
             (like_string(city),),
         ).fetchone()
@@ -562,7 +569,6 @@ def get_newest_by_brand(
             JOIN brands br on p.brand_id = br.id
             WHERE br.slug LIKE ?
             AND p.status = "APPROVED"
-            GROUP BY p.id
             """,
                 (like_string(slug),),
             ).fetchone()
@@ -575,7 +581,7 @@ def get_newest_by_brand(
 
 # DONE Recent Added Products
 def get_newest_by_bussiness(
-    slug, limited=False, start_page=None, end_page=None, order="DESC"
+    slug, bussiness, limited=False, start_page=None, end_page=None, order="DESC"
 ):
     try:
         with sqlite3.connect("database.db") as connection:
@@ -586,12 +592,16 @@ def get_newest_by_bussiness(
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = s.id
             WHERE b.slug LIKE ?
+            AND p.slug LIKE ?
             AND p.status = "APPROVED"
             GROUP BY p.id
             ORDER BY p.created_at {order}
             {limit_or_pagination(limited, start_page, end_page)}
             """,
-            (like_string(slug),),
+            (
+                like_string(bussiness),
+                like_string(slug),
+            ),
         ).fetchall()
         count = {"count": ""}
         if not limited:
@@ -602,7 +612,6 @@ def get_newest_by_bussiness(
             JOIN bussiness b on s.bussiness_id = s.id
             WHERE b.slug LIKE ?
             AND p.status = "APPROVED"
-            GROUP BY p.id
             """,
                 (like_string(slug),),
             ).fetchone()
@@ -694,7 +703,6 @@ def get_popular_by_owner(
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.user_id = ?
             AND p.status = "APPROVED"
-            GROUP BY p.id
             """,
                 (owner_id,),
             ).fetchone()
@@ -736,7 +744,6 @@ def get_top_rated_by_owner(
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.city LIKE ?
             AND p.status = "APPROVED"
-            GROUP BY p.id
             """,
                 (owner_id,),
             ).fetchone()
@@ -774,7 +781,6 @@ def get_by_search_tags(word, tags, start_page, end_page):
             WHERE tp.tag_id IN ({tag_field}) AND
             p.name LIKE ?
             AND p.status = "APPROVED"
-            GROUP BY p.id
             HAVING COUNT(DISTINCT tp.tag_id) = ?""",
                     (*tags, like_string(word), len(tags)),
                 ).fetchone()

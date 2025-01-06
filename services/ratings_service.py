@@ -174,7 +174,7 @@ def get_average_by_bussiness(bussiness_id):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """SELECT COUNT(score) as count, AVG(score) as avg_score FROM bussiness b
+            """SELECT COUNT(score) as count, COALESCE(AVG(score), 0) as avg_score FROM bussiness b
                     JOIN ratings r ON r.bussiness_id = b.id
                     WHERE bussiness_id = ?""",
             (bussiness_id,),
@@ -193,7 +193,7 @@ def get_average_by_product(product_id):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """SELECT COUNT(score) as count, AVG(score) as avg_score FROM products p
+            """SELECT COUNT(score) as count, COALESCE(AVG(score), 0) as avg_score FROM products p
                 JOIN ratings r ON r.product_id = p.id
                 WHERE product_id = ?""",
             (product_id,),
@@ -217,6 +217,38 @@ def delete_duplicate_ratings(user_id, bussiness_id, product_id):
 
         connection.commit()
         return res
+    except Exception as error:
+        print(error)
+        raise Exception(error)
+
+
+def insert_rating(user_id, bussiness_id, product_id, score, comment=None):
+    try:
+        with sqlite3.connect("database.db") as connection:
+            cursor = connection.cursor()
+
+            # Intenta actualizar la calificación existente
+            cursor.execute(
+                """
+                UPDATE ratings
+                SET score = ?, comment = ?, created_at = CURRENT_TIMESTAMP
+                WHERE user_id = ? AND bussiness_id = ? AND product_id = ?
+            """,
+                (score, comment, user_id, bussiness_id, product_id),
+            )
+
+            # Verifica si se actualizó alguna fila
+            if cursor.rowcount == 0:
+                # Si no se actualizó, inserta una nueva calificación
+                cursor.execute(
+                    """
+                    INSERT INTO ratings (score, comment, user_id, bussiness_id, product_id)
+                    VALUES (?, ?, ?, ?, ?)
+                """,
+                    (score, comment, user_id, bussiness_id, product_id),
+                )
+
+            connection.commit()
     except Exception as error:
         print(error)
         raise Exception(error)

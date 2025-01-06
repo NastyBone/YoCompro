@@ -581,7 +581,7 @@
         <mxCell id="NXJJWlPIzXNzET5rZxup-190" value="product details" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#FF6666;fontSize=16;" parent="1" vertex="1">
           <mxGeometry x="640" y="1897" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="NXJJWlPIzXNzET5rZxup-191" value="brands details" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#FF6666;fontSize=16;" parent="1" vertex="1">
+        <mxCell id="NXJJWlPIzXNzET5rZxup-191" value="brands details" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#66FF66;fontSize=16;" parent="1" vertex="1">
           <mxGeometry x="415" y="1822" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="NXJJWlPIzXNzET5rZxup-192" value="bussiness details" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#FF6666;fontSize=16;" parent="1" vertex="1">
@@ -904,9 +904,6 @@
         </mxCell>
         <mxCell id="dOirgz0_V3Rg2CDJSkMz-4" value="product details" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#FF6666;fontSize=16;" parent="1" vertex="1">
           <mxGeometry x="-1801" y="2489" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="dOirgz0_V3Rg2CDJSkMz-5" value="brands details" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#FF6666;fontSize=16;" parent="1" vertex="1">
-          <mxGeometry x="-1801" y="2354" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="dOirgz0_V3Rg2CDJSkMz-6" value="bussiness details" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#FF6666;fontSize=16;" parent="1" vertex="1">
           <mxGeometry x="-1801" y="2423" width="120" height="60" as="geometry" />

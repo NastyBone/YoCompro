@@ -93,21 +93,19 @@ def find_by_slug(slug):
     top_discounts = get_most_discount_by_bussiness(slug, True)
     top_rated = top_rated_products(slug, True)
     rating = rating_bussiness(int(bussiness["id"]))
-    return jsonify(
-        {
-            "bussiness": bussiness,
-            "popular_products": popular,
-            "popular_brands": popular_brands,
-            "top_discounts": top_discounts,
-            "top_rated": top_rated,
-            "newest_products": newest,
-            "rating": rating,
-        }
-    )  # render_template('', bussiness=bussiness, popular_brands=popular_brands, popular_products=popular_products, top_discounts=top_discounts, rating=rating)
+    return render_template(
+        "",
+        bussiness=bussiness,
+        popular_brands=popular_brands,
+        popular_products=popular_products,
+        top_discounts=top_discounts,
+        rating=rating,
+    )
 
 
 @bussiness_bp.route("/search/product/<slug>", methods=["GET"])
 def find_by_slug_product(slug):
+    # TODO: Implement filtering wtf is wrong
     bussiness_id = request.args.get("bussiness_id")
     page = request.args.get("page", None)
     [start_pagination, end_pagination] = set_pagination(page)

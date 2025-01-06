@@ -18,9 +18,10 @@ dashboard_bp = Blueprint("dashboard", __name__)
 
 @dashboard_bp.route("/", methods=["GET"])
 def main():
-    city = session["city"]
-    lat = session["lat"]
-    lon = session["lon"]
+    print(session)
+    city = session.get("city", None)
+    lat = session.get("lat", None)
+    lon = session.get("lon", None)
     if not city:
         return redirect("/allow-location")
     popular_products = product_popular(city)
