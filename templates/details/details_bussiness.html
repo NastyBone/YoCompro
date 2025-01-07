@@ -40,8 +40,12 @@
                         <span class="star" data-value="3">&#9733;</span>
                         <span class="star" data-value="4">&#9733;</span>
                         <span class="star" data-value="5">&#9733;</span>
-                    </div>
 
+                    </div>
+                    <a href="{{ url_for('ratings.find_by_bussiness', slug=bussiness.slug) }}"
+                        class="tw-text-center tw-text-xs tw-text-blue-600 dark:tw-text-blue-500 hover:tw-underline tw-mt-[-5px]">View
+                        More Ratings</a>
+                    <span id="avg_score" style="display: none;">{{ rating.avg_score }}</span>
                 </div>
                 <div class="tw-flex tw-justify-evenly tw-mt-2 tw-gap-4 ">
                     <div class="tw-flex tw-flex-col tw-justify-evenly">
@@ -220,9 +224,9 @@
         const stars = document.querySelectorAll('.star');
         const averageDisplay = document.getElementById('average');
         const countDisplay = document.getElementById('count');
-        let average = '{{ rating.avg_score }}' | 0;
+        let average = parseFloat(document.getElementById('avg_score').innerHTML) | 0;
         let scoreCount = '{{ rating.count }}' | 0;
-
+        console.log('wft', average, scoreCount);
         function updateStars(rating) {
             stars.forEach(star => {
                 star.classList.remove('filled');
@@ -255,9 +259,11 @@
                 });
                 if (result.ok) {
                     const score = parseInt(star.dataset.value);
-                    scoreCount++;
                     let totalScore = (average) * (scoreCount)
-                    averageDisplay.textContent = ((totalScore + score) / scoreCount).toFixed(1);
+                    scoreCount++;
+                    const newAverage = (totalScore + score) / scoreCount;
+                    console.log(newAverage, average, totalScore, scoreCount, score);
+                    averageDisplay.textContent = newAverage.toFixed(1);
                     countDisplay.textContent = scoreCount;
                     updateStars(average);
                     alert('Rating saved');
