@@ -1,0 +1,284 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="tw-flex tw-flex-col tw-w-full">
+    <!-- -- Products details -- -->
+    <div class="card tw-flex-tw-gap-3-tw-p-4 tw-w-full tw-h-1/3">
+        <!-- --     Image -- -->
+        <div class="card-body tw-w-full tw-h-1/3 tw-flex tw-items-center tw-justify-center">
+            <img src="{{ url_for('static', filename='images/generic.png') }}" alt="{{ product.name }}"
+                class="card-img tw-w-1/4 tw-h-1/4">
+            <!-- --     Description -- -->
+            <div class="tw-w-2/3 tw-text-center">
+
+                <h1 class="tw-text-2xl tw-font-bold">{{ product.name }}</h1>
+                <p class="tw-text-sm">{{ product.description }}</p>
+                <div>
+                    <div class="rating" id="rating">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                    </div>
+
+                    <span id="avg_score" style="display: none;">{{ product.avg_score }}</span>
+                </div>
+                <div class="tw-flex tw-flex-col tw-w-1/3 tw-rounded-[10px] bg-primary-subtle tw-p-2 tw-m-auto">
+                    <div class="tw-text-lg tw-font-semibold">
+                        Leave a comment:
+                    </div>
+                    <Textarea id="comment" class="tw-p-2" placeholder="Select a score to submit"></Textarea>
+                </div>
+                <div class="tw-flex tw-justify-evenly tw-mt-2 tw-gap-4 ">
+                    <div class="tw-flex tw-flex-col tw-justify-evenly">
+                        <div>
+                            <p>Average</p>
+                            <p class="tw-font-bold" id="average">{{ product.avg_score | round(1) }}</p>
+                            <span id="avg_score" style="display: none;">{{ product.avg_score }}</span>
+                        </div>
+
+                    </div>
+                    <div class="tw-flex tw-justify-evenly tw-flex-col">
+                        <div>
+                            <p>Reviews</p>
+                            <p class="tw-font-bold" id="count">{{count}}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- -- Bottom -- -->
+    <div class="tw-flex">
+        <!-- -- Right Side -- -->
+        <!-- -- Filters -- -->
+        <div id="__sidebar"
+            class="bg-primary-subtle text-color-baseblue p-2 tw-w-1/5 tw-rounded-[10px] tw-min-w-min tw-mt-4">
+            <p class="tw-text-center tw-text-xl tw-font-semibold tw-m-3">Filters</p>
+            <form id="ratings__form" onsubmit="event.preventDefault(); return getResults(this);">
+                <p>By Time</p>
+                <select class="form-select flex-grow mb-2" aria-label=".form-select-lg example" name="time"
+                    id="filter__options">
+                    <option class="filter-option" value="ASC">Recent</option>
+                    <option class="filter-option" value="DESC">Oldets</option>
+                </select>
+                <p>By Score</p>
+                <select class="form-select flex-grow tw-mb-2" aria-label=".form-select-lg example" name="score"
+                    id="filter__options">
+                    <option class="filter-option" value="ASC">Most Valued</option>
+                    <option class="filter-option" value="DESC">Less Valued</option>
+                </select>
+                <input type="number" name="page" id="input_page" hidden="true">
+            </form>
+        </div>
+
+        <!-- -- Left Side -- -->
+        <!-- -- Content -- -->
+        <div id="__container" class="tw-w-4/5 px-2">
+            <!-- Elements -->
+
+            <div class="tw-flex tw-flex-col tw-mt-4 tw-gap-4" id="rating__elements">
+
+                {% for item in ratings %}
+
+                <div class="tw-flex tw-flex-col tw-w-full tw-gap-2 tw-rounded-[10px] bg-primary-subtle tw-p-2">
+                    <div class="tw-text-lg tw-font-semibold">
+                        {{item.name}}
+                    </div>
+                    <div>
+                        {{item.comment}}
+                    </div>
+                    <div>
+                        {{item.score}}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div id="not-results">
+                {% if items == [] %}
+                <p class="tw-text-3xl tw-mt-4 tw-font-semibold tw-text-center">No results</p>
+                {% endif %}
+            </div>
+            <!-- Pagination -->
+            <div id="pagination" class="tw-mt-4"></div>
+        </div>
+
+    </div>
+    <!-- Ratings -->
+    <script>
+        const stars = document.querySelectorAll('.star');
+        const averageDisplay = document.getElementById('average');
+        const countDisplay = document.getElementById('count');
+        let average = parseFloat(document.getElementById('avg_score').innerHTML) | 0
+        console.log('AVERAGE', average);
+        let scoreCount = '{{ count }}' | 0;
+        function updateStars(rating) {
+            stars.forEach(star => {
+                star.classList.remove('filled');
+                if (star.dataset.value <= rating) {
+                    star.classList.add('filled');
+                }
+            });
+        }
+        updateStars(average);
+
+        stars.forEach(star => {
+            star.addEventListener('mouseover', () => {
+                updateStars(star.dataset.value);
+            });
+
+            star.addEventListener('mouseout', () => {
+                updateStars(average);
+            });
+
+            star.addEventListener('click', async () => {
+                const comment = document.getElementById('comment').value;
+                const result = await fetch('/ratings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        product_id: '{{ product.id }}',
+                        score: star.dataset.value,
+                        comment: comment,
+                    })
+                });
+                if (result.ok) {
+                    const score = parseInt(star.dataset.value);
+                    let totalScore = (average) * (scoreCount)
+                    scoreCount++;
+                    const newAverage = (totalScore + score) / scoreCount;
+                    averageDisplay.textContent = newAverage.toFixed(1);
+                    countDisplay.textContent = scoreCount;
+                    updateStars(average);
+
+                    alert('Rating saved');
+                } else {
+                    alert('Error saving rating');
+                }
+
+            });
+        });
+    </script>
+    <!-- Set starts for comments -->
+    <script></script>
+    <!-- Pagination -->
+    <script>
+        function setPaginationElement(pages, index) {
+
+            const paginationArea = document.getElementById('pagination');
+            const pagesCount = pages < 1 ? 1 : pages;
+            // Clear previous pagination
+            paginationArea.innerHTML = '';
+
+            // Create navigation structure
+            const nav = document.createElement('nav');
+            nav.setAttribute('aria-label', 'Page navigation example');
+            nav.className = 'tw-flex tw-justify-center';
+
+            const ul = document.createElement('ul');
+            ul.className = 'pagination';
+
+            // Previous button
+            const prevLi = document.createElement('li');
+            prevLi.className = `page-item ${index == 1 ? 'disabled' : ''}`;
+            const prevLink = document.createElement('a');
+            prevLink.className = 'page-link';
+            prevLink.href = '#';
+            prevLink.innerText = 'Previous';
+            prevLink.addEventListener('click', () => {
+                event.preventDefault()
+                document.getElementById('input_page').value = index - 1; // Set the 
+                document.getElementById('submit__search__button').click()
+            })
+            prevLi.appendChild(prevLink);
+            ul.appendChild(prevLi);
+
+            // Create page items
+            for (let i = 0; i < pagesCount; i++) {
+                const li = document.createElement('li');
+                li.className = 'page-item';
+                const link = document.createElement('a');
+                link.className = `page-link ${index === i + 1 ? 'active' : ''}`;
+                link.href = '#';
+                link.innerText = i + 1;
+
+                // Add click event listener
+                link.addEventListener('click', function (event) {
+                    event.preventDefault(); // Prevent the default anchor behavior
+                    document.getElementById('input_page').value = i + 1; // Set the hidden input value
+                    document.getElementById('ratings__form').submit(); // Submit the form
+                });
+
+                li.appendChild(link);
+                ul.appendChild(li);
+            }
+
+            // Next button
+            const nextLi = document.createElement('li');
+            nextLi.className = 'page-item';
+            const nextLink = document.createElement('a');
+            nextLink.className = `page-link ${index >= pagesCount ? 'disabled' : ''}`;
+            nextLink.href = '#';
+            nextLink.innerText = 'Next';
+            nextLink.addEventListener('click', () => {
+                event.preventDefault()
+                document.getElementById('input_page').value = index + 1; // Set the 
+                document.getElementById('ratings__form').submit();
+            })
+            nextLi.appendChild(nextLink);
+            ul.appendChild(nextLi);
+
+            // Append the list to the navigation
+            nav.appendChild(ul);
+            paginationArea.appendChild(nav);
+        }
+    </script>
+    <!-- DOM Load -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+        })
+        setPaginationElement(`{{pages}}`, 1)
+    </script>
+
+    <!-- Request -->
+    <script>
+        async function getResults(e) {
+            const page = e.page.value
+            const score = e.score.value
+            const time = e.time.value
+            const productId = '{{ product.id }}'
+            const response = await fetch(`/${id}/${score}/${time}${page > 1 ? '&page=' + page : ''}`, {
+                method: 'GET',
+            })
+
+            const content = await response.json();
+            const data = content.data
+            const cardContainer = document.getElementById('rating__elements')
+            cardContainer.innerHTML = '';
+            const htmlContent = data.map(item => `<div class="tw-flex tw-flex-col tw-w-full tw-gap-2 tw-rounded-[10px] bg-primary-subtle tw-p-2">
+                    <div class="tw-text-lg tw-font-semibold">
+                        ${item.name}
+                    </div>
+                    <div>
+                        ${item.comment}
+                    </div>
+                    <div>
+                        ${item.score}
+                    </div>
+                </div>`).join('')
+            cardContainer.innerHTML = htmlContent;
+            setPaginationElement(content.count, +page)
+
+            return false
+        }
+    </script>
+</div>
+
+{% endblock %}

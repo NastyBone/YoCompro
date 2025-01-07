@@ -113,7 +113,7 @@ def get_by_slug(name):
         res = connection.execute(
             """SELECT p.*, COALESCE(AVG(score), 0) as avg_score FROM products p LEFT JOIN ratings r ON r.product_id = p.id WHERE slug LIKE ?""",
             (like_string(name),),
-        ).fetchall()
+        ).fetchone()
         connection.commit()
         return res
     except Exception as error:
@@ -437,8 +437,6 @@ def get_top_rated_by_bussiness(
     slug, bussiness, limited=False, start_page=None, end_page=None, order="DESC"
 ):
     try:
-        print("bussiness slug", like_string(bussiness))
-        print("product slug", like_string(slug))
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(

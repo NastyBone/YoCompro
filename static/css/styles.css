@@ -7,3 +7,23 @@
   font-family: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
     "Helvetica Neue", sans-serif;
 }
+
+.rating {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.star {
+  font-size: 50px;
+  color: lightgray;
+  transition: color 0.2s;
+}
+
+.star:hover {
+  color: gold;
+}
+
+.filled {
+  color: gold;
+}

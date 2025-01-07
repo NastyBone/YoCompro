@@ -114,13 +114,30 @@ def get_by_user(user_id, limited=False, start_page=None, end_page=None, order="D
 
 # DONE: Load ratings for bussiness
 def get_by_bussiness(
-    bussiness_id, limited=False, start_page=None, end_page=None, order="DESC"
+    bussiness_id,
+    limited=False,
+    start_page=None,
+    end_page=None,
+    order_rating="DESC",
+    order_time="DESC",
 ):
     try:
+        limited_select_user = ""
+        limited_join_user = ""
+        limited_comment = ""
+        if not limited:
+            limited_select_user = ", u.name, r.comment"
+            limited_join_user = "JOIN users u ON r.user_id = u.id"
+            limited_comment = "AND r.comment IS NOT NULL"
+
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            f"""SELECT *  FROM ratings WHERE bussiness_id = ? ORDER BY score{order}
+            f"""SELECT r.* {limited_select_user} FROM ratings 
+            {limited_join_user}
+            WHERE bussiness_id = ? 
+            {limited_comment}
+            ORDER BY score {order_rating} {order_time}
             {limit_or_pagination(limited, start_page, end_page)}""",
             (bussiness_id,),
         ).fetchall()
@@ -144,10 +161,21 @@ def get_by_product(
     product_id, limited=False, start_page=None, end_page=None, order="DESC"
 ):
     try:
+        limited_select_user = ""
+        limited_join_user = ""
+        limited_comment = ""
+        if not limited:
+            limited_select_user = ", u.name, r.comment"
+            limited_join_user = "JOIN users u ON r.user_id = u.id"
+            limited_comment = "AND r.comment IS NOT NULL"
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            f"""SELECT * FROM ratings WHERE product_id = ? ORDER BY score {order}
+            f"""SELECT r.* {limited_select_user} FROM ratings r
+            {limited_join_user}
+            WHERE product_id = ? 
+            {limited_comment}
+            ORDER BY score {order}
             {limit_or_pagination(limited, start_page, end_page)}""",
             (product_id,),
         ).fetchall()

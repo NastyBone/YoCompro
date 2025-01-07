@@ -1,6 +1,8 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, render_template, request, jsonify
 from flask_login import current_user
 from services.ratings_service import *
+from services.bussiness_service import get_by_slug as get_bussiness
+from services.products_service import get_by_slug as get_product
 from helpers import set_pagination
 from guard import secure_access
 
@@ -25,12 +27,13 @@ def find_all():
 def create():
     data = request.get_json()
     score = data.get("score", None)
+    comment = data.get("comment", None)
     product_id = data.get("product_id", None)
     bussiness_id = data.get("bussiness_id", None)
     user_id = 1  # current_user.get_id()
     if not user_id:
         return jsonify({"error": "User not found"}), 404
-    response = insert_rating(user_id, bussiness_id, product_id, score)
+    response = insert_rating(user_id, bussiness_id, product_id, score, comment)
     return jsonify(response)
 
 
@@ -59,22 +62,52 @@ def find_by_user():
     return jsonify(response)
 
 
-@ratings_bp.route("/bussiness", methods=["GET"])
-def find_by_bussiness():
-    id = request.args.get("id")
+@ratings_bp.route("/bussiness/<slug>", methods=["GET"])
+def find_by_bussiness(slug):
     page = request.args.get("page", None)
     [start_pagination, end_pagination] = set_pagination(page)
-    response = get_by_bussiness(id, start_pagination, end_pagination)
-    return jsonify(response)
+    bussiness = get_bussiness(slug)
+    response = get_by_bussiness(int(bussiness["id"]), start_pagination, end_pagination)
+    return render_template(
+        "ratings/ratings_bussiness.html",
+        ratings=response,
+        bussiness=bussiness,
+    )
 
 
-@ratings_bp.route("/product", methods=["GET"])
-def find_by_product():
-    id = request.args.get("id")
+@ratings_bp.route("/product/<slug>", methods=["GET"])
+def find_by_product(slug):
     page = request.args.get("page", None)
     [start_pagination, end_pagination] = set_pagination(page)
-    response = get_by_product(id, start_pagination, end_pagination)
-    return jsonify(response)
+    product = get_product(slug)
+    print(product)
+    [response, count] = get_by_product(
+        int(product["id"]), start_pagination, end_pagination
+    )
+    return render_template(
+        "ratings/ratings_products.html",
+        ratings=response,
+        product=product,
+        count=count,
+        pages=count / 12,
+    )
+
+
+@ratings_bp.route("/<id>/<score>/<time>", methods=["GET"])
+def find_auxiliar(id, score, time):
+    if score not in ["ASC", "DESC"]:
+        ValueError("Undefined type")
+    if time not in ["ASC", "DESC"]:
+        ValueError("Undefined Filter")
+    page = request.args.get("page", None)
+    [start_pagination, end_pagination] = set_pagination(page)
+    [response, count] = get_by_bussiness(
+        id, False, start_pagination, end_pagination, score, time
+    )
+    return jsonify({"response": response, "count": count})
+
+
+# DESUSO
 
 
 @ratings_bp.route("/bussiness/average", methods=["GET"])
