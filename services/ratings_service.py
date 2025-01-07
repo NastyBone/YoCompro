@@ -178,7 +178,7 @@ def get_average_by_bussiness(bussiness_id):
                     JOIN ratings r ON r.bussiness_id = b.id
                     WHERE bussiness_id = ?""",
             (bussiness_id,),
-        ).fetchall()
+        ).fetchone()
 
         connection.commit()
         return res

@@ -81,24 +81,32 @@ def edit_form():
 
 @bussiness_bp.route("/search/<slug>", methods=["GET"])
 def find_by_slug(slug):
-    print(slug)
     bussiness = get_by_slug(slug)
     if not bussiness:
         print("Not found")
         ValueError("Not found")
 
-    popular = popular_products(slug, True)
-    popular_brands = brands_popular(int(bussiness["id"]))
-    newest = newest_products(slug, True)
-    top_discounts = get_most_discount_by_bussiness(slug, True)
-    top_rated = top_rated_products(slug, True)
+    [popular, count] = popular_products("", slug, True)
+    [popular_brands, count] = brands_popular(int(bussiness["id"]), True)
+    [newest, count] = newest_products("", slug, True)
+    [top_discounts, count] = get_most_discount_by_bussiness("", slug, True)
+    [top_rated, count] = top_rated_products("", slug, True)
     rating = rating_bussiness(int(bussiness["id"]))
+    print(rating)
+    print(popular)
+    print(top_rated)
+    print(newest)
+    print(top_discounts)
+    print(popular_brands)
+
     return render_template(
-        "",
+        "details/details_bussiness.html",
         bussiness=bussiness,
         popular_brands=popular_brands,
-        popular_products=popular_products,
+        popular_products=popular,
         top_discounts=top_discounts,
+        top_rated=top_rated,
+        newest=newest,
         rating=rating,
     )
 
@@ -190,6 +198,14 @@ def get_bussiness_by_status(status):
     page = request.args.get("page", None)
     [start_pagination, end_pagination] = set_pagination(page)
     response = get_by_status(status, start_pagination, end_pagination, word)
+    return jsonify(response)
+
+
+@bussiness_bp.route("/brands/<slug>", methods=["GET"])
+def get_brands_by_bussiness(slug):
+    page = request.args.get("page", None)
+    [start_pagination, end_pagination] = set_pagination(page)
+    [response, count] = brands_popular(slug, False, start_pagination, end_pagination)
     return jsonify(response)
 
 

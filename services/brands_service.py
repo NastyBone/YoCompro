@@ -145,12 +145,12 @@ def get_popular():
 
 
 # DONE: Popular Brands of that bussiness
-def get_popular_by_bussiness(bussiness_id):
+def get_popular_by_bussiness(bussiness_id, limited, start_page=None, end_page=None):
     try:
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """
+            f"""
             SELECT br.*, COUNT(l.id) as count FROM brands br
             JOIN products p on p.brand_id = br.id
             JOIN stocks s on s.product_id = p.id 
@@ -159,11 +159,23 @@ def get_popular_by_bussiness(bussiness_id):
             WHERE b.id = ? AND br.status = "APPROVED"
             GROUP BY br.id 
             ORDER BY count
+            {limit_or_pagination(limited, start_page, end_page)}
             """,
             (bussiness_id,),
         ).fetchall()
         connection.commit()
-        return res
+        count = {"count": 0}
+        if limited:
+            count = connection.execute(
+                f"""
+            SELECT COUNT(*) as count FROM brands br 
+            JOIN products p on p.brand_id = br.id 
+            JOIN stocks s on s.product_id = p.id 
+            JOIN bussiness b on s.bussiness_id = b.id 
+            WHERE b.id = ? AND br.status = 'APPROVED'""",
+                (bussiness_id,),
+            ).fetchone()
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)

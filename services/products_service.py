@@ -194,9 +194,9 @@ def get_popular_by_bussiness(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT p.*, COUNT(l.id) as count FROM products p
+            SELECT p.*, COUNT(l.id) as count, s.price, s.discount FROM products p
             JOIN stocks s on s.product_id = p.id
-            JOIN bussiness b on s.bussiness_id = s.id
+            JOIN bussiness b on s.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.slug LIKE ?
             AND p.slug LIKE ?
@@ -224,9 +224,6 @@ def get_popular_by_bussiness(
                 (like_string(slug),),
             ).fetchone()
         connection.commit()
-        print(limited)
-        print(res)
-        print(count)
 
         return [res, count["count"]]
     except Exception as error:
@@ -440,17 +437,20 @@ def get_top_rated_by_bussiness(
     slug, bussiness, limited=False, start_page=None, end_page=None, order="DESC"
 ):
     try:
+        print("bussiness slug", like_string(bussiness))
+        print("product slug", like_string(slug))
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT p.*, AVG(r.score) as avg_score FROM products p
+            SELECT p.*, AVG(r.score) as avg_score, s.price, s.discount FROM products p
             JOIN stocks s on s.product_id = p.id
-            JOIN bussiness b on s.bussiness_id = s.id
+            JOIN bussiness b on s.bussiness_id = b.id
             JOIN ratings r ON r.product_id = p.id
             WHERE b.slug LIKE ?
             AND p.slug LIKE ?
             AND p.status = "APPROVED"
+            GROUP BY p.id
             ORDER BY avg_score  {order}
             {limit_or_pagination(limited, start_page, end_page)}
             """,
@@ -588,9 +588,9 @@ def get_newest_by_bussiness(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT p.* FROM products p
+            SELECT p.*, s.price, s.discount FROM products p
             JOIN stocks s on s.product_id = p.id
-            JOIN bussiness b on s.bussiness_id = s.id
+            JOIN bussiness b on s.bussiness_id = b.id
             WHERE b.slug LIKE ?
             AND p.slug LIKE ?
             AND p.status = "APPROVED"
@@ -951,7 +951,6 @@ def tags_setter(product_id, tags):
             """INSERT INTO tags_products (tag_id, product_id) VALUES (?,?) """,
             (tags_data),
         ).fetchall()
-        print(res)
         connection.commit()
         return res
     except Exception as error:

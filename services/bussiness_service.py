@@ -96,7 +96,6 @@ def update(id, obj):
         ).fetchall()
 
         connection.commit()
-        print(res)
         return res
     except Exception as error:
         print(error)
@@ -148,7 +147,6 @@ def get_by_slug(slug):
         ).fetchone()
 
         connection.commit()
-        print(res)
         return res
     except Exception as error:
         print(error)
@@ -195,7 +193,6 @@ def get_popular_by_brand(
                 (like_string(city), like_string(slug)),
             ).fetchone()
         connection.commit()
-        print("POP BY BRAND", res, count, slug, city)
         return [res, count["count"]]
     except Exception as error:
         print(error)
@@ -406,12 +403,13 @@ def get_most_discount_by_bussiness(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT p.*, AVG(s.discount) as avg_disc FROM products p
+            SELECT p.*, AVG(s.discount) as avg_disc, s.price, s.discount FROM products p
             JOIN stocks s ON s.product_id = p.id
             JOIN bussiness b ON b.id = s.bussiness_id
             WHERE b.slug LIKE ?
             AND p.slug LIKE ?
             AND b.status = "APPROVED"
+            GROUP BY p.id
             ORDER BY avg_disc {order}
             {limit_or_pagination(limited, start_page, end_page)}
             """,
@@ -420,9 +418,7 @@ def get_most_discount_by_bussiness(
                 like_string(slug),
             ),
         ).fetchall()
-        print(like_string(slug))
         count = {"count": ""}
-        print("COUNT", count, limited)
 
         if not limited:
             count = connection.execute(
@@ -436,7 +432,6 @@ def get_most_discount_by_bussiness(
                 (like_string(slug),),
             ).fetchone()
         connection.commit()
-        print("COUNT", count, res)
         return [res, count["count"]]
     except Exception as error:
         print(error)

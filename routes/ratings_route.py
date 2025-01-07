@@ -23,7 +23,6 @@ def find_all():
 @ratings_bp.route("/", methods=["POST"])
 # @secure_access()
 def create():
-    print("we re here")
     data = request.get_json()
     score = data.get("score", None)
     product_id = data.get("product_id", None)

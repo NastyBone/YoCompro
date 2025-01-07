@@ -84,15 +84,12 @@ def find_by_slug(slug):
     lat = session.get("lat", None)
     lon = session.get("lon", None)
     product = get_by_slug(slug)[0]
-    print(product)
     [bussiness_by_distance, count] = get_bussiness_has_product_by_distance(
         int(product["id"]), lat, lon, True
     )
     [bussiness_by_price, count] = get_bussiness_has_product_by_price(
         int(product["id"]), True
     )
-    print(bussiness_by_distance)
-    print(bussiness_by_price)
     brand = brand_by_product(int(product["id"]))[0]
     rating = rating_by_product(int(product["id"]))[0]
 
@@ -101,7 +98,6 @@ def find_by_slug(slug):
     #                        brand=brand,
     #                        rating=rating,
     #                        bussiness=bussiness)
-    print(product)
     return render_template(
         "details/detail_product.html",
         product=product,
