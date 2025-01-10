@@ -82,9 +82,11 @@ def edit_form():
 @bussiness_bp.route("/search/<slug>", methods=["GET"])
 def find_by_slug(slug):
     bussiness = get_by_slug(slug)
+    print(bussiness)
+    print(slug)
     if not bussiness:
         print("Not found")
-        ValueError("Not found")
+        return ValueError("Not found")
 
     [popular, count] = popular_products("", slug, True)
     [popular_brands, count] = brands_popular(int(bussiness["id"]), True)

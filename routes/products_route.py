@@ -83,7 +83,7 @@ def edit_form():
 def find_by_slug(slug):
     lat = session.get("lat", None)
     lon = session.get("lon", None)
-    product = get_by_slug(slug)[0]
+    product = get_by_slug(slug)
     [bussiness_by_distance, count] = get_bussiness_has_product_by_distance(
         int(product["id"]), lat, lon, True
     )
@@ -158,7 +158,7 @@ def find_by_bussiness_filter(slug, filter=filter_list["newest"]):
     lon = session.get("lon", None)
     page = request.args.get("page", None)
     [start_pagination, end_pagination] = set_pagination(page)
-    product = get_by_slug(slug)[0]
+    product = get_by_slug(slug)
     if filter == "nearest":
         response = get_bussiness_has_product_by_distance(
             product_id=product["id"],

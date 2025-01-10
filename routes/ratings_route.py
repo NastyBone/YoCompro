@@ -30,7 +30,7 @@ def create():
     comment = data.get("comment", None)
     product_id = data.get("product_id", None)
     bussiness_id = data.get("bussiness_id", None)
-    user_id = 1  # current_user.get_id()
+    user_id = 3  # current_user.get_id()
     if not user_id:
         return jsonify({"error": "User not found"}), 404
     response = insert_rating(user_id, bussiness_id, product_id, score, comment)
@@ -67,11 +67,15 @@ def find_by_bussiness(slug):
     page = request.args.get("page", None)
     [start_pagination, end_pagination] = set_pagination(page)
     bussiness = get_bussiness(slug)
-    response = get_by_bussiness(int(bussiness["id"]), start_pagination, end_pagination)
+    [response, count] = get_by_bussiness(
+        int(bussiness["id"]), False, start_pagination, end_pagination
+    )
     return render_template(
         "ratings/ratings_bussiness.html",
         ratings=response,
         bussiness=bussiness,
+        count=count,
+        pages=count / 12,
     )
 
 
@@ -80,10 +84,10 @@ def find_by_product(slug):
     page = request.args.get("page", None)
     [start_pagination, end_pagination] = set_pagination(page)
     product = get_product(slug)
-    print(product)
     [response, count] = get_by_product(
-        int(product["id"]), start_pagination, end_pagination
+        int(product["id"]), False, start_pagination, end_pagination
     )
+    print(count)
     return render_template(
         "ratings/ratings_products.html",
         ratings=response,
@@ -93,18 +97,30 @@ def find_by_product(slug):
     )
 
 
-@ratings_bp.route("/<id>/<score>/<time>", methods=["GET"])
-def find_auxiliar(id, score, time):
+@ratings_bp.route("/<type>/<id>/aux", methods=["GET"])
+def find_auxiliar(type, id):
+    score = request.args.get("score")
+    time = request.args.get("time")
     if score not in ["ASC", "DESC"]:
         ValueError("Undefined type")
     if time not in ["ASC", "DESC"]:
         ValueError("Undefined Filter")
-    page = request.args.get("page", None)
+    page = request.args.get("page")
     [start_pagination, end_pagination] = set_pagination(page)
-    [response, count] = get_by_bussiness(
-        id, False, start_pagination, end_pagination, score, time
-    )
-    return jsonify({"response": response, "count": count})
+
+    if type == "bussiness":
+        [response, count] = get_by_bussiness(
+            id, False, start_pagination, end_pagination, score, time
+        )
+    elif type == "products":
+        print(id, False, start_pagination, end_pagination, score, time)
+        [response, count] = get_by_product(
+            id, False, start_pagination, end_pagination, score, time
+        )
+    else:
+        ValueError("Type not valid")
+    print(response)
+    return jsonify({"data": response, "count": count / 12})  # 12 per page
 
 
 # DESUSO

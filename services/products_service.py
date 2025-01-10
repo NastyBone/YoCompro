@@ -252,7 +252,7 @@ def get_popular_by_brand(
             """,
             (like_string(slug),),
         ).fetchall()
-        count = {"count": ""}
+        count = {"count": 0}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -457,7 +457,7 @@ def get_top_rated_by_bussiness(
                 like_string(slug),
             ),
         ).fetchall()
-        count = {"count": ""}
+        count = {"count": 0}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -559,7 +559,7 @@ def get_newest_by_brand(
             """,
             (like_string(slug),),
         ).fetchall()
-        count = {"count": ""}
+        count = {"count": 0}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -601,7 +601,7 @@ def get_newest_by_bussiness(
                 like_string(slug),
             ),
         ).fetchall()
-        count = {"count": ""}
+        count = {"count": 0}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -691,7 +691,7 @@ def get_popular_by_owner(
             """,
             (owner_id,),
         ).fetchall()
-        count = {"count": ""}
+        count = {"count": 0}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -732,7 +732,7 @@ def get_top_rated_by_owner(
             """,
             (owner_id,),
         ).fetchall()
-        count = {"count": ""}
+        count = {"count": 0}
         if not limited:
             count = connection.execute(
                 f""" 

@@ -97,7 +97,7 @@ def get_by_user(user_id, limited=False, start_page=None, end_page=None, order="D
             """,
             (user_id,),
         ).fetchall()
-        count = {"count": ""}
+        count = {"count": 0}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -133,19 +133,22 @@ def get_by_bussiness(
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            f"""SELECT r.* {limited_select_user} FROM ratings 
+            f"""SELECT r.* {limited_select_user} FROM ratings r
             {limited_join_user}
             WHERE bussiness_id = ? 
             {limited_comment}
-            ORDER BY score {order_rating} {order_time}
+            ORDER BY score {order_rating}, created_at {order_time}
             {limit_or_pagination(limited, start_page, end_page)}""",
             (bussiness_id,),
         ).fetchall()
-        count = {"count": ""}
+        count = {"count": 0}
         if not limited:
             count = connection.execute(
                 f""" 
-           SELECT COUNT(*) as count FROM ratings WHERE bussiness_id = ?
+            SELECT COUNT(*) as count FROM ratings r
+            {limited_join_user}
+            WHERE bussiness_id = ? 
+            {limited_comment}
             """,
                 (bussiness_id,),
             ).fetchone()
@@ -158,7 +161,12 @@ def get_by_bussiness(
 
 # DONE: Load ratings for products
 def get_by_product(
-    product_id, limited=False, start_page=None, end_page=None, order="DESC"
+    product_id,
+    limited=False,
+    start_page=None,
+    end_page=None,
+    order_rating="DESC",
+    order_time="DESC",
 ):
     try:
         limited_select_user = ""
@@ -175,15 +183,18 @@ def get_by_product(
             {limited_join_user}
             WHERE product_id = ? 
             {limited_comment}
-            ORDER BY score {order}
+            ORDER BY score {order_rating}, created_at {order_time}
             {limit_or_pagination(limited, start_page, end_page)}""",
             (product_id,),
         ).fetchall()
-        count = {"count": ""}
+        count = {"count": 0}
         if not limited:
             count = connection.execute(
                 f""" 
-           SELECT COUNT(*) as count FROM ratings WHERE product_id = ? 
+            SELECT COUNT(*) as count FROM ratings r
+            {limited_join_user}
+            WHERE product_id = ? 
+            {limited_comment}
             """,
                 (product_id,),
             ).fetchone()

@@ -23,13 +23,14 @@ def slug_builder(name):
 
 
 def set_pagination(page: str | None = None, perPage: int | None = 12):
-    if page == None or page == 1:
+
+    if page == None or page == 1 or page == "":
         start_pagination = 0
         end_pagination = perPage
     else:
         start_pagination = (int(page) - 1) * perPage
         end_pagination = start_pagination + perPage
-    return [start_pagination, end_pagination]
+    return [int(start_pagination), int(end_pagination)]
 
 
 def dict_factory(cursor, row):
@@ -44,6 +45,7 @@ def like_string(string):
 
 
 def limit_or_pagination(limited, start_page, end_page):
+    print(isinstance(start_page, int), isinstance(end_page, int))
     if (start_page != None and end_page != None) and not (
         isinstance(start_page, int) and isinstance(end_page, int)
     ):
@@ -51,7 +53,7 @@ def limit_or_pagination(limited, start_page, end_page):
     limited_clause = "LIMIT 5" if limited else ""
     pagination_clause = (
         f"LIMIT {int(end_page)} OFFSET {start_page}"
-        if start_page is not None and end_page is not None
+        if start_page is not None and end_page is not None and not limited
         else ""
     )
     return f"{limited_clause} {pagination_clause}"

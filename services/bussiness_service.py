@@ -142,7 +142,9 @@ def get_by_slug(slug):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            "SELECT * FROM bussiness WHERE slug LIKE ? AND status = 'APPROVED'",
+            """SELECT b.*, COALESCE(AVG(score), 0) as avg_score FROM bussiness b 
+             LEFT JOIN ratings r ON r.bussiness_id = b.id
+            WHERE slug LIKE ? AND status = 'APPROVED'""",
             (like_string(slug),),
         ).fetchone()
 
@@ -178,7 +180,7 @@ def get_popular_by_brand(
                 like_string(slug),
             ),
         ).fetchall()
-        count = {"count": ""}
+        count = {"count": 0}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -418,7 +420,7 @@ def get_most_discount_by_bussiness(
                 like_string(slug),
             ),
         ).fetchall()
-        count = {"count": ""}
+        count = {"count": 0}
 
         if not limited:
             count = connection.execute(
@@ -459,7 +461,7 @@ def get_by_owner_popular(
             """,
             (owner_id,),
         ).fetchall()
-        count = {"count": ""}
+        count = {"count": 0}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -497,7 +499,7 @@ def get_by_owner_top_rated(
             """,
             (owner_id,),
         ).fetchall()
-        count = {"count": ""}
+        count = {"count": 0}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -644,7 +646,7 @@ def get_by_nearest_limited(lat, lon, city):
 SELECT * , RANK() OVER (ORDER BY ( 3959 * acos( cos( radians(?) ) * cos( radians(lat) ) * cos( radians(lon) - radians(?) ) + sin( radians(?) ) * sin( radians(lat) ) ) )  DESC) as rank
 FROM bussiness
 WHERE city LIKE ?
-
+AND status = 'APPROVED'
 LIMIT 5""",
             (lat, lon, lat, like_string(city)),
         ).fetchall()
@@ -676,7 +678,7 @@ def get_bussiness_has_product_by_price(
             """,
             (product_id,),
         ).fetchall()
-        count = {"count": ""}
+        count = {"count": 0}
         if not limited:
             count = connection.execute(
                 f""" 
@@ -721,7 +723,7 @@ def get_bussiness_has_product_by_distance(
                 product_id,
             ),
         ).fetchall()
-        count = {"count": ""}
+        count = {"count": 0}
         if not limited:
             count = connection.execute(
                 f""" 

@@ -125,7 +125,7 @@
         const stars = document.querySelectorAll('.star');
         const averageDisplay = document.getElementById('average');
         const countDisplay = document.getElementById('count');
-        let average = parseFloat(document.getElementById('avg_score').innerHTML) | 0;
+        let average = parseFloat(document.getElementById('avg_score').innerHTML);
         let scoreCount = '{{ rating.count }}' | 0;
 
         function updateStars(rating) {
@@ -148,6 +148,7 @@
             });
 
             star.addEventListener('click', async () => {
+                console.log(average)
                 const result = await fetch('/ratings', {
                     method: 'POST',
                     headers: {
@@ -160,11 +161,13 @@
                 });
                 if (result.ok) {
                     const score = parseInt(star.dataset.value);
-                    scoreCount++;
                     let totalScore = (average) * (scoreCount)
-                    averageDisplay.textContent = ((totalScore + score) / scoreCount).toFixed(1);
+                    scoreCount++;
+                    const newAverage = ((totalScore + score) / scoreCount)
+                    averageDisplay.textContent = newAverage.toFixed(1)
                     countDisplay.textContent = scoreCount;
-                    updateStars(average);
+                    updateStars(newAverage);
+                    console.log(newAverage)
                     alert('Rating saved');
                 } else {
                     alert('Error saving rating');
