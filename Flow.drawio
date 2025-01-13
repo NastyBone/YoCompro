@@ -1,6 +1,6 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/25.0.2 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="25.0.2">
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.0.4 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="26.0.4">
   <diagram name="Página-1" id="JkejbjwRbI5Mm3JxXKyr">
-    <mxGraphModel dx="6216" dy="3256" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="3672" dy="1352" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -857,10 +857,10 @@
         <mxCell id="NXJJWlPIzXNzET5rZxup-407" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.658;entryY=0.983;entryDx=0;entryDy=0;entryPerimeter=0;fontSize=12;startSize=8;endSize=8;" parent="1" source="NXJJWlPIzXNzET5rZxup-406" target="NXJJWlPIzXNzET5rZxup-350" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="QpYXfKqDC9RKlLKm9F4h-11" value="product ratings" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#FF6666;fontSize=16;" parent="1" vertex="1">
+        <mxCell id="QpYXfKqDC9RKlLKm9F4h-11" value="product ratings" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#66FF66;fontSize=16;" parent="1" vertex="1">
           <mxGeometry x="60" y="1944" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="QpYXfKqDC9RKlLKm9F4h-12" value="bussiness ratings" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#FF6666;fontSize=16;" parent="1" vertex="1">
+        <mxCell id="QpYXfKqDC9RKlLKm9F4h-12" value="bussiness ratings" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#66FF66;fontSize=16;" parent="1" vertex="1">
           <mxGeometry x="286" y="1897" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="QpYXfKqDC9RKlLKm9F4h-14" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.65;entryY=0.033;entryDx=0;entryDy=0;entryPerimeter=0;fontSize=12;startSize=8;endSize=8;" parent="1" source="NXJJWlPIzXNzET5rZxup-172" target="QpYXfKqDC9RKlLKm9F4h-11" edge="1">
@@ -922,12 +922,6 @@
         </mxCell>
         <mxCell id="dOirgz0_V3Rg2CDJSkMz-13" value="view user profile" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#FF6666;fontSize=16;" parent="1" vertex="1">
           <mxGeometry x="-1125" y="2495" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="dOirgz0_V3Rg2CDJSkMz-14" value="product ratings" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#FF6666;fontSize=16;" parent="1" vertex="1">
-          <mxGeometry x="-1661" y="2489" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="dOirgz0_V3Rg2CDJSkMz-15" value="bussiness ratings" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#FF6666;fontSize=16;" parent="1" vertex="1">
-          <mxGeometry x="-1661" y="2423" width="120" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

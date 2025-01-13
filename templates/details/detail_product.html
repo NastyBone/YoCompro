@@ -148,7 +148,6 @@
             });
 
             star.addEventListener('click', async () => {
-                console.log(average)
                 const result = await fetch('/ratings', {
                     method: 'POST',
                     headers: {
@@ -167,7 +166,6 @@
                     averageDisplay.textContent = newAverage.toFixed(1)
                     countDisplay.textContent = scoreCount;
                     updateStars(newAverage);
-                    console.log(newAverage)
                     alert('Rating saved');
                 } else {
                     alert('Error saving rating');
