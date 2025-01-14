@@ -6,6 +6,7 @@ from services.ratings_service import get_average_by_product as rating_by_product
 from services.bussiness_service import (
     get_bussiness_has_product_by_distance,
     get_bussiness_has_product_by_price,
+    search_by_products,
 )
 from helpers import roles_list, set_pagination, filter_list
 
@@ -185,6 +186,21 @@ def get_products_by_status(status):
     [start_pagination, end_pagination] = set_pagination(page)
     response = get_by_status(status, start_pagination, end_pagination, word)
     return jsonify(response)
+
+
+@products_bp.route("<slug>/search/bussiness", methods=["GET"])
+def bussiness_by_products(slug):
+    lat = session.get("lat", None)
+    lon = session.get("lon", None)
+    page = request.args.get("page", None)
+    filter = request.args.get("filter", "cheapest")
+    order = request.args.get("order", "DESC")
+    word = request.args.get("word", "")
+    [start_pagination, end_pagination] = set_pagination(page)
+    [response, count] = search_by_products(
+        slug, word, lat, lon, start_pagination, end_pagination, filter, order
+    )
+    return render_template("search/product_search.html")
 
 
 # DESCARTADO

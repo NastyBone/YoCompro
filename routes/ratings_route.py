@@ -87,7 +87,6 @@ def find_by_product(slug):
     [response, count] = get_by_product(
         int(product["id"]), False, start_pagination, end_pagination
     )
-    print(count)
     return render_template(
         "ratings/ratings_products.html",
         ratings=response,

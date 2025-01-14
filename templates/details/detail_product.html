@@ -119,6 +119,12 @@
             </a>
             {% endfor %}
         </div>
+        <div class="tw-flex tw-w-full tw-m-4 tw-justify-center tw-items-center">
+            <a href="{{url_for('products.bussiness_by_products', slug=product.slug)}}"
+                class="btn btn-primary btn-large">View more
+                bussiness with this
+                products</a>
+        </div>
     </div>
 
     <script>

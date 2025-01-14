@@ -600,6 +600,10 @@ video {
   margin: auto;
 }
 
+.tw-m-4 {
+  margin: 1rem;
+}
+
 .tw-my-5 {
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;

@@ -6,6 +6,7 @@ from helpers import (
     dict_factory,
     like_string,
     slug_builder,
+    bussiness_filtering,
 )
 
 
@@ -764,33 +765,6 @@ def get_newest(city, start_page, end_page):
         raise Exception(error)
 
 
-def search_on_bussiness(word, bussiness_id, start_page, end_page):
-    try:
-        with sqlite3.connect("database.db") as connection:
-            connection.row_factory = dict_factory
-            res = connection.execute(
-                f"""
-           SELECT p.* FROM products p
-           JOIN stocks s on s.product_id = p.id
-           JOIN bussiness b on b.id = s.bussiness_id
-           WHERE
-           p.name LIKE ?
-           AND b.id = ?
-           AND b.status = "APPROVED"
-           GROUP BY p.id
-           LIMIT ?
-           OFFSET ?
-               """,
-                (like_string(word), bussiness_id, end_page, start_page),
-            ).fetchall()
-
-        connection.commit()
-        return res
-    except Exception as error:
-        print(error)
-        raise Exception(error)
-
-
 def get_by_status(status, start_page, end_page, word):
     try:
         if status not in status_list:
@@ -830,6 +804,48 @@ JOIN users u ON b.user_id = u.id
         ).fetchall()
         connection.commit()
         return res
+    except Exception as error:
+        print(error)
+        raise Exception(error)
+
+
+def search_by_products(
+    product_slug,
+    bussiness_word,
+    lat,
+    lon,
+    start_page,
+    end_page,
+    bussiness_filter,
+    order,
+):
+    try:
+        with sqlite3.connect("database.db") as connection:
+            connection.row_factory = dict_factory
+        res = connection.execute(
+            f""" SELECT b.*, s.price, s.discount, ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance FROM bussiness b
+                JOIN stocks s ON s.bussiness_id = b.id
+                JOIN products p ON s.product_id = p.id
+                WHERE p.slug LIKE ?
+                AND b.name LIKE ? 
+                AND b.status = "APPROVED" and p.status = "APPROVED"
+                ORDER BY {bussiness_filtering(bussiness_filter, order)}
+                {limit_or_pagination(False, start_page, end_page)}
+           """,
+            (lat, lat, lon, like_string(product_slug), like_string(bussiness_word)),
+        ).fetchall()
+        count = connection.execute(
+            """ SELECT COUNT(b.id) as count FROM bussiness b
+                JOIN stocks s ON s.bussiness_id = b.id
+                JOIN products p ON s.product_id = p.id
+                WHERE p.slug LIKE ?
+                AND b.name LIKE ? 
+                AND b.status = "APPROVED" and p.status = "APPROVED" 
+        """,
+            (like_string(product_slug), like_string(bussiness_word)),
+        ).fetchone()
+        connection.commit()
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)

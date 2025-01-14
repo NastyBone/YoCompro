@@ -1,7 +1,13 @@
 import sqlite3
 from helpers import limit_or_pagination, type_list
 from classes.product_class import *
-from helpers import status_list, dict_factory, like_string, slug_builder
+from helpers import (
+    status_list,
+    dict_factory,
+    like_string,
+    slug_builder,
+    product_filtering,
+)
 
 
 def get(id):
@@ -924,6 +930,46 @@ def get_by_status(status, start_page, end_page, word):
         SELECT COUNT(*) as count FROM products WHERE status = ? AND name LIKE ?
         """,
             (status_list[status], like_string(word)),
+        ).fetchone()
+        connection.commit()
+        return [res, count["count"]]
+    except Exception as error:
+        print(error)
+        raise Exception(error)
+
+
+def search_by_bussiness(
+    bussiness_slug,
+    product_word,
+    start_page,
+    end_page,
+    product_filter,
+    order,
+):
+    try:
+        with sqlite3.connect("database.db") as connection:
+            connection.row_factory = dict_factory
+        res = connection.execute(
+            f""" SELECT p.*, s.price, s.discount FROM products p
+                JOIN stocks s ON s.product_id = p.id
+                JOIN bussiness b ON s.bussiness_id = b.id
+                WHERE b.slug LIKE ?
+                AND p.name LIKE ? 
+                AND b.status = "APPROVED" and p.status = "APPROVED"
+                ORDER BY {product_filtering(product_filter, order)}
+                {limit_or_pagination(False, start_page, end_page)}
+           """,
+            (like_string(bussiness_slug), like_string(product_word)),
+        ).fetchall()
+        count = connection.execute(
+            """ SELECT COUNT(p.id) as count FROM bussiness b
+                JOIN stocks s ON s.bussiness_id = b.id
+                JOIN products p ON s.product_id = p.id
+                WHERE p.slug LIKE ?
+                AND b.name LIKE ? 
+                AND b.status = "APPROVED" and p.status = "APPROVED" 
+        """,
+            (like_string(bussiness_slug), like_string(product_word)),
         ).fetchone()
         connection.commit()
         return [res, count["count"]]

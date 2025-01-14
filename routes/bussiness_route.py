@@ -4,6 +4,7 @@ from services.products_service import (
     get_newest_by_bussiness as newest_products,
     get_popular_by_bussiness as popular_products,
     get_top_rated_by_bussiness as top_rated_products,
+    search_by_bussiness,
 )
 
 from services.brands_service import get_popular_by_bussiness as brands_popular
@@ -107,14 +108,18 @@ def find_by_slug(slug):
     )
 
 
-@bussiness_bp.route("/search/product/<slug>", methods=["GET"])
-def find_by_slug_product(slug):
+@bussiness_bp.route("<slug>/search/products", methods=["GET"])
+def products_by_bussiness(slug):
     # TODO: Implement filtering wtf is wrong
-    bussiness_id = request.args.get("bussiness_id")
     page = request.args.get("page", None)
+    filter = request.args.get("filter", "cheapest")
+    order = request.args.get("order", "DESC")
+    word = request.args.get("word", "")
     [start_pagination, end_pagination] = set_pagination(page)
-    products = search_on_bussiness(slug, bussiness_id, start_pagination, end_pagination)
-    return jsonify(products)
+    [response, count] = search_by_bussiness(
+        slug, word, start_pagination, end_pagination, filter, order
+    )
+    return render_template("search/bussiness_search.html")
 
 
 @bussiness_bp.route("/popular", methods=["GET"])

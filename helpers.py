@@ -45,7 +45,6 @@ def like_string(string):
 
 
 def limit_or_pagination(limited, start_page, end_page):
-    print(isinstance(start_page, int), isinstance(end_page, int))
     if (start_page != None and end_page != None) and not (
         isinstance(start_page, int) and isinstance(end_page, int)
     ):
@@ -57,3 +56,23 @@ def limit_or_pagination(limited, start_page, end_page):
         else ""
     )
     return f"{limited_clause} {pagination_clause}"
+
+
+def bussiness_filtering(filter: str, order):
+    if filter not in ["cheapest", "nearest"]:
+        return ValueError("Invalid filter")
+    if filter == "cheapest":
+        return f"price {order}"
+    else:
+        return f"distance {order}"
+
+
+def product_filtering(filter: str, order):
+    if filter not in ["top_rated", "popular", "newest"]:
+        return ValueError("Invalid filter")
+    if filter == "top_rated":
+        return f"r.score {order}"
+    elif filter == "popular":
+        return f"order {order}"
+    else:
+        return f"created_at {order}"
