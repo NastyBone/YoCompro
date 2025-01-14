@@ -153,6 +153,44 @@ def find_all_by_discount():
     return jsonify(response)
 
 
+@products_bp.route("/<status>", methods=["GET"])
+def get_products_by_status(status):
+    if status not in status_list:
+        return "error"
+    word = request.args.get("word", "")
+    page = request.args.get("page", None)
+    [start_pagination, end_pagination] = set_pagination(page)
+    response = get_by_status(status, start_pagination, end_pagination, word)
+    return jsonify(response)
+
+
+@products_bp.route("<slug>/search/bussiness", methods=["GET"])
+def bussiness_by_products(slug):
+    print("is here??")
+    lat = session.get("lat", None)
+    lon = session.get("lon", None)
+    page = request.args.get("page", None)
+    json_req = request.args.get("json", None)
+    filter = request.args.get("filter", "cheapest")
+    order = request.args.get("order", "DESC")
+    word = request.args.get("word", "")
+    [start_pagination, end_pagination] = set_pagination(page)
+    product = get_by_slug(slug)
+    [response, count] = search_by_products(
+        slug, word, lat, lon, start_pagination, end_pagination, filter, order
+    )
+    if not json_req:
+        return render_template(
+            "search/product_search.html",
+            items=response,
+            product=product,
+            count=count,
+            pages=count / 12,
+        )
+    else:
+        return jsonify({"data": response, "count": count / 12})
+
+
 @products_bp.route("/<slug>/<filter>", methods=["GET"])
 def find_by_bussiness_filter(slug, filter=filter_list["newest"]):
     lat = session.get("lat", None)
@@ -175,32 +213,6 @@ def find_by_bussiness_filter(slug, filter=filter_list["newest"]):
             end_page=end_pagination,
         )
     return jsonify(response)
-
-
-@products_bp.route("/<status>", methods=["GET"])
-def get_products_by_status(status):
-    if status not in status_list:
-        return "error"
-    word = request.args.get("word", "")
-    page = request.args.get("page", None)
-    [start_pagination, end_pagination] = set_pagination(page)
-    response = get_by_status(status, start_pagination, end_pagination, word)
-    return jsonify(response)
-
-
-@products_bp.route("<slug>/search/bussiness", methods=["GET"])
-def bussiness_by_products(slug):
-    lat = session.get("lat", None)
-    lon = session.get("lon", None)
-    page = request.args.get("page", None)
-    filter = request.args.get("filter", "cheapest")
-    order = request.args.get("order", "DESC")
-    word = request.args.get("word", "")
-    [start_pagination, end_pagination] = set_pagination(page)
-    [response, count] = search_by_products(
-        slug, word, lat, lon, start_pagination, end_pagination, filter, order
-    )
-    return render_template("search/product_search.html")
 
 
 # DESCARTADO

@@ -59,7 +59,7 @@ def limit_or_pagination(limited, start_page, end_page):
 
 
 def bussiness_filtering(filter: str, order):
-    if filter not in ["cheapest", "nearest"]:
+    if filter not in ["cheapest", "nearest", ""]:
         return ValueError("Invalid filter")
     if filter == "cheapest":
         return f"price {order}"
