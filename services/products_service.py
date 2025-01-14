@@ -950,9 +950,11 @@ def search_by_bussiness(
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            f""" SELECT p.*, s.price, s.discount FROM products p
+            f""" SELECT p.*, s.price, s.discount, COUNT(l.id) as count FROM products p
                 JOIN stocks s ON s.product_id = p.id
                 JOIN bussiness b ON s.bussiness_id = b.id
+                JOIN ratings r On r.bussiness_id = b.id
+                JOIN lists_stocks l On l.stock_id = s.id
                 WHERE b.slug LIKE ?
                 AND p.name LIKE ? 
                 AND b.status = "APPROVED" and p.status = "APPROVED"

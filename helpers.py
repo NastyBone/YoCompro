@@ -68,11 +68,11 @@ def bussiness_filtering(filter: str, order):
 
 
 def product_filtering(filter: str, order):
-    if filter not in ["top_rated", "popular", "newest"]:
+    if filter not in ["top_rated", "popular", "newest", ""]:
         return ValueError("Invalid filter")
     if filter == "top_rated":
         return f"r.score {order}"
     elif filter == "popular":
-        return f"order {order}"
+        return f"count {order}"
     else:
         return f"created_at {order}"

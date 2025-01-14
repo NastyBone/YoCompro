@@ -188,16 +188,15 @@
         })
         const content = await response.json();
         const data = content.data
-        console.log(data)
         const cardContainer = document.getElementById('search__elements')
         cardContainer.innerHTML = '';
         const htmlContent = data.map(item => `<a class="card" href=../bussiness/search/${item.slug}>
                                     <div class="card-header tw-flex tw-justify-between">
                             <div>
-                                <strong>${Math.round(item.price)}$ USD</strong>
+                                <strong>${(item.price).toFixed(2)}$ USD</strong>
                             </div>
                             <div>
-                                <strong>${Math.round(item.discount)}% discount</strong>
+                                <strong>${(item.discount).toFixed(1)}% discount</strong>
                             </div>
                         </div>
                     <div class="card-body tw-flex tw-flex-col tw-gap-1">
@@ -207,7 +206,7 @@
                         <p class="card-text">${item.description}</p>
                     </div>
                                             <div class="card-header tw-flex tw-justify-center">
-                            <strong>${Math.round(item.distance)} Km away</strong>
+                            <strong>${(item.distance).toFixed(1)} Km away</strong>
                         </div>
                 </a>`).join('')
         cardContainer.innerHTML = htmlContent;

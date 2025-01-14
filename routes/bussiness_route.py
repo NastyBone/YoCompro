@@ -112,14 +112,25 @@ def find_by_slug(slug):
 def products_by_bussiness(slug):
     # TODO: Implement filtering wtf is wrong
     page = request.args.get("page", None)
-    filter = request.args.get("filter", "cheapest")
+    filter = request.args.get("filter", "top_rated")
     order = request.args.get("order", "DESC")
+    json_req = request.args.get("json", None)
     word = request.args.get("word", "")
+    bussiness = get_by_slug(slug)
     [start_pagination, end_pagination] = set_pagination(page)
     [response, count] = search_by_bussiness(
         slug, word, start_pagination, end_pagination, filter, order
     )
-    return render_template("search/bussiness_search.html")
+    if not json_req:
+        return render_template(
+            "search/bussiness_search.html",
+            items=response,
+            count=count,
+            pages=count / 12,
+            bussiness=bussiness,
+        )
+    else:
+        return jsonify({"data": response, "count": count})
 
 
 @bussiness_bp.route("/popular", methods=["GET"])
