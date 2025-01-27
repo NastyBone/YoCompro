@@ -12,6 +12,8 @@
             <div class="tw-w-2/3 tw-text-center">
                 <h1 class="tw-text-2xl tw-font-bold">{{ bussiness.name }}</h1>
                 <p class="tw-text-sm">{{ bussiness.description }}</p>
+                <p class="tw-text-xs">{{ bussiness.distance | round(2) }} Km away</p>
+
                 <div>
                     <div class="rating" id="rating">
                         <span class="star" data-value="1">&#9733;</span>
@@ -26,7 +28,7 @@
                         More Ratings</a>
                     <span id="avg_score" style="display: none;">{{ rating.avg_score }}</span>
                 </div>
-                <div class="tw-flex tw-justify-evenly tw-mt-2 tw-gap-4 ">
+                <div class="tw-flex tw-justify-around tw-mt-2 tw-gap-4 ">
                     <div class="tw-flex tw-flex-col tw-justify-evenly">
                         <div>
                             <p>Average</p>
@@ -42,7 +44,22 @@
                         </div>
                     </div>
                 </div>
+                <div class="tw-flex tw-justify-around tw-mt-2 tw-gap-4 ">
+                    <div class="tw-flex tw-flex-col tw-justify-evenly">
+                        <div>
+                            <p>Phone</p>
+                            <p class="tw-font-bold" id="average">{{ bussiness.phone }}</p>
+                        </div>
 
+                    </div>
+                    <div class="tw-flex tw-justify-evenly tw-flex-col">
+
+                        <div>
+                            <p>Mail</p>
+                            <p class="tw-font-bold" id="count">{{bussiness.email}}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

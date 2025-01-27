@@ -138,15 +138,22 @@ def update_status(id, status):
         raise Exception(error)
 
 
-def get_by_slug(slug):
+def get_by_slug(slug, lat, lon):
     try:
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """SELECT b.*, COALESCE(AVG(score), 0) as avg_score FROM bussiness b 
+            """SELECT b.*, COALESCE(AVG(score), 0) as avg_score, 
+              ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance
+            FROM bussiness b 
              LEFT JOIN ratings r ON r.bussiness_id = b.id
             WHERE slug LIKE ? AND status = 'APPROVED'""",
-            (like_string(slug),),
+            (
+                lat,
+                lat,
+                lon,
+                like_string(slug),
+            ),
         ).fetchone()
 
         connection.commit()

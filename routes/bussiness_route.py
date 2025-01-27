@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, jsonify
+from flask import Blueprint, request, render_template, jsonify, session
 from services.bussiness_service import *
 from services.products_service import (
     get_newest_by_bussiness as newest_products,
@@ -82,9 +82,10 @@ def edit_form():
 
 @bussiness_bp.route("/search/<slug>", methods=["GET"])
 def find_by_slug(slug):
-    bussiness = get_by_slug(slug)
+    lat = session.get("lat", 0)
+    lon = session.get("lon", 0)
+    bussiness = get_by_slug(slug, lat, lon)
     print(bussiness)
-    print(slug)
     if not bussiness:
         print("Not found")
         return ValueError("Not found")
