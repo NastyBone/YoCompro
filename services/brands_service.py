@@ -242,7 +242,6 @@ def get_by_status(status, start_page, end_page, word):
             (status_list[status], like_string(word)),
         ).fetchone()
         connection.commit()
-        print("statys", status_list[status])
         return [res, count["count"]]
     except Exception as error:
         print(error)

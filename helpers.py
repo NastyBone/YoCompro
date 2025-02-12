@@ -10,7 +10,12 @@ filter_list = {
     "most_discount": "MOST_DISCOUNT",
     "cheapest": "CHEAPEST",
 }
-type_list = {"brand": "BRAND", "bussiness": "BUSSINESS"}
+type_list = {
+    "brand": "BRAND",
+    "bussiness": "BUSSINESS",
+    "product": "PRODUCT",
+    "tags": "TAGS",
+}
 
 
 def to_tag_ids(tags):

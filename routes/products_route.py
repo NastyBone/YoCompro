@@ -157,11 +157,11 @@ def find_all_by_discount():
 def get_products_by_status(status):
     if status not in status_list:
         return "error"
-    word = request.args.get("word", "")
+    name = request.args.get("name", "")
     page = request.args.get("page", None)
     [start_pagination, end_pagination] = set_pagination(page)
-    response = get_by_status(status, start_pagination, end_pagination, word)
-    return jsonify(response)
+    [response, count] = get_by_status(status, start_pagination, end_pagination, name)
+    return jsonify({"data": response, "count": count / 12})
 
 
 @products_bp.route("<slug>/search/bussiness", methods=["GET"])

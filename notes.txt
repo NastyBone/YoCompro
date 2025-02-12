@@ -129,6 +129,7 @@ X Add status filtering from gets which requires approvation
 - Similar products?
 - All paginations require an auxiliar endpoint to fetch data
 - Fix searches where if not rated or added into a list, appear anyways (prlly a left o right join)
+- Beware that tags does not have images, so adapt admin search to not forceload it or add a defaul image
 X SQL injection on end_date and start_date
 X Add security layer using user_id (might be a route decorator, might not) (ratings, lists, bussiness, stocks) (take it from request)
 

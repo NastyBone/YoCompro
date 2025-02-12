@@ -1,6 +1,6 @@
 import sqlite3
 from classes.tag_class import CreateTag, UpdateTag
-from helpers import status_list, dict_factory
+from helpers import like_string, status_list, dict_factory
 
 
 def get(id):
@@ -40,13 +40,14 @@ def get_by_status(status, start_page, end_page, word=""):
             LIMIT ?
             OFFSET ?
            """,
-            (status_list[status], word, end_page, start_page),
+            (status_list[status], like_string(word), end_page, start_page),
         ).fetchall()
         count = connection.execute(
             """
         SELECT COUNT(*) as count FROM tags WHERE status = ? AND name LIKE ?
-        """
-        )
+        """,
+            (status_list[status], like_string(word)),
+        ).fetchone()
         connection.commit()
         return [res, count["count"]]
     except Exception as error:

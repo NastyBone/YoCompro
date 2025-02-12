@@ -914,6 +914,7 @@ ORDER BY distance ASC""",
 
 def get_by_status(status, start_page, end_page, word):
     try:
+        print(status_list[status], word)
         if status not in status_list:
             raise ValueError("Not in list")
         with sqlite3.connect("database.db") as connection:
@@ -932,6 +933,7 @@ def get_by_status(status, start_page, end_page, word):
             (status_list[status], like_string(word)),
         ).fetchone()
         connection.commit()
+        print(res)
         return [res, count["count"]]
     except Exception as error:
         print(error)
