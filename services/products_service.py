@@ -673,14 +673,16 @@ def get_by_brand(id):
 
 # DONE: Popular Products of that owner
 def get_popular_by_owner(
-    owner_id, limited=False, start_page=None, end_page=None, order="DESC"
+    owner_id,
+    limited=False,
+    start_page=None,
+    end_page=None,
+    order="DESC",
+    word="",
+    status="approved",
 ):
-
-    # if (limited):
-    #     limited_clause = 'LIMIT 5'
-    # if (start_page and end_page):
-    #     pagination_clause = f'LIMIT {end_page} OFFSET {start_page}'
     try:
+        print(owner_id, status_list[status], like_string(word))
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
@@ -690,12 +692,13 @@ def get_popular_by_owner(
             JOIN bussiness b on s.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.user_id = ?
-            AND p.status = "APPROVED"
+            AND p.status LIKE ?
+            AND p.slug LIKE ?
             GROUP BY p.id
             ORDER BY count {order}
             {limit_or_pagination(limited, start_page, end_page)}
             """,
-            (owner_id,),
+            (owner_id, status_list[status], like_string(word)),
         ).fetchall()
         count = {"count": 0}
         if not limited:
@@ -706,9 +709,10 @@ def get_popular_by_owner(
             JOIN bussiness b on s.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.user_id = ?
+            AND b.slug LIKE ?
             AND p.status = "APPROVED"
             """,
-                (owner_id,),
+                (owner_id, like_string(word)),
             ).fetchone()
         connection.commit()
         return [res, count["count"]]
@@ -719,7 +723,13 @@ def get_popular_by_owner(
 
 # DONE: Popular Products of that owner
 def get_top_rated_by_owner(
-    owner_id, limited=False, start_page=None, end_page=None, order="DESC"
+    owner_id,
+    limited=False,
+    start_page=None,
+    end_page=None,
+    order="DESC",
+    word="",
+    status="approved",
 ):
     try:
         with sqlite3.connect("database.db") as connection:
@@ -731,12 +741,13 @@ def get_top_rated_by_owner(
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = b.id
             WHERE b.user_id = ?
-            AND p.status = "APPROVED"
+            AND p.status LIKE ?
+            AND p.slug LIKE ?
             GROUP BY p.id
             ORDER BY avg_score {order}
             {limit_or_pagination(limited, start_page, end_page)}
             """,
-            (owner_id,),
+            (owner_id, status_list[status], like_string(word)),
         ).fetchall()
         count = {"count": 0}
         if not limited:
@@ -747,9 +758,10 @@ def get_top_rated_by_owner(
             JOIN bussiness b ON s.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.city LIKE ?
+            AND p.slug LIKE ?
             AND p.status = "APPROVED"
             """,
-                (owner_id,),
+                (owner_id, like_string(word)),
             ).fetchone()
         connection.commit()
         return [res, count["count"]]
@@ -914,7 +926,6 @@ ORDER BY distance ASC""",
 
 def get_by_status(status, start_page, end_page, word):
     try:
-        print(status_list[status], word)
         if status not in status_list:
             raise ValueError("Not in list")
         with sqlite3.connect("database.db") as connection:

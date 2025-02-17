@@ -450,7 +450,13 @@ def get_most_discount_by_bussiness(
 
 # DONE: Popular Bussiness of that owner
 def get_by_owner_popular(
-    owner_id, limited=False, start_page=None, end_page=None, order="DESC"
+    owner_id,
+    limited=False,
+    start_page=None,
+    end_page=None,
+    order="DESC",
+    word="",
+    status="approved",
 ):
     try:
         int(owner_id)
@@ -462,12 +468,13 @@ def get_by_owner_popular(
             JOIN stocks s on s.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.user_id = ?
-            AND b.status = "APPROVED"
+            AND b.status LIKE ?
+            AND slug LIKE ?
             GROUP BY b.id
             ORDER BY count {order}
             {limit_or_pagination(limited, start_page, end_page)}
             """,
-            (owner_id,),
+            (owner_id, status_list[status], like_string(word)),
         ).fetchall()
         count = {"count": 0}
         if not limited:
@@ -477,9 +484,10 @@ def get_by_owner_popular(
             JOIN stocks s on s.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.user_id = ?
+            AND slug LIKE ?
             AND b.status = "APPROVED"
             """,
-                (owner_id,),
+                (owner_id, like_string(word)),
             ).fetchone()
         connection.commit()
         return [res, count["count"]]
@@ -490,7 +498,13 @@ def get_by_owner_popular(
 
 # DONE: Top rated Bussines
 def get_by_owner_top_rated(
-    owner_id, limited=False, start_page=None, end_page=None, order="DESC"
+    owner_id,
+    limited=False,
+    start_page=None,
+    end_page=None,
+    order="DESC",
+    word="",
+    status="approved",
 ):
     try:
         int(owner_id)
@@ -501,11 +515,12 @@ def get_by_owner_top_rated(
             SELECT b.*, AVG(score) as avg_score FROM bussiness b
             JOIN ratings ON ratings.bussiness_id = b.id
             WHERE b.user_id = ?
-            AND b.status = "APPROVED"
+            AND b.status LIKE ?
+            AND slug LIKE ?
             ORDER BY avg_score {order}
             {limit_or_pagination(limited, start_page, end_page)}
             """,
-            (owner_id,),
+            (owner_id, status_list[status], like_string(word)),
         ).fetchall()
         count = {"count": 0}
         if not limited:
@@ -514,9 +529,10 @@ def get_by_owner_top_rated(
             SELECT COUNT(*) as count FROM bussiness b
             JOIN ratings ON ratings.bussiness_id = b.id
             WHERE b.user_id = ?
+            AND slug LIKE ?
             AND b.status = "APPROVED"
             """,
-                (owner_id,),
+                (owner_id, like_string(word)),
             ).fetchone()
         connection.commit()
         return [res, count["count"]]

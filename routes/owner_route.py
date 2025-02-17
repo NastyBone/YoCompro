@@ -35,138 +35,192 @@ def main():
     #                        unpopular_bussiness=unpopular_bussiness)
 
 
-@owner_bp.route("/search/<type>/<filter>", methods=["GET"])
-def search(type="products", filter="popular"):
-    owner = current_user.get_id()
-    order = request.args.get("order", "DESC")
-    page = request.args.get("page", None)
-    [start_pagination, end_pagination] = set_pagination(page)
-    if filter == "None":
-        if type == "products":
-            [response, count] = products_popular(
-                owner, False, start_pagination, end_pagination, order
-            )
-        else:
-            [response, count] = bussiness_popular(
-                owner, False, start_pagination, end_pagination, order
-            )
-    else:
-        if filter not in filter_list:
-            raise ValueError("Not in list")
-        if type == "products":
-            if "TOP_RATED" == filter_list[filter]:
-                [response, count] = products_top_rated(
-                    owner, False, start_pagination, end_pagination
-                )
-            else:
-                [response, count] = products_popular(
-                    owner, False, start_pagination, end_pagination
-                )
-        else:
-            if "TOP_RATED" == filter_list[filter]:
-                [response, count] = bussiness_top_rated(
-                    owner, False, start_pagination, end_pagination
-                )
-            else:
-                [response, count] = bussiness_popular(
-                    owner, False, start_pagination, end_pagination
-                )
-    return jsonify(response)
+@owner_bp.route("/search", methods=["GET"])
+def general_search():
+    owner_id = 3  # current_user.get_id()
+    [start_pagination, end_pagination] = set_pagination(None)
+    [response, count] = products_popular(
+        owner_id,
+        False,
+        start_pagination,
+        end_pagination,
+    )
+
+    return render_template(
+        "search/owner_search.html",
+        items=response,
+        pages=count / 12,  # 12 per page
+    )
 
 
 @owner_bp.route("/bussiness/popular", methods=["GET"])
 def popular_bussiness():
     page = request.args.get("page", None)
+    name = request.args.get("name", "")
+    status = request.args.get("status", None)
+    if status not in status_list:
+        return "error"
     owner = current_user.get_id()
     [start_pagination, end_pagination] = set_pagination(page)
-    response = bussiness_popular(
-        owner, start_page=start_pagination, end_page=end_pagination, order="ASC"
+    [response, count] = bussiness_popular(
+        owner,
+        start_page=start_pagination,
+        end_page=end_pagination,
+        order="ASC",
+        word=name,
+        status=status,
     )
-    return jsonify(response)
+    return jsonify({"data": response, "count": count / 12})
     # return render_template('', bussiness=response)
 
 
 @owner_bp.route("/bussiness/unpopular", methods=["GET"])
 def unpopular_bussiness():
     page = request.args.get("page", None)
+    name = request.args.get("name", "")
+    status = request.args.get("status", None)
+    if status not in status_list:
+        return "error"
     owner = current_user.get_id()
     [start_pagination, end_pagination] = set_pagination(page)
-    response = bussiness_popular(
-        owner, start_page=start_pagination, end_page=end_pagination
+    [response, count] = bussiness_popular(
+        owner,
+        start_page=start_pagination,
+        end_page=end_pagination,
+        word=name,
+        status=status,
     )
-    return jsonify(response)
+    return jsonify({"data": response, "count": count / 12})
+
     # return render_template('', bussiness=response)
 
 
 @owner_bp.route("/products/popular", methods=["GET"])
 def popular_products():
     page = request.args.get("page", None)
-    owner = current_user.get_id()
+    name = request.args.get("name", "")
+    status = request.args.get("status", None)
+    if status not in status_list:
+        return "error"
+    owner = current_user.get_id() or 3
     [start_pagination, end_pagination] = set_pagination(page)
-    response = products_popular(
-        owner, start_page=start_pagination, end_page=end_pagination
+    [response, count] = products_popular(
+        owner,
+        start_page=start_pagination,
+        end_page=end_pagination,
+        word=name,
+        status=status,
     )
-    return jsonify(response)
+    return jsonify({"data": response, "count": count / 12})
+
     # return render_template('', products=response)
 
 
 @owner_bp.route("/bussiness/less_rated", methods=["GET"])
 def less_rated_bussiness():
     page = request.args.get("page", None)
+    name = request.args.get("name", "")
+    status = request.args.get("status", None)
+    if status not in status_list:
+        return "error"
     owner = current_user.get_id()
     [start_pagination, end_pagination] = set_pagination(page)
-    response = bussiness_top_rated(
-        owner, start_page=start_pagination, end_page=end_pagination, order="ASC"
+    [response, count] = bussiness_top_rated(
+        owner,
+        start_page=start_pagination,
+        end_page=end_pagination,
+        order="ASC",
+        word=name,
+        status=status,
     )
-    return jsonify(response)
+    return jsonify({"data": response, "count": count / 12})
+
     # return render_template('', products=response)
 
 
 @owner_bp.route("/bussiness/top_rated", methods=["GET"])
 def top_rated_bussiness():
     page = request.args.get("page", None)
+    name = request.args.get("name", "")
+    status = request.args.get("status", None)
+    if status not in status_list:
+        return "error"
     owner = current_user.get_id()
     [start_pagination, end_pagination] = set_pagination(page)
-    response = bussiness_top_rated(
-        owner, start_page=start_pagination, end_page=end_pagination
+    [response, count] = bussiness_top_rated(
+        owner,
+        start_page=start_pagination,
+        end_page=end_pagination,
+        word=name,
+        status=status,
     )
-    return jsonify(response)
+    return jsonify({"data": response, "count": count / 12})
+
     # return render_template('', products=response)
 
 
 @owner_bp.route("/products/top_rated", methods=["GET"])
 def top_rated_products():
     page = request.args.get("page", None)
+    name = request.args.get("name", "")
+    status = request.args.get("status", None)
+    if status not in status_list:
+        return "error"
     owner = current_user.get_id()
     [start_pagination, end_pagination] = set_pagination(page)
-    response = products_top_rated(
-        owner, start_page=start_pagination, end_page=end_pagination
+    [response, count] = products_top_rated(
+        owner,
+        start_page=start_pagination,
+        end_page=end_pagination,
+        word=name,
+        status=status,
     )
-    return jsonify(response)
+    return jsonify({"data": response, "count": count / 12})
+
     # return render_template('', products=response)
 
 
 @owner_bp.route("/products/less_rated", methods=["GET"])
 def less_rated_products():
     page = request.args.get("page", None)
+    name = request.args.get("name", "")
+    status = request.args.get("status", None)
+    if status not in status_list:
+        return "error"
     owner = current_user.get_id()
     [start_pagination, end_pagination] = set_pagination(page)
-    response = products_top_rated(
-        owner, start_page=start_pagination, end_page=end_pagination, order="ASC"
+    [response, count] = products_top_rated(
+        owner,
+        start_page=start_pagination,
+        end_page=end_pagination,
+        order="ASC",
+        word=name,
+        status=status,
     )
-    return jsonify(response)
+    return jsonify({"data": response, "count": count / 12})
+
     # return render_template('', products=response)
 
 
 @owner_bp.route("/products/unpopular", methods=["GET"])
 def unpopular_products():
     page = request.args.get("page", None)
+    name = request.args.get("name", "")
+    status = request.args.get("status", None)
+    if status not in status_list:
+        return "error"
     owner = current_user.get_id()
     [start_pagination, end_pagination] = set_pagination(page)
-    response = products_popular(
-        owner, start_page=start_pagination, end_page=end_pagination, order="ASC"
+    [response, count] = products_popular(
+        owner,
+        start_page=start_pagination,
+        end_page=end_pagination,
+        order="ASC",
+        word=name,
+        status=status,
     )
-    return jsonify(response)
+    return jsonify({"data": response, "count": count / 12})
+
     # return render_template('', products=response)
 
 
@@ -174,7 +228,12 @@ def unpopular_products():
 def stocks(slug):
     owner = current_user.get_id()
     page = request.args.get("page", None)
+    name = request.args.get("name", "")
+    status = request.args.get("status", None)
+    if status not in status_list:
+        return "error"
     [start_pagination, end_pagination] = set_pagination(page)
-    response = stock_bussiness(slug, owner, start_pagination, end_pagination)
-    return jsonify(response)
+    [response, count] = stock_bussiness(slug, owner, start_pagination, end_pagination)
+    return jsonify({"data": response, "count": count / 12})
+
     # return render_template('', stocks=response)
