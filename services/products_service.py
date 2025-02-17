@@ -239,7 +239,7 @@ def get_popular_by_bussiness(
 
 # DONE: Popular Products by Brand
 def get_popular_by_brand(
-    slug, limited=False, start_page=None, end_page=None, order="DESC"
+    slug, limited=False, start_page=None, end_page=None, order="DESC", word=""
 ):
     try:
         with sqlite3.connect("database.db") as connection:
@@ -251,12 +251,13 @@ def get_popular_by_brand(
             JOIN lists_stocks l on l.stock_id = s.id
             JOIN brands br on p.brand_id = br.id
             AND br.slug LIKE ?
+            AND p.slug LIKE ?
             AND p.status = "APPROVED"
             GROUP BY p.id
             ORDER BY count {order}
             {limit_or_pagination(limited, start_page, end_page)}
             """,
-            (like_string(slug),),
+            (like_string(slug), like_string(word)),
         ).fetchall()
         count = {"count": 0}
         if not limited:
@@ -401,7 +402,7 @@ def get_top_rated_limited(city):
 
 # DONE: Top Rated Products By Brand
 def get_top_rated_by_brand(
-    slug, limited=False, start_page=None, end_page=None, order="DESC"
+    slug, limited=False, start_page=None, end_page=None, order="DESC", word=""
 ):
     try:
         with sqlite3.connect("database.db") as connection:
@@ -412,12 +413,13 @@ def get_top_rated_by_brand(
             JOIN ratings r ON r.product_id = p.id
             JOIN brands br on p.brand_id = br.id
             WHERE br.slug LIKE ?
+            AND p.slug LIKE ?
             AND p.status = "APPROVED"
             GROUP BY p.id
             ORDER BY avg_score {order}
             {limit_or_pagination(limited, start_page, end_page)}
             """,
-            (like_string(slug),),
+            (like_string(slug), like_string(word)),
         ).fetchall()
         count = {"count": 0}
         if not limited:
@@ -548,7 +550,7 @@ def get_newest_limited(city):
 
 # DONE Recent Added Products
 def get_newest_by_brand(
-    slug, limited=False, start_page=None, end_page=None, order="DESC"
+    slug, limited=False, start_page=None, end_page=None, order="DESC", word=""
 ):
     try:
         with sqlite3.connect("database.db") as connection:
@@ -559,11 +561,12 @@ def get_newest_by_brand(
             JOIN brands br on p.brand_id = br.id
             WHERE br.slug LIKE ?
             AND p.status = "APPROVED"
+            AND p.slug LIKE ?
             GROUP BY p.id
             ORDER BY p.created_at {order}
             {limit_or_pagination(limited, start_page, end_page)}
             """,
-            (like_string(slug),),
+            (like_string(slug), like_string(word)),
         ).fetchall()
         count = {"count": 0}
         if not limited:

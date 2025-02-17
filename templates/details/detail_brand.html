@@ -109,7 +109,11 @@
         </div>
     </div>
 
-
+    <div class="tw-flex tw-w-full tw-m-4 tw-justify-center tw-items-center">
+        <a href="{{url_for('brands.find_by_product_filter', slug=brand.slug)}}" class="btn btn-primary btn-large">View
+            more
+            products of this brand</a>
+    </div>
 
 </div>
 {% endblock %}

@@ -83,19 +83,38 @@ def popular_bussines(slug):
     return response
 
 
-@brands_bp.route("/<slug>/products/<filter>", methods=["GET"])
-def find_by_product_filter(slug, filter=filter_list["newest"]):
+@brands_bp.route("/<slug>/search/products", methods=["GET"])
+def find_by_product_filter(slug):
+    page = request.args.get("page", None)
+    filter = request.args.get("filter", "popular")
+    print(filter, "filter")
+    json = request.args.get("json", False)
+    name = request.args.get("name", "")
     if filter not in filter_list:
         return "error"
-    page = request.args.get("page", None)
+    brand = get_with_details(slug)
     [start_pagination, end_pagination] = set_pagination(page)
     if filter == "top_rated":
-        response = products_top_rated(slug, False, start_pagination, end_pagination)
+        [response, count] = products_top_rated(
+            slug, False, start_pagination, end_pagination, word=name
+        )
     elif filter == "popular":
-        response = products_popular(slug, False, start_pagination, end_pagination)
+        [response, count] = products_popular(
+            slug, False, start_pagination, end_pagination, word=name
+        )
     else:
-        response = produscts_newest(slug, False, start_pagination, end_pagination)
-    return jsonify(response)  # render_template('', products=response)
+        [response, count] = produscts_newest(
+            slug, False, start_pagination, end_pagination, word=name
+        )
+    if json:
+        return jsonify({"data": response, "count": count / 12})
+    return render_template(
+        "search/brand_search.html",
+        items=response,
+        brand=brand,
+        count=count,
+        pages=count / 12,
+    )
 
 
 @brands_bp.route("/search/<slug>", methods=["GET"])

@@ -117,7 +117,9 @@ def products_by_bussiness(slug):
     order = request.args.get("order", "DESC")
     json_req = request.args.get("json", None)
     word = request.args.get("word", "")
-    bussiness = get_by_slug(slug)
+    lat = session.get("lat", 0)
+    lon = session.get("lon", 0)
+    bussiness = get_by_slug(slug, lat, lon)
     [start_pagination, end_pagination] = set_pagination(page)
     [response, count] = search_by_bussiness(
         slug, word, start_pagination, end_pagination, filter, order
