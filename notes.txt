@@ -131,7 +131,7 @@ X Add status filtering from gets which requires approvation
 - Fix searches where if not rated or added into a list, appear anyways (prlly a left o right join)
 - Protect routes based on roles
 - Beware that tags does not have images, so adapt admin search to not forceload it or add a defaul image
-- On product details, add extra request for stocks on bussiness in case is an owner
+- On product details, add extra request for low stocks on bussiness in case is an owner, for bussiness details, add extra request for low stock products
 - TODO: Manage users
 - Another detail still missing, the count of 'listed' by users on item
 X SQL injection on end_date and start_date

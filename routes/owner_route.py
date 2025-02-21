@@ -19,16 +19,33 @@ owner_bp = Blueprint("owner", __name__)
 
 @owner_bp.route("/dashboard", methods=["GET"])
 def main():
-    owner = current_user.get_id()
-    popular_products = products_popular(owner, limited=True)
-    popular_bussiness = bussiness_popular(owner, limited=True)
-    unpopular_bussiness = bussiness_popular(owner, limited=True, order="ASC")
-    return jsonify(
-        {
-            "pop_products": popular_products,
-            "pop_bussiness": popular_bussiness,
-            "unpop_bussiness": unpopular_bussiness,
-        }
+    owner = current_user.get_id() or 3
+    [popular_products, count] = products_popular(owner, limited=True)
+    [popular_bussiness, count] = bussiness_popular(owner, limited=True)
+    [unpopular_bussiness, count] = bussiness_popular(owner, limited=True, order="ASC")
+    [unpopular_products, count] = products_popular(owner, limited=True, order="ASC")
+    [top_rated_bussiness, count] = bussiness_top_rated(owner, limited=True)
+    [top_rated_products, count] = products_top_rated(owner, limited=True)
+    [less_rated_bussiness, count] = bussiness_top_rated(
+        owner, limited=True, order="ASC"
+    )
+    [less_rated_products, count] = products_top_rated(owner, limited=True, order="ASC")
+
+    print(popular_bussiness)
+    print(unpopular_bussiness)
+    print(top_rated_bussiness)
+    print(less_rated_bussiness)
+
+    return render_template(
+        "/dashboards/owner_dashboard.html",
+        popular_products=popular_products,
+        popular_bussiness=popular_bussiness,
+        less_rated_products=less_rated_products,
+        top_rated_products=top_rated_products,
+        unpopular_bussiness=unpopular_bussiness,
+        unpopular_products=unpopular_products,
+        top_rated_bussiness=top_rated_bussiness,
+        less_rated_bussiness=less_rated_bussiness,
     )
     # return render_template('',
     #                        popular_products=popular_products, popular_bussiness=popular_bussiness,

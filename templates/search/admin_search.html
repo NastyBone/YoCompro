@@ -215,7 +215,7 @@
 <!-- Set Selects  -->
 <script>
     const filterSelect = document.getElementById('filter__options');
-    filterSelect.value = `{{request.args.get("filter", None)}}` || "None"
+    filterSelect.value = `{{request.args.get("filter", 'approved')}}` || "approved"
     const typeSelect = document.getElementById("type__options")
     const typeResult = `{{request.args.get("type")}}` || "products"
     typeSelect.value = typeResult !== 'None' ? typeResult : "products"

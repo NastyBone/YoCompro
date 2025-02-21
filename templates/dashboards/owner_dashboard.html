@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container tw-flex tw-flex-col tw-gap-20">
+    <!-- popular products -->
+    <div class="container">
+        <div class="container-title tw-flex tw-gap-6">
+            <h1 class="tw-font-semibold tw-text-4xl tw-mt-2 tw-mb-4 tw-inline-block">Your popular products</h1>
+            <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
+            </div>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center" href="">View More</a>
+        </div>
+        <div class="tw-container tw-flex gap-3">
+            {% if popular_products == [] %}
+            <p class="tw-text-lg tw-font-semibold">No popular bussiness found</p>
+            {% else %}
+            {% for item in popular_products %}
+            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+                href="{{ url_for('products.find_by_slug', slug=item.slug) }}">
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
+                    <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
+                    <p class="card-title tw-text-lg tw-font-semibold"> {{item.name}}</p>
+                    <p class="card-text">{{item.description}}</p>
+                </div>
+            </a>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="container-title tw-flex tw-gap-6">
+            <h1 class="tw-font-semibold tw-text-4xl tw-mt-2 tw-mb-4 tw-inline-block">Your less popular products</h1>
+            <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
+            </div>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center" href="">View More</a>
+        </div>
+        <div class="tw-container tw-flex gap-3">
+            {% if unpopular_products == [] %}
+            <p class="tw-text-lg tw-font-semibold">No popular bussiness found</p>
+            {% else %}
+            {% for item in unpopular_products %}
+            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+                href="{{ url_for('products.find_by_slug', slug=item.slug) }}">
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
+                    <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
+                    <p class="card-title tw-text-lg tw-font-semibold"> {{item.name}}</p>
+                    <p class="card-text">{{item.description}}</p>
+                </div>
+            </a>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="container-title tw-flex tw-gap-6">
+            <h1 class="tw-font-semibold tw-text-4xl tw-mt-2 tw-mb-4 tw-inline-block">Your top rated products</h1>
+            <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
+            </div>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center" href="">View More</a>
+        </div>
+        <div class="tw-container tw-flex gap-3">
+            {% if top_rated_products == [] %}
+            <p class="tw-text-lg tw-font-semibold">No popular bussiness found</p>
+            {% else %}
+            {% for item in top_rated_products %}
+            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+                href="{{ url_for('products.find_by_slug', slug=item.slug) }}">
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
+                    <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
+                    <p class="card-title tw-text-lg tw-font-semibold"> {{item.name}}</p>
+                    <p class="card-text">{{item.description}}</p>
+                </div>
+            </a>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="container-title tw-flex tw-gap-6">
+            <h1 class="tw-font-semibold tw-text-4xl tw-mt-2 tw-mb-4 tw-inline-block">Your less rated products</h1>
+            <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
+            </div>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center" href="">View More</a>
+        </div>
+        <div class="tw-container tw-flex gap-3">
+            {% if less_rated_products == [] %}
+            <p class="tw-text-lg tw-font-semibold">No popular bussiness found</p>
+            {% else %}
+            {% for item in less_rated_products %}
+            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+                href="{{ url_for('products.find_by_slug', slug=item.slug) }}">
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
+                    <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
+                    <p class="card-title tw-text-lg tw-font-semibold"> {{item.name}}</p>
+                    <p class="card-text">{{item.description}}</p>
+                </div>
+            </a>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- popular bussiness -->
+    <div class="container">
+        <div class="container-title tw-flex tw-gap-6">
+            <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Your popular bussiness</h1>
+            <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
+            </div>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center" href="">View More</a>
+        </div>
+        <div class="container tw-flex tw-gap-3">
+            {% if popular_bussiness == [] %}
+            <p class="tw-text-lg tw-font-semibold">No popular bussiness found</p>
+            {% else %}
+            {% for item in popular_bussiness %}
+            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+                href="{{ url_for('bussiness.find_by_slug', slug=item.slug) }}">
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
+                    <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
+                    <p class="card-title tw-text-lg tw-font-semibold"> {{item.name}}</p>
+                    <p class="card-text">{{item.description}}</p>
+                </div>
+            </a>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="container-title tw-flex tw-gap-6">
+            <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Your unpopular bussiness</h1>
+            <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
+            </div>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center" href="">View More</a>
+        </div>
+        <div class="container tw-flex tw-gap-3">
+            {% if unpopular_bussiness == [] %}
+            <p class="tw-text-lg tw-font-semibold">No unpopular bussiness found</p>
+            {% else %}
+            {% for item in unpopular_bussiness %}
+            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+                href="{{ url_for('bussiness.find_by_slug', slug=item.slug) }}">
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
+                    <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
+                    <p class="card-title tw-text-lg tw-font-semibold"> {{item.name}}</p>
+                    <p class="card-text">{{item.description}}</p>
+                </div>
+            </a>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="container-title tw-flex tw-gap-6">
+            <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Your top rated bussiness</h1>
+            <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
+            </div>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center" href="">View More</a>
+        </div>
+        <div class="container tw-flex tw-gap-3">
+            {% if top_rated_bussiness == [] %}
+            <p class="tw-text-lg tw-font-semibold">No top rated bussiness found</p>
+            {% else %}
+            {% for item in top_rated_bussiness %}
+            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+                href="{{ url_for('bussiness.find_by_slug', slug=item.slug) }}">
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
+                    <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
+                    <p class="card-title tw-text-lg tw-font-semibold"> {{item.name}}</p>
+                    <p class="card-text">{{item.description}}</p>
+                </div>
+            </a>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="container-title tw-flex tw-gap-6">
+            <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Your less rated bussiness</h1>
+            <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
+            </div>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center" href="">View More</a>
+        </div>
+        <div class="container tw-flex tw-gap-3">
+            {% if less_rated_bussiness == [] %}
+            <p class="tw-text-lg tw-font-semibold">No less rated bussiness found</p>
+            {% else %}
+            {% for item in less_rated_bussiness %}
+            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+                href="{{ url_for('bussiness.find_by_slug', slug=item.slug) }}">
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
+                    <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
+                    <p class="card-title tw-text-lg tw-font-semibold"> {{item.name}}</p>
+                    <p class="card-text">{{item.description}}</p>
+                </div>
+            </a>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -517,6 +517,8 @@ def get_by_owner_top_rated(
             WHERE b.user_id = ?
             AND b.status LIKE ?
             AND slug LIKE ?
+            GROUP BY b.id
+            HAVING AVG(score) IS NOT NULL
             ORDER BY avg_score {order}
             {limit_or_pagination(limited, start_page, end_page)}
             """,
