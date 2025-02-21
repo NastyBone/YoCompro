@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container tw-flex tw-flex-col tw-gap-12">
+    <!-- users count -->
+    <div class="tw-text-center">
+        <div class="container-title tw-flex tw-gap-6 tw-mb-4">
+            <h2 class="tw-font-semibold tw-text-3xl tw-mb-4 tw-inline-block">Users Count</h2>
+            <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
+            </div>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center"
+                href="{{url_for('admin.general_search', type='users')}}">Manage</a>
+        </div>
+        <div class="container tw-flex tw-w-full tw-gap-3">
+            <div class="card tw-w-full tw-pb-4 tw-pt-2">
+                <div class="card-title tw-text-lg">Total Users</div>
+                <div class="card-body tw-text-4xl tw-font-semibold">
+                    {{ users.count }}
+                </div>
+            </div>
+            <div class="card tw-w-full tw-pb-4 tw-pt-2">
+                <div class="card-title tw-text-lg">Total Owners</div>
+                <div class="card-body tw-text-4xl tw-font-semibold">
+                    {{ users.owner_count }}
+                </div>
+            </div>
+            <div class="card tw-w-full tw-pb-4 tw-pt-2">
+                <div class="card-title tw-text-lg">Total Clients</div>
+                <div class="card-body tw-text-4xl tw-font-semibold">
+                    {{ users.user_count }}
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- bussiness count -->
+
+    <div class="tw-text-center">
+        <div class="container-title tw-flex tw-gap-6 tw-mb-4">
+            <h2 class="tw-font-semibold tw-text-3xl tw-mb-4 tw-inline-block">Bussiness Count</h2>
+            <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
+            </div>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center"
+                href="{{url_for('admin.general_search', type='bussiness')}}">Manage</a>
+        </div>
+        <div class="container tw-flex tw-w-full tw-gap-3">
+            <div class="card tw-w-full tw-pb-4 tw-pt-2">
+                <div class="card-title tw-text-lg">Total Bussiness</div>
+                <div class="card-body tw-text-4xl tw-font-semibold">
+                    {{ bussiness.count }}
+                </div>
+            </div>
+            <div class="card tw-w-full tw-pb-4 tw-pt-2">
+                <div class="card-title tw-text-lg">Approved</div>
+                <div class="card-body tw-text-4xl tw-font-semibold">
+                    {{ bussiness.approved }}
+                </div>
+            </div>
+            <div class="card tw-w-full tw-pb-4 tw-pt-2">
+                <div class="card-title tw-text-lg">Rejected</div>
+                <div class="card-body tw-text-4xl tw-font-semibold">
+                    {{ bussiness.rejected }}
+                </div>
+            </div>
+            <div class="card tw-w-full tw-pb-4 tw-pt-2">
+                <div class="card-title tw-text-lg">In Review</div>
+                <div class="card-body tw-text-4xl tw-font-semibold">
+                    {{ bussiness.review }}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- products count -->
+
+    <div class="tw-text-center">
+        <div class="container-title tw-flex tw-gap-6 tw-mb-4">
+            <h2 class="tw-font-semibold tw-text-3xl tw-mb-4 tw-inline-block">Products Count</h2>
+            <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
+            </div>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center"
+                href="{{url_for('admin.general_search', type='products')}}">Manage</a>
+        </div>
+        <div class="container tw-flex tw-w-full tw-gap-3">
+            <div class="card tw-w-full tw-pb-4 tw-pt-2">
+                <div class="card-title tw-text-lg">Total Products</div>
+                <div class="card-body tw-text-4xl tw-font-semibold">
+                    {{ products.count }}
+                </div>
+            </div>
+            <div class="card tw-w-full tw-pb-4 tw-pt-2">
+                <div class="card-title tw-text-lg">Approved</div>
+                <div class="card-body tw-text-4xl tw-font-semibold">
+                    {{ products.approved }}
+                </div>
+            </div>
+            <div class="card tw-w-full tw-pb-4 tw-pt-2">
+                <div class="card-title tw-text-lg">Rejected</div>
+                <div class="card-body tw-text-4xl tw-font-semibold">
+                    {{ products.rejected }}
+                </div>
+            </div>
+            <div class="card tw-w-full tw-pb-4 tw-pt-2">
+                <div class="card-title tw-text-lg">In Review</div>
+                <div class="card-body tw-text-4xl tw-font-semibold">
+                    {{ products.review }}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- tags count -->
+
+    <div class="tw-text-center">
+        <div class="container-title tw-flex tw-gap-6 tw-mb-4">
+            <h2 class="tw-font-semibold tw-text-3xl tw-mb-4 tw-inline-block">Tags Count</h2>
+            <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
+            </div>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center"
+                href="{{url_for('admin.general_search', type='tags')}}">Manage</a>
+        </div>
+        <div class="container tw-flex tw-w-full tw-gap-3">
+            <div class="card tw-w-full tw-pb-4 tw-pt-2">
+                <div class="card-title tw-text-lg">Total Tags</div>
+                <div class="card-body tw-text-4xl tw-font-semibold">
+                    {{ tags.count }}
+                </div>
+            </div>
+            <div class="card tw-w-full tw-pb-4 tw-pt-2">
+                <div class="card-title tw-text-lg">Approved</div>
+                <div class="card-body tw-text-4xl tw-font-semibold">
+                    {{ tags.approved }}
+                </div>
+            </div>
+            <div class="card tw-w-full tw-pb-4 tw-pt-2">
+                <div class="card-title tw-text-lg">Rejected</div>
+                <div class="card-body tw-text-4xl tw-font-semibold">
+                    {{ tags.rejected }}
+                </div>
+            </div>
+            <div class="card tw-w-full tw-pb-4 tw-pt-2">
+                <div class="card-title tw-text-lg">In Review</div>
+                <div class="card-body tw-text-4xl tw-font-semibold">
+                    {{ tags.review }}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
