@@ -4,7 +4,6 @@ from helpers import (
     like_string,
     status_list,
     dict_factory,
-    slug_builder,
     limit_or_pagination,
 )
 
@@ -43,7 +42,7 @@ def insert(obj):
             connection.row_factory = dict_factory
         res = connection.execute(
             "INSERT INTO brands (name, slug, country) VALUES (?, ?, ?) RETURNING *",
-            (obj["name"], slug_builder(obj["name"]), obj["country"]),
+            (obj["name"], obj["slug"], obj["country"]),
         ).fetchall()
 
         connection.commit()
@@ -61,7 +60,7 @@ def update(id, obj):
             connection.row_factory = dict_factory
         res = connection.execute(
             "UPDATE brands SET name = ?, slug = ?, country = ? WHERE id = ? RETURNING *",
-            (obj["name"], slug_builder(obj["name"]), obj["country"], id),
+            (obj["name"], obj["slug"], obj["country"], id),
         ).fetchall()
 
         connection.commit()

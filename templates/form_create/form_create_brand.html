@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container tw-flex tw-flex-col tw-gap-6 tw-w-full">
+    <h2 class="tw-font-semibold tw-text-3xl tw-mb-4 tw-inline-block">Create Brand</h2>
+    <form onsubmit="event.preventDefault(); return createBrand()" class="tw-flex tw-flex-col tw-gap-4">
+        <div>
+            <label for="brand_name">Brand Name</label>
+            <input type="text" name="brand_name" id="brand_name" placeholder="i.e. Kellogs" class="form-control"
+                required>
+        </div>
+        <div>
+            <label for="brand_country">Country</label>
+            <input type="text" name="brand_country" id="brand_country" placeholder="i.e. Venezuela" required
+                class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary btn-large">Submit</button>
+    </form>
+</div>
+<script>
+    async function createBrand() {
+        const name = document.getElementById('brand_name').value;
+        const country = document.getElementById('brand_country').value;
+        console.log(name, country);
+        const data = {
+            name,
+            country
+        }
+        await fetch('/brands', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+</script>
+{% endblock %}

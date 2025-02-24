@@ -5,7 +5,7 @@ from helpers import (
     status_list,
     dict_factory,
     like_string,
-    slug_builder,
+    slug_generator,
     product_filtering,
 )
 
@@ -48,7 +48,7 @@ def insert(obj):
             (
                 obj["name"],
                 obj["description"],
-                slug_builder(obj["name"]),
+                slug_generator(obj["name"]),
                 obj["brand_id"],
             ),
         ).fetchall()
@@ -69,7 +69,7 @@ def update(id, obj):
             (
                 obj["name"],
                 obj["description"],
-                slug_builder(obj["name"]),
+                slug_generator(obj["name"]),
                 obj["brand_id"],
                 id,
             ),

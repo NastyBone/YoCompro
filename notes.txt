@@ -119,16 +119,16 @@ X Forbiden view
 
 X Add view more button to dashboards components, it will lead to full views (not limited, but paginated)
 X Add links to card items
-- Use slug only in searchs and gets specifics. Verify like_string searchs and generate them
+- Use slugs to make requests, use name to search
 X Add status filtering from gets which requires approvation
 - Add joins on relations and extra info -- Be modified where needed
-- Connect images
+- Connect images even to forms
 - Export scripts
 - Remember general endpoint is a get and then rest are posts
-- Be aware of redirections
-- Similar products?
 - All paginations require an auxiliar endpoint to fetch data
-- Fix searches where if not rated or added into a list, appear anyways (prlly a left o right join)
+- Be aware of redirections (handle notfound on posts)
+- Similar products?
+- Fix searches where if not rated or added into a list, appear anyways or doesnt (prlly a left o right join)
 - Protect routes based on roles
 - Beware that tags does not have images, so adapt admin search to not forceload it or add a defaul image
 - On product details, add extra request for low stocks on bussiness in case is an owner, for bussiness details, add extra request for low stock products

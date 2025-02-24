@@ -1,3 +1,4 @@
+import uuid
 from unidecode import unidecode
 
 status_list = {"approved": "APPROVED", "in_review": "IN REVIEW", "rejected": "REJECTED"}
@@ -21,10 +22,6 @@ type_list = {
 def to_tag_ids(tags):
     tags_ids = [tag["id"] for tag in tags]
     return tags_ids
-
-
-def slug_builder(name):
-    return name.strip().lower().replace(" ", "-")
 
 
 def set_pagination(page: str | None = None, perPage: int | None = 12):
@@ -81,3 +78,9 @@ def product_filtering(filter: str, order):
         return f"count {order}"
     else:
         return f"created_at {order}"
+
+
+def slug_generator(name):
+    return (
+        unidecode(name).strip().lower().replace(" ", "-") + "-" + str(uuid.uuid4())[:8]
+    )

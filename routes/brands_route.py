@@ -1,6 +1,6 @@
 from flask import Blueprint, redirect, request, jsonify, render_template, session
 from services.brands_service import *
-from helpers import filter_list, roles_list, type_list, set_pagination
+from helpers import filter_list, roles_list, slug_generator, type_list, set_pagination
 from services.products_service import (
     get_popular_by_brand as products_popular,
     get_newest_by_brand as produscts_newest,
@@ -34,6 +34,7 @@ def find_all():
 @brands_bp.route("/", methods=["POST"])
 def create():
     data = request.get_json()
+    data["slug"] = slug_generator(data["name"])
     response = insert(data)
     return jsonify(response)
 
@@ -63,7 +64,7 @@ def edit_status():
 
 @brands_bp.route("/create/form", methods=["GET"])
 def create_form():
-    return render_template("")
+    return render_template("form_create/form_create_brand.html")
 
 
 @brands_bp.route("/edit/form", methods=["GET"])
