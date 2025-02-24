@@ -8,7 +8,8 @@
             <h1 class="tw-font-semibold tw-text-4xl tw-mt-2 tw-mb-4 tw-inline-block">Your popular products</h1>
             <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
-            <a class="btn btn-outline-primary tw-h-fit tw-self-center" href="">View More</a>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center"
+                href="{{url_for('owner.general_search', type='products', filter='popular')}}">View More</a>
         </div>
         <div class="tw-container tw-flex gap-3">
             {% if popular_products == [] %}
@@ -33,7 +34,8 @@
             <h1 class="tw-font-semibold tw-text-4xl tw-mt-2 tw-mb-4 tw-inline-block">Your less popular products</h1>
             <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
-            <a class="btn btn-outline-primary tw-h-fit tw-self-center" href="">View More</a>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center"
+                href="{{url_for('owner.general_search', type='products', filter='unpopular')}}">View More</a>
         </div>
         <div class="tw-container tw-flex gap-3">
             {% if unpopular_products == [] %}
@@ -58,7 +60,8 @@
             <h1 class="tw-font-semibold tw-text-4xl tw-mt-2 tw-mb-4 tw-inline-block">Your top rated products</h1>
             <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
-            <a class="btn btn-outline-primary tw-h-fit tw-self-center" href="">View More</a>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center"
+                href="{{url_for('owner.general_search', type='products', filter='top_rated')}}">View More</a>
         </div>
         <div class="tw-container tw-flex gap-3">
             {% if top_rated_products == [] %}
@@ -83,7 +86,8 @@
             <h1 class="tw-font-semibold tw-text-4xl tw-mt-2 tw-mb-4 tw-inline-block">Your less rated products</h1>
             <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
-            <a class="btn btn-outline-primary tw-h-fit tw-self-center" href="">View More</a>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center"
+                href="{{url_for('owner.general_search', type='products', filter='less_rated')}}">View More</a>
         </div>
         <div class="tw-container tw-flex gap-3">
             {% if less_rated_products == [] %}
@@ -109,7 +113,8 @@
             <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Your popular bussiness</h1>
             <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
-            <a class="btn btn-outline-primary tw-h-fit tw-self-center" href="">View More</a>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center"
+                href="{{url_for('owner.general_search', type='bussiness', filter='popular')}}">View More</a>
         </div>
         <div class="container tw-flex tw-gap-3">
             {% if popular_bussiness == [] %}
@@ -134,7 +139,8 @@
             <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Your unpopular bussiness</h1>
             <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
-            <a class="btn btn-outline-primary tw-h-fit tw-self-center" href="">View More</a>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center"
+                href="{{url_for('owner.general_search', type='bussiness', filter='unpopular')}}">View More</a>
         </div>
         <div class="container tw-flex tw-gap-3">
             {% if unpopular_bussiness == [] %}
@@ -159,7 +165,8 @@
             <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Your top rated bussiness</h1>
             <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
-            <a class="btn btn-outline-primary tw-h-fit tw-self-center" href="">View More</a>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center"
+                href="{{url_for('owner.general_search', type='bussiness', filter='top_rated')}}">View More</a>
         </div>
         <div class="container tw-flex tw-gap-3">
             {% if top_rated_bussiness == [] %}
@@ -185,7 +192,8 @@
             <h1 class="tw-font-semibold tw-text-4xl  tw-mb-4 tw-inline-block">Your less rated bussiness</h1>
             <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
-            <a class="btn btn-outline-primary tw-h-fit tw-self-center" href="">View More</a>
+            <a class="btn btn-outline-primary tw-h-fit tw-self-center"
+                href="{{url_for('owner.general_search', type='bussiness', filter='less_rated')}}">View More</a>
         </div>
         <div class="container tw-flex tw-gap-3">
             {% if less_rated_bussiness == [] %}

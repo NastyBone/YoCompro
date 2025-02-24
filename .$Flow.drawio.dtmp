@@ -897,10 +897,10 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="dOirgz0_V3Rg2CDJSkMz-2" value="owner dashboard" style="rounded=1;whiteSpace=wrap;html=1;fontSize=16;strokeColor=#FFD966;" parent="1" vertex="1">
-          <mxGeometry x="-1412" y="2640" width="120" height="60" as="geometry" />
+          <mxGeometry x="-615" y="2564" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="dOirgz0_V3Rg2CDJSkMz-3" value="admin dashboard" style="rounded=1;whiteSpace=wrap;html=1;fontSize=16;strokeColor=#FFD966;" parent="1" vertex="1">
-          <mxGeometry x="-1283" y="2640" width="120" height="60" as="geometry" />
+          <mxGeometry x="-486" y="2564" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="dOirgz0_V3Rg2CDJSkMz-12" value="edit profile" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#FF6666;fontSize=16;" parent="1" vertex="1">
           <mxGeometry x="-1125" y="2426" width="120" height="60" as="geometry" />

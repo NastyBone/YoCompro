@@ -55,13 +55,43 @@ def main():
 @owner_bp.route("/search", methods=["GET"])
 def general_search():
     owner_id = 3  # current_user.get_id()
+    type = request.args.get("type", "products")
+    filter = request.args.get("filter", "popular")
     [start_pagination, end_pagination] = set_pagination(None)
-    [response, count] = products_popular(
-        owner_id,
-        False,
-        start_pagination,
-        end_pagination,
-    )
+    if type == "products":
+        if filter == "popular":
+            [response, count] = products_popular(
+                owner_id, False, start_pagination, end_pagination
+            )
+        elif filter == "top_rated":
+            [response, count] = products_top_rated(
+                owner_id, False, start_pagination, end_pagination
+            )
+        elif filter == "less_rated":
+            [response, count] = products_top_rated(
+                owner_id, False, start_pagination, end_pagination, order="ASC"
+            )
+        elif filter == "unpopular":
+            [response, count] = products_popular(
+                owner_id, False, start_pagination, end_pagination, order="ASC"
+            )
+    elif type == "bussiness":
+        if filter == "popular":
+            [response, count] = bussiness_popular(
+                owner_id, False, start_pagination, end_pagination
+            )
+        elif filter == "top_rated":
+            [response, count] = bussiness_top_rated(
+                owner_id, False, start_pagination, end_pagination
+            )
+        elif filter == "less_rated":
+            [response, count] = bussiness_top_rated(
+                owner_id, False, start_pagination, end_pagination, order="ASC"
+            )
+        elif filter == "unpopular":
+            [response, count] = bussiness_popular(
+                owner_id, False, start_pagination, end_pagination, order="ASC"
+            )
 
     return render_template(
         "search/owner_search.html",

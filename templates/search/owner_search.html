@@ -37,11 +37,11 @@
             </select>
             <p class="tw-text-center tw-text-xl tw-font-semibold tw-m-3">Category</p>
             <select class="form-select flex-grow" aria-label=".form-select-lg example" name="category"
-                id="filter__options">
+                id="category__options">
                 <option class="filter-option" value="popular" selected="selected">Popular</option>
                 <option class="filter-option" value="top_rated">Top Rated</option>
                 <option class="filter-option" value="less_rated">Less Rated</option>
-                <option class="filter-option" value="top_rated">Unpopular</option>
+                <option class="filter-option" value="unpopular">Unpopular</option>
             </select>
         </div>
         <!-- Content -->
@@ -215,5 +215,13 @@
 
         return false
     }
+</script>
+
+<script>
+    const categorySelect = document.getElementById('category__options');
+    categorySelect.value = `{{request.args.get("filter", 'popular')}}` || "popular"
+    const typeSelect = document.getElementById("type__options")
+    const typeResult = `{{request.args.get("type")}}` || "products"
+    typeSelect.value = typeResult !== 'None' ? typeResult : "products"
 </script>
 {% endblock %}

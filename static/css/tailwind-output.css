@@ -703,11 +703,6 @@ video {
   width: 100%;
 }
 
-.tw-w-max {
-  width: -moz-max-content;
-  width: max-content;
-}
-
 .tw-min-w-min {
   min-width: -moz-min-content;
   min-width: min-content;
@@ -765,6 +760,10 @@ video {
   gap: 0.25rem;
 }
 
+.tw-gap-12 {
+  gap: 3rem;
+}
+
 .tw-gap-2 {
   gap: 0.5rem;
 }
@@ -783,10 +782,6 @@ video {
 
 .tw-gap-6 {
   gap: 1.5rem;
-}
-
-.tw-gap-12 {
-  gap: 3rem;
 }
 
 .tw-self-center {
@@ -819,10 +814,6 @@ video {
 .tw-py-8 {
   padding-top: 2rem;
   padding-bottom: 2rem;
-}
-
-.tw-pb-2 {
-  padding-bottom: 0.5rem;
 }
 
 .tw-pb-4 {
