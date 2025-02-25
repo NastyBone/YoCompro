@@ -123,6 +123,7 @@ X Add links to card items
 X Add status filtering from gets which requires approvation
 - Add joins on relations and extra info -- Be modified where needed
 - Connect images even to forms
+- Connect tags too
 - Export scripts
 - Remember general endpoint is a get and then rest are posts
 - All paginations require an auxiliar endpoint to fetch data

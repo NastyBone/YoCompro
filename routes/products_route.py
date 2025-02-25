@@ -1,7 +1,10 @@
 from flask import Blueprint, request, jsonify, render_template, session
 from services.products_service import *
 from classes.product_class import *
-from services.brands_service import get_by_product_id as brand_by_product
+from services.brands_service import (
+    get_by_product_id as brand_by_product,
+    get_all as get_all_brands,
+)
 from services.ratings_service import get_average_by_product as rating_by_product
 from services.bussiness_service import (
     get_bussiness_has_product_by_distance,
@@ -9,6 +12,7 @@ from services.bussiness_service import (
     search_by_products,
 )
 from helpers import roles_list, set_pagination, filter_list
+from services.tags_service import get_all as get_all_tags
 
 products_bp = Blueprint("products", __name__)
 
@@ -38,6 +42,7 @@ def find():
 @products_bp.route("/", methods=["POST"])
 def create():
     data = request.get_json()
+    data["slug"] = slug_generator(data["name"])
     response = insert(data)
     tags = tags_setter(response[0]["id"], data["tags"])
     return jsonify(response)
@@ -69,7 +74,11 @@ def edit_status():
 
 @products_bp.route("/create/form", methods=["GET"])
 def create_form():
-    return render_template("")
+    brands = get_all_brands()
+    tags = get_all_tags()
+    return render_template(
+        "form_create/form_create_product.html", brands=brands, tags=tags
+    )
 
 
 @products_bp.route("/edit/form", methods=["GET"])

@@ -20,7 +20,9 @@ def get_all():
     try:
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
-        res = connection.execute("SELECT * FROM tags").fetchall()
+        res = connection.execute(
+            "SELECT * FROM tags WHERE status = 'APPROVED'"
+        ).fetchall()
         connection.commit()
         return res
     except Exception as error:
