@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container tw-flex tw-flex-col tw-gap-6 tw-w-full">
+    <h2 class="tw-font-semibold tw-text-3xl tw-mb-4 tw-inline-block">Create Stock</h2>
+    <form onsubmit="event.preventDefault(); return createStock()" class="tw-flex tw-flex-col tw-gap-4">
+        <div>
+            <label for="stock_price">Stock Price</label>
+            <input type="number" name="stock_price" id="stock_price" placeholder="11.99" class="form-control" required>
+        </div>
+        <div>
+            <label for="stock_discount">Stock Discount (Percentage)</label>
+            <input type="number" name="stock_discount" id="stock_discount" placeholder="0" class="form-control"
+                required>
+        </div>
+        <div>
+            <label for="stock_quantity">Stock Quantity</label>
+            <input type="number" name="stock_quantity" id="stock_quantity" placeholder="0" class="form-control"
+                required>
+        </div>
+        <div>
+            <label for="product">Product</label>
+            <select name="product" id="product" class="form-control" required>
+                <option value="" disabled selected>Select Product</option>
+                {% for item in products %}
+                <option value="{{item.id}}">{{item.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label for="bussiness">Bussiness</label>
+            <select name="bussiness" id="bussiness" class="form-control" required>
+                <option value="" disabled selected>Select Bussiness</option>
+                {% for item in bussiness %}
+                <option value="{{item.id}}">{{item.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-large">Submit</button>
+    </form>
+</div>
+<script>
+    async function createStock() {
+        const price = document.getElementById('stock_price').value;
+        const discount = document.getElementById('stock_discount').value;
+        const quantity = document.getElementById('stock_quantity').value;
+        const product_id = document.getElementById('product').value;
+        const bussiness_id = document.getElementById('bussiness').value;
+
+        const data = {
+            price,
+            discount,
+            quantity,
+            bussiness_id,
+            product_id
+        }
+        await fetch('/stocks', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+</script>
+
+<script>
+    const tags_area = document.getElementById('tags__area')
+    function setTagList(value) {
+        const existingTags = document.querySelectorAll('.tag-button')
+        const [id, name] = value.split(',')
+        const tag = { 'id': parseInt(id), name }
+        const tagExists = Array.from(existingTags).find(tag => tag.id === id)
+        if (tagExists) {
+            return
+        }
+        const buttonTag = document.createElement('button')
+        buttonTag.classList.add('btn', 'btn-primary', 'btn-small', 'tag-button', 'tw-m-2')
+        buttonTag.innerText = name
+        buttonTag.id = id;
+        buttonTag.onclick = () => {
+            buttonTag.remove()
+        }
+        tags_area.appendChild(buttonTag)
+
+    }
+
+</script>
+{% endblock %}

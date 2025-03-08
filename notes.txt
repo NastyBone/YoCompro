@@ -131,13 +131,14 @@ X Add status filtering from gets which requires approvation
 - Similar products?
 - Add contact to bussiness details
 - Edit and creation requires guards
+- Better handling on backend errors
 - Fix searches where if not rated or added into a list, appear anyways or doesnt (prlly a left o right join)
 - Protect routes based on roles
 - Beware that tags does not have images, so adapt admin search to not forceload it or add a defaul image
 - On product details, add extra request for low stocks on bussiness in case is an owner, for bussiness details, add extra request for low stock products
 - TODO: Manage users
-- TODO: Add function to removing and editing items
-- TODO: Same above with owners
+- TODO: Add function to removing and editing items (users, bussiness, stocks, tags, products, brands)
+- TODO: Same above with owners (for stocks and bussiness)
 - Change certain buttons on layaut according to role
 - Another detail still missing, the count of 'listed' by users on item
 - owner_id = 3 

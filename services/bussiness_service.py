@@ -544,16 +544,16 @@ def get_by_owner_top_rated(
 
 
 # DONE: All Bussiness of the owner
-def get_by_owner(owner_id, start_page, end_page):
+def get_by_owner(owner_id, start_page, end_page, limited=False):
     try:
         int(owner_id)
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """SELECT * FROM bussiness WHERE user_id = ? 
+            f"""SELECT * FROM bussiness b WHERE user_id = ? 
             AND b.status = "APPROVED"
-            LIMIT ? OFFSET ? """,
-            (owner_id, end_page, start_page),
+            {limit_or_pagination(limited, start_page, end_page)} """,
+            (owner_id,),
         ).fetchall()
 
         connection.commit()

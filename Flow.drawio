@@ -593,7 +593,7 @@
         <mxCell id="NXJJWlPIzXNzET5rZxup-194" value="create products" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#66FF66;fontSize=16;" parent="1" vertex="1">
           <mxGeometry x="-1775" y="1971" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="NXJJWlPIzXNzET5rZxup-195" value="create stock" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#FF6666;fontSize=16;" parent="1" vertex="1">
+        <mxCell id="NXJJWlPIzXNzET5rZxup-195" value="create stock" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#66FF66;fontSize=16;" parent="1" vertex="1">
           <mxGeometry x="-1204" y="1837" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="NXJJWlPIzXNzET5rZxup-196" value="create brand" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#66FF66;fontSize=16;" parent="1" vertex="1">
