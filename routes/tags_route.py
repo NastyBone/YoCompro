@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, render_template, request, jsonify
 from services.tags_service import *
 from helpers import set_pagination
 
@@ -60,6 +60,16 @@ def get_tags_by_status(status):
     [start_pagination, end_pagination] = set_pagination(page)
     [response, count] = get_by_status(status, start_pagination, end_pagination, word)
     return jsonify({"data": response, "count": count / 12})
+
+
+@tags_bp.route("/create/form", methods=["GET"])
+def create_form():
+    return render_template("form_create/form_create_tag.html")
+
+
+@tags_bp.route("/edit/form", methods=["GET"])
+def edit_form():
+    return render_template("")
 
 
 @tags_bp.route("/test", methods=["GET"])

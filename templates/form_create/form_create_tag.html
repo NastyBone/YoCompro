@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container tw-flex tw-flex-col tw-gap-6 tw-w-full">
+    <h2 class="tw-font-semibold tw-text-3xl tw-mb-4 tw-inline-block">Create Tag</h2>
+    <form onsubmit="event.preventDefault(); return createTag()" class="tw-flex tw-flex-col tw-gap-4">
+        <div>
+            <label for="tag_name">Tag Name</label>
+            <input type="text" name="tag_name" id="tag_name" placeholder="i.e. Corn Flakes" class="form-control"
+                required>
+        </div>
+        <div>
+            <label for="tag_description">Tag Description</label>
+            <input type="text" name="tag_description" id="tag_description" placeholder="i.e. My Tag"
+                class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-large">Submit</button>
+    </form>
+</div>
+<script>
+    async function createTag() {
+        const name = document.getElementById('tag_name').value;
+        const description = document.getElementById('tag_description').value;
+        const data = {
+            name,
+            description,
+        }
+        await fetch('/tags', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+</script>
+
+<script>
+    const tags_area = document.getElementById('tags__area')
+    function setTagList(value) {
+        const existingTags = document.querySelectorAll('.tag-button')
+        const [id, name] = value.split(',')
+        const tag = { 'id': parseInt(id), name }
+        const tagExists = Array.from(existingTags).find(tag => tag.id === id)
+        if (tagExists) {
+            return
+        }
+        const buttonTag = document.createElement('button')
+        buttonTag.classList.add('btn', 'btn-primary', 'btn-small', 'tag-button', 'tw-m-2')
+        buttonTag.innerText = name
+        buttonTag.id = id;
+        buttonTag.onclick = () => {
+            buttonTag.remove()
+        }
+        tags_area.appendChild(buttonTag)
+
+    }
+
+</script>
+{% endblock %}

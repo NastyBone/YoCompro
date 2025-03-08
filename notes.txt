@@ -135,6 +135,7 @@ X Add status filtering from gets which requires approvation
 - Fix searches where if not rated or added into a list, appear anyways or doesnt (prlly a left o right join)
 - Protect routes based on roles
 - Beware that tags does not have images, so adapt admin search to not forceload it or add a defaul image
+- Redirection or messages after submit form (clear form also)
 - On product details, add extra request for low stocks on bussiness in case is an owner, for bussiness details, add extra request for low stock products
 - TODO: Manage users
 - TODO: Add function to removing and editing items (users, bussiness, stocks, tags, products, brands)
