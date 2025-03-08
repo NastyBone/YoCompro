@@ -1,4 +1,6 @@
 from flask import Blueprint, request, render_template, jsonify, session
+from flask_login import current_user
+
 from services.bussiness_service import *
 from services.products_service import (
     get_newest_by_bussiness as newest_products,
@@ -6,6 +8,7 @@ from services.products_service import (
     get_top_rated_by_bussiness as top_rated_products,
     search_by_bussiness,
 )
+from services.tags_service import get_all as get_all_tags
 
 from services.brands_service import get_popular_by_bussiness as brands_popular
 from services.ratings_service import get_average_by_bussiness as rating_bussiness
@@ -38,6 +41,9 @@ def find():
 @bussiness_bp.route("/", methods=["POST"])
 def create():
     data = request.get_json()
+    data["slug"] = slug_generator(data["name"])
+    data["city"] = session["city"]
+    data["user_id"] = current_user.get_id() or 3
     response = insert(data)
     tags = tags_setter(response[0]["id"], data["tags"])
     return jsonify(response)
@@ -69,7 +75,8 @@ def edit_status():
 
 @bussiness_bp.route("/create/form", methods=["GET"])
 def create_form():
-    return render_template("")
+    tags = get_all_tags()
+    return render_template("form_create/form_create_bussiness.html", tags=tags)
 
 
 @bussiness_bp.route("/edit/form", methods=["GET"])

@@ -129,6 +129,8 @@ X Add status filtering from gets which requires approvation
 - All paginations require an auxiliar endpoint to fetch data
 - Be aware of redirections (handle notfound on posts)
 - Similar products?
+- Add contact to bussiness details
+- Edit and creation requires guards
 - Fix searches where if not rated or added into a list, appear anyways or doesnt (prlly a left o right join)
 - Protect routes based on roles
 - Beware that tags does not have images, so adapt admin search to not forceload it or add a defaul image

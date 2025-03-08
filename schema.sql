@@ -14,6 +14,7 @@ CREATE TABLE bussiness (
     email TEXT,
     phone TEXT NOT NULL,
     slug TEXT NOT NULL,
+    address TEXT NOT NULL,
     description TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'IN REVIEW' CHECK (status IN ('APPROVED', 'REJECTED', 'IN REVIEW')),
     address TEXT NOT NULL,

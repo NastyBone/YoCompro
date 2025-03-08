@@ -604,6 +604,10 @@ video {
   margin: auto;
 }
 
+.tw-m-2 {
+  margin: 0.5rem;
+}
+
 .tw-my-4 {
   margin-top: 1rem;
   margin-bottom: 1rem;

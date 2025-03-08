@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container tw-flex tw-flex-col tw-gap-6 tw-w-full">
+    <h2 class="tw-font-semibold tw-text-3xl tw-mb-4 tw-inline-block">Create Bussiness</h2>
+    <form onsubmit="event.preventDefault(); return createBussiness()" class="tw-flex tw-flex-col tw-gap-4">
+        <div>
+            <label for="bussiness_name">Bussiness Name</label>
+            <input type="text" name="bussiness_name" id="bussiness_name" placeholder="i.e. Corn Flakes"
+                class="form-control" required>
+        </div>
+        <div>
+            <label for="bussiness_description">Bussiness Description</label>
+            <input type="text" name="bussiness_description" id="bussiness_description" placeholder="i.e. My Bussiness"
+                class="form-control" required>
+        </div>
+        <div>
+            <label for="bussiness_email">Bussiness Email</label>
+            <input type="email" name="bussiness_email" id="bussiness_email" placeholder="i.e. mybussiness@yahoo.com"
+                class="form-control" required>
+        </div>
+        <div>
+            <label for="bussiness_address">Bussiness Address</label>
+            <input type="address" name="bussiness_address" id="bussiness_address" placeholder="305 Bickley, Mahattan"
+                class="form-control" required>
+        </div>
+        <div>
+            <label for="bussiness_phone">Bussiness Phone</label>
+            <input type="text" name="bussiness_phone" id="bussiness_phone" placeholder="+30574828553253"
+                class="form-control" required>
+        </div>
+        <div>
+            <label for="bussiness_rif">Bussiness Registration Identity (RIF)</label>
+            <input type="text" name="bussiness_rif" id="bussiness_rif" placeholder="J-12345678-9" class="form-control"
+                required>
+        </div>
+        <div>
+            <label for="bussiness_tag">Tags</label>
+            <select name="bussiness_tag" id="bussiness_tag" class="form-control" required
+                onchange="event.preventDefault(); return setTagList(event.target.value)" multiple>
+                <option disabled selected>Select A Tag
+                </option>
+                {% for item in tags %}
+                <option value="{{item.id}},{{item.name}}">{{item.name}}</option>
+                {% endfor %}
+            </select>
+            <div id="tags__area"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-large">Submit</button>
+    </form>
+</div>
+<script>
+    async function createBussiness() {
+        const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        const name = document.getElementById('bussiness_name').value;
+        const description = document.getElementById('bussiness_description').value;
+        const email = document.getElementById('bussiness_email').value;
+        const phone = document.getElementById('bussiness_phone').value;
+        const rif = document.getElementById('bussiness_rif').value;
+        const address = document.getElementById('bussiness_address').value;
+
+        const tags = document.querySelectorAll('.tag-button')
+        const tag_ids = Array.from(tags).map(tag => { return { 'id': parseInt(tag.id) } })
+        console.log(lat, lon)
+        const data = {
+            name,
+            description,
+            email,
+            phone,
+            rif,
+            address,
+            lat,
+            lon,
+            tags: tag_ids
+        }
+        await fetch('/bussiness', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+</script>
+
+<script>
+    const tags_area = document.getElementById('tags__area')
+    function setTagList(value) {
+        const existingTags = document.querySelectorAll('.tag-button')
+        const [id, name] = value.split(',')
+        const tag = { 'id': parseInt(id), name }
+        const tagExists = Array.from(existingTags).find(tag => tag.id === id)
+        if (tagExists) {
+            return
+        }
+        const buttonTag = document.createElement('button')
+        buttonTag.classList.add('btn', 'btn-primary', 'btn-small', 'tag-button', 'tw-m-2')
+        buttonTag.innerText = name
+        buttonTag.id = id;
+        buttonTag.onclick = () => {
+            buttonTag.remove()
+        }
+        tags_area.appendChild(buttonTag)
+
+    }
+
+</script>
+{% endblock %}
