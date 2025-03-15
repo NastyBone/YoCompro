@@ -84,3 +84,19 @@ def slug_generator(name):
     return (
         unidecode(name).strip().lower().replace(" ", "-") + "-" + str(uuid.uuid4())[:8]
     )
+
+
+def regex_password_match(password):
+    lowercase_rule = r"(?=(.*[a-z]){1,})"
+    uppercase_rule = r"(?=(.*[A-Z]){1,})"
+    number_rule = r"(?=(.*[0-9]){1,})"
+    special_rule = r"(?=(.*[!@#$%^&*()\-__+.]){1,})"
+    if not lowercase_rule.find(password):
+        return "Password requires at least one lowercase character"
+    if not uppercase_rule.find(password):
+        return "Password requires at least one uppercase character"
+    if not number_rule.find(password):
+        return "Password requires at least one number"
+    if not special_rule.find(password):
+        return "Password requires at least one special character (!,@,#,$,%,^,&,*,(,),_,+,.)"
+    return True

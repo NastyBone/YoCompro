@@ -707,6 +707,10 @@ video {
   width: 100%;
 }
 
+.tw-w-40 {
+  width: 10rem;
+}
+
 .tw-min-w-min {
   min-width: -moz-min-content;
   min-width: min-content;

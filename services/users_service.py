@@ -39,7 +39,7 @@ def insert(obj):
         res = connection.execute(
             "INSERT INTO users (name, email, password) VALUES (?, ?, ?) RETURNING id, name, email, role",
             (obj["name"], obj["email"], hashed_password),
-        ).fetchall()
+        ).fetchone()
         connection.commit()
         return res
     except Exception as error:
