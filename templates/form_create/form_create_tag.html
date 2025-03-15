@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container tw-flex tw-flex-col tw-gap-6 tw-w-full">
-    <h2 class="tw-font-semibold tw-text-3xl tw-mb-4 tw-inline-block">Create Tag</h2>
+    <h2 class="tw-font-semibold tw-text-3xl tw-mb-4 tw-inline-block">Create or Edit Tag</h2>
     <form onsubmit="event.preventDefault(); return createTag()" class="tw-flex tw-flex-col tw-gap-4">
         <div>
             <label for="tag_name">Tag Name</label>
@@ -21,14 +21,16 @@
 </div>
 <script>
     async function createTag() {
+        const tag = JSON.parse(('{{tag[0] | tojson}}'))
+
         const name = document.getElementById('tag_name').value;
         const description = document.getElementById('tag_description').value;
         const data = {
             name,
             description,
         }
-        await fetch('/tags', {
-            method: 'POST',
+        await fetch(`/tags${tag ? '?id=' + tag.id : ''}`, {
+            method: tag ? 'PUT' : 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -64,6 +66,18 @@
         tags_area.appendChild(buttonTag)
 
     }
+
+</script>
+<script>
+    function editing() {
+        const tag = JSON.parse(('{{tag[0] | tojson}}'))
+
+        if (tag) {
+            document.getElementById('tag_name').value = tag.name
+            document.getElementById('tag_description').value = tag.description
+        }
+    }
+    editing()
 
 </script>
 {% endblock %}

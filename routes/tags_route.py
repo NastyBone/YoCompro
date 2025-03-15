@@ -62,9 +62,15 @@ def get_tags_by_status(status):
     return jsonify({"data": response, "count": count / 12})
 
 
-@tags_bp.route("/create/form", methods=["GET"])
-def create_form():
-    return render_template("form_create/form_create_tag.html")
+@tags_bp.route("/form", methods=["GET"])
+def form():
+    id = request.args.get("id", None)
+    print(id)
+    if id:
+        tag = get(id)
+    else:
+        tag = None
+    return render_template("form_create/form_create_tag.html", tag=tag)
 
 
 @tags_bp.route("/edit/form", methods=["GET"])
