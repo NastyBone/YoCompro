@@ -8,7 +8,10 @@ from services.products_service import (
     get_top_rated_by_bussiness as top_rated_products,
     search_by_bussiness,
 )
-from services.tags_service import get_all as get_all_tags
+from services.tags_service import (
+    get_all as get_all_tags,
+    get_tags_by_bussiness as tags_by_bussiness,
+)
 
 from services.brands_service import get_popular_by_bussiness as brands_popular
 from services.ratings_service import get_average_by_bussiness as rating_bussiness
@@ -53,6 +56,8 @@ def create():
 def edit():
     id = request.args.get("id")
     data = request.get_json()
+    data["slug"] = slug_generator(data["name"])
+    data["city"] = session["city"]
     response = update(id, data)
     tags = tags_setter(response[0]["id"], data["tags"])
     return jsonify(response)
@@ -73,10 +78,23 @@ def edit_status():
     return jsonify(response)
 
 
-@bussiness_bp.route("/create/form", methods=["GET"])
-def create_form():
+@bussiness_bp.route("/form", methods=["GET"])
+def form():
+    id = request.args.get("id", None)
+    if id:
+        bussiness = get(id)
+        current_tags = tags_by_bussiness(id)
+    else:
+        bussiness = None
+        current_tags = []
     tags = get_all_tags()
-    return render_template("form_create/form_create_bussiness.html", tags=tags)
+    print(current_tags)
+    return render_template(
+        "form_create/form_create_bussiness.html",
+        tags=tags,
+        bussiness=bussiness,
+        current_tags=current_tags,
+    )
 
 
 @bussiness_bp.route("/edit/form", methods=["GET"])

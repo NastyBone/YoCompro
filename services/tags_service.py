@@ -189,8 +189,8 @@ def get_tags_by_bussiness(id):
             connection.row_factory = dict_factory
         res = connection.execute(
             """SELECT t.* FROM tags t
-            JOIN tags_products tp ON tp.tag_id = t.id
-            WHERE product_id = ? """,
+            JOIN tags_bussiness tb ON tb.tag_id = t.id
+            WHERE bussiness_id = ? """,
             (id,),
         ).fetchall()
         connection.commit()

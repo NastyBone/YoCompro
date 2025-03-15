@@ -55,7 +55,7 @@ def insert(obj):
                 obj["name"],
                 obj["email"],
                 obj["description"],
-                slug_generator(obj["name"]),
+                obj["slug"],
                 obj["address"],
                 obj["phone"],
                 obj["rif"],

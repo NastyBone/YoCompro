@@ -53,6 +53,7 @@
 </div>
 <script>
     async function createBussiness() {
+        const bussiness = JSON.parse(('{{bussiness[0] | tojson}}'))
         const position = await new Promise((resolve, reject) => {
             navigator.geolocation.getCurrentPosition(resolve, reject);
         });
@@ -79,17 +80,14 @@
             lon,
             tags: tag_ids
         }
-        await fetch('/bussiness', {
-            method: 'POST',
+        await fetch(`/bussiness${bussiness ? '?id=' + bussiness.id : ''}`, {
+            method: bussiness ? 'PUT' : 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         })
             .then(res => res.json())
-            .then(data => {
-                console.log(data);
-            })
             .catch(err => {
                 console.log(err);
             })
@@ -116,6 +114,29 @@
         tags_area.appendChild(buttonTag)
 
     }
+
+</script>
+<script>
+    function editing() {
+        const bussiness = JSON.parse(('{{bussiness[0] | tojson}}'))
+        const currentTags = JSON.parse(('{{current_tags | tojson}}'))
+        console.log(bussiness)
+        if (bussiness) {
+            document.getElementById('bussiness_name').value = bussiness.name
+            document.getElementById('bussiness_description').value = bussiness.description
+            document.getElementById('bussiness_email').value = bussiness.email
+            document.getElementById('bussiness_address').value = bussiness.address
+            document.getElementById('bussiness_phone').value = bussiness.phone
+            document.getElementById('bussiness_rif').value = bussiness.rif
+            const options = Array.from(document.getElementsByTagName('option'))
+            currentTags.forEach(ct => {
+                dataString = `${ct.id},${ct.name}`
+                setTagList(dataString)
+                options.find(t => t.value == dataString).selected = true;
+            })
+        }
+    }
+    editing()
 
 </script>
 {% endblock %}
