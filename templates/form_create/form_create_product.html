@@ -42,6 +42,7 @@
 </div>
 <script>
     async function createProduct() {
+        const product = JSON.parse(('{{product[0] | tojson}}'))
         const name = document.getElementById('product_name').value;
         const description = document.getElementById('product_description').value;
         const tags = document.querySelectorAll('.tag-button')
@@ -53,8 +54,8 @@
             brand_id,
             tags: tag_ids
         }
-        await fetch('/products', {
-            method: 'POST',
+        await fetch(`/products${product ? '?id=' + product.id : ''}`, {
+            method: product ? 'PUT' : 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -90,6 +91,26 @@
         tags_area.appendChild(buttonTag)
 
     }
+
+</script>
+<script>
+    function editing() {
+        const product = JSON.parse(('{{product[0] | tojson}}'))
+        const currentTags = JSON.parse(('{{current_tags | tojson}}'))
+        console.log(currentTags)
+        if (product) {
+            document.getElementById('product_name').value = product.name
+            document.getElementById('product_description').value = product.description
+            document.getElementById('product_brand').value = product.brand_id
+            const options = Array.from(document.getElementsByTagName('option'))
+            currentTags.forEach(ct => {
+                dataString = `${ct.id},${ct.name}`
+                setTagList(dataString)
+                options.find(t => t.value == dataString).selected = true;
+            })
+        }
+    }
+    editing()
 
 </script>
 {% endblock %}

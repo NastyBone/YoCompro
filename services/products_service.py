@@ -14,7 +14,9 @@ def get(id):
     try:
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
-        res = connection.execute("SELECT * FROM products WHERE id = ?", id).fetchall()
+        res = connection.execute(
+            "SELECT * FROM products WHERE id = ?", (id,)
+        ).fetchall()
         connection.commit()
         return res
     except Exception as error:

@@ -162,3 +162,39 @@ def update_status(id, status):
 #     except Exception as error:
 #         print(error)
 #         raise Exception(error)
+
+
+def get_tags_by_products(id):
+    try:
+        int(id)
+        with sqlite3.connect("database.db") as connection:
+            connection.row_factory = dict_factory
+        res = connection.execute(
+            """SELECT t.* FROM tags t
+            JOIN tags_products tp ON tp.tag_id = t.id
+            WHERE product_id = ? """,
+            (id,),
+        ).fetchall()
+        connection.commit()
+        return res
+    except Exception as error:
+        print(error)
+        raise Exception(error)
+
+
+def get_tags_by_bussiness(id):
+    try:
+        int(id)
+        with sqlite3.connect("database.db") as connection:
+            connection.row_factory = dict_factory
+        res = connection.execute(
+            """SELECT t.* FROM tags t
+            JOIN tags_products tp ON tp.tag_id = t.id
+            WHERE product_id = ? """,
+            (id,),
+        ).fetchall()
+        connection.commit()
+        return res
+    except Exception as error:
+        print(error)
+        raise Exception(error)

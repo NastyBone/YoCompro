@@ -592,6 +592,10 @@ video {
   margin: 0.25rem;
 }
 
+.tw-m-2 {
+  margin: 0.5rem;
+}
+
 .tw-m-3 {
   margin: 0.75rem;
 }
@@ -602,10 +606,6 @@ video {
 
 .tw-m-auto {
   margin: auto;
-}
-
-.tw-m-2 {
-  margin: 0.5rem;
 }
 
 .tw-my-4 {

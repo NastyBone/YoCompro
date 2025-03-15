@@ -12,7 +12,10 @@ from services.bussiness_service import (
     search_by_products,
 )
 from helpers import roles_list, set_pagination, filter_list
-from services.tags_service import get_all as get_all_tags
+from services.tags_service import (
+    get_all as get_all_tags,
+    get_tags_by_products as tags_by_products,
+)
 
 products_bp = Blueprint("products", __name__)
 
@@ -52,6 +55,7 @@ def create():
 def edit():
     id = request.args.get("id")
     data = request.get_json()
+    data["slug"] = slug_generator(data["name"])
     response = update(id, data)
     tags = tags_setter(response[0]["id"], data["tags"])
     return jsonify(response)
@@ -72,12 +76,24 @@ def edit_status():
     return "Hello Products!"
 
 
-@products_bp.route("/create/form", methods=["GET"])
-def create_form():
+@products_bp.route("/form", methods=["GET"])
+def form():
+    id = request.args.get("id", None)
+    print(id)
+    if id:
+        product = get(id)
+        current_tags = tags_by_products(id)
+    else:
+        product = None
+        current_tags = []
     brands = get_all_brands()
     tags = get_all_tags()
     return render_template(
-        "form_create/form_create_product.html", brands=brands, tags=tags
+        "form_create/form_create_product.html",
+        brands=brands,
+        tags=tags,
+        product=product,
+        current_tags=current_tags,
     )
 
 
