@@ -43,6 +43,7 @@ def create():
 def edit():
     id = request.args.get("id")
     data = request.get_json()
+    data["slug"] = slug_generator(data["name"])
     response = update(id, data)
     return jsonify(response)
 
@@ -62,9 +63,15 @@ def edit_status():
     return jsonify(response)
 
 
-@brands_bp.route("/create/form", methods=["GET"])
-def create_form():
-    return render_template("form_create/form_create_brand.html")
+@brands_bp.route("/form", methods=["GET"])
+def form():
+    id = request.args.get("id", None)
+    print(id)
+    if id:
+        brand = get(id)
+    else:
+        brand = None
+    return render_template("form_create/form_create_brand.html", brand=brand)
 
 
 @brands_bp.route("/edit/form", methods=["GET"])

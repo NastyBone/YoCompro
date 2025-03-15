@@ -20,15 +20,15 @@
 </div>
 <script>
     async function createBrand() {
+        const brand = JSON.parse(('{{brand[0] | tojson}}'))
         const name = document.getElementById('brand_name').value;
         const country = document.getElementById('brand_country').value;
-        console.log(name, country);
         const data = {
             name,
             country
         }
-        await fetch('/brands', {
-            method: 'POST',
+        await fetch(`/brands${brand ? '?id=' + brand.id : ''}`, {
+            method: brand ? 'PUT' : 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -42,5 +42,17 @@
                 console.log(err);
             })
     }
+</script>
+<script>
+    function editing() {
+        const brand = JSON.parse(('{{brand[0] | tojson}}'))
+        if (brand) {
+            document.getElementById('brand_name').value = brand.name
+            document.getElementById('brand_country').value = brand.country
+
+        }
+    }
+    editing()
+
 </script>
 {% endblock %}
