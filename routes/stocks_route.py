@@ -56,7 +56,7 @@ def form():
     if id:
         stock = get(id)
     else:
-        stock = None
+        stock = [None]
     owner_id = current_user.get_id() or 3
     products = get_all_products()
     bussiness = get_bussiness_by_owner(owner_id, None, None)

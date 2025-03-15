@@ -69,7 +69,7 @@ def form():
     if id:
         tag = get(id)
     else:
-        tag = None
+        tag = [None]
     return render_template("form_create/form_create_tag.html", tag=tag)
 
 

@@ -70,7 +70,7 @@ def form():
     if id:
         brand = get(id)
     else:
-        brand = None
+        brand = [None]
     return render_template("form_create/form_create_brand.html", brand=brand)
 
 

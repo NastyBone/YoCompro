@@ -85,7 +85,7 @@ def form():
         bussiness = get(id)
         current_tags = tags_by_bussiness(id)
     else:
-        bussiness = None
+        bussiness = [None]
         current_tags = []
     tags = get_all_tags()
     print(current_tags)
