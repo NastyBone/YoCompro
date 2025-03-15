@@ -15,6 +15,7 @@ from services.tags_service import (
 
 from services.brands_service import get_popular_by_bussiness as brands_popular
 from services.ratings_service import get_average_by_bussiness as rating_bussiness
+from services.users_service import check_ownership
 from helpers import set_pagination, roles_list, filter_list, type_list
 
 bussiness_bp = Blueprint("bussiness", __name__)
@@ -47,6 +48,7 @@ def create():
     data["slug"] = slug_generator(data["name"])
     data["city"] = session["city"]
     data["user_id"] = current_user.get_id() or 3
+    check_ownership(current_user.get_id() or 3)
     response = insert(data)
     tags = tags_setter(response[0]["id"], data["tags"])
     return jsonify(response)

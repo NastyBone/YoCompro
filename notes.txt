@@ -117,32 +117,41 @@ X Forbiden view
 
 ### NOTES
 
-X Add view more button to dashboards components, it will lead to full views (not limited, but paginated)
-X Add links to card items
-- Use slugs to make requests, use name to search
-X Add status filtering from gets which requires approvation
-- Add joins on relations and extra info -- Be modified where needed
-- Connect images even to forms
-- Connect tags too
-- Export scripts
-- Remember general endpoint is a get and then rest are posts
-- All paginations require an auxiliar endpoint to fetch data
-- Be aware of redirections (handle notfound on posts)
-- Similar products?
-- Add contact to bussiness details
-- Edit and creation requires guards
-- Better handling on backend errors
-- Fix searches where if not rated or added into a list, appear anyways or doesnt (prlly a left o right join)
-- Protect routes based on roles
-- Beware that tags does not have images, so adapt admin search to not forceload it or add a defaul image
-- Redirection or messages after submit form (clear form also)
-- On product details, add extra request for low stocks on bussiness in case is an owner, for bussiness details, add extra request for low stock products
+== TODOs
 - TODO: Manage users
 - TODO: Add function to removing and editing items (users, bussiness, stocks, tags, products, brands)
 - TODO: Same above with owners (for stocks and bussiness)
-- Change certain buttons on layaut according to role
+- Figure out how to edit status
+- Connect views through buttons
+
+== FEATURES
+- Connect images even to forms
+- Be aware of redirections (handle notfound on posts and redirect on edit/creating)
+- Redirection or messages after submit form (clear form also)
+- Beware that tags does not have images, so adapt admin search to not forceload it or add a defaul image
+- On product details, add extra request for low stocks on bussiness in case is an owner, for bussiness details, add extra request for low stock products
+- Change certain buttons on layout according to role
 - Another detail still missing, the count of 'listed' by users on item
-- owner_id = 3 
+- Similar products?
+
+== SECURITY
+- Protect routes based on roles
+- Edit and creation requires guards
+
+== FIXES
+- Better handling on backend errors
+- Fix searches where if not rated or added into a list, appear anyways or doesnt (prlly a left o right join)
+- owner_id = 3 (or 3)
+- Add contact (address, mail, phone) to bussiness details
+
+X Add view more button to dashboards components, it will lead to full views (not limited, but paginated)
+X Add links to card items
+
+X Add status filtering from gets which requires approvation
+X Connect tags too
+X Remember general endpoint is a get and then rest are posts
+X All paginations require an auxiliar endpoint to fetch data
+
 X SQL injection on end_date and start_date
 X Add security layer using user_id (might be a route decorator, might not) (ratings, lists, bussiness, stocks) (take it from request)
 
@@ -164,6 +173,10 @@ X Verify not existing product name
 X Verify not existing brand name
 X Become owner should redirect to create bussiness, that endpoint should call the change of user.role
 X Store user location on session
+
+-- Use slugs to make requests, use name to search
+-- Export scripts
+-- Add joins on relations and extra info -- Be modified where needed
 
 
 -------------------- Review
