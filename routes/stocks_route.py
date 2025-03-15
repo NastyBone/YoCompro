@@ -49,13 +49,22 @@ def remove():
     return jsonify(response)
 
 
-@stocks_bp.route("/create/form", methods=["GET"])
-def create_form():
+@stocks_bp.route("/form", methods=["GET"])
+def form():
+    id = request.args.get("id", None)
+    print(id)
+    if id:
+        stock = get(id)
+    else:
+        stock = None
     owner_id = current_user.get_id() or 3
     products = get_all_products()
     bussiness = get_bussiness_by_owner(owner_id, None, None)
     return render_template(
-        "form_create/form_create_stock.html", products=products, bussiness=bussiness
+        "form_create/form_create_stock.html",
+        products=products,
+        bussiness=bussiness,
+        stock=stock,
     )
 
 

@@ -24,7 +24,7 @@
             <select name="product" id="product" class="form-control" required>
                 <option value="" disabled selected>Select Product</option>
                 {% for item in products %}
-                <option value="{{item.id}}">{{item.name}}</option>
+                <option value="{{item.id}}" class="product-list">{{item.name}}</option>
                 {% endfor %}
             </select>
         </div>
@@ -34,7 +34,7 @@
             <select name="bussiness" id="bussiness" class="form-control" required>
                 <option value="" disabled selected>Select Bussiness</option>
                 {% for item in bussiness %}
-                <option value="{{item.id}}">{{item.name}}</option>
+                <option value="{{item.id}}" class="bussiness-list">{{item.name}}</option>
                 {% endfor %}
             </select>
         </div>
@@ -44,6 +44,7 @@
 </div>
 <script>
     async function createStock() {
+        const stock = JSON.parse(('{{stock[0] | tojson}}'))
         const price = document.getElementById('stock_price').value;
         const discount = document.getElementById('stock_discount').value;
         const quantity = document.getElementById('stock_quantity').value;
@@ -57,8 +58,8 @@
             bussiness_id,
             product_id
         }
-        await fetch('/stocks', {
-            method: 'POST',
+        await fetch(`/stocks${stock ? '?id=' + stock.id : ''}`, {
+            method: stock ? 'PUT' : 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -94,6 +95,26 @@
         tags_area.appendChild(buttonTag)
 
     }
+
+</script>
+<script>
+    function editing() {
+        const stock = JSON.parse(('{{stock[0] | tojson}}'))
+
+        if (stock) {
+            document.getElementById('stock_price').value = stock.price
+            document.getElementById('stock_discount').value = stock.discount
+            document.getElementById('stock_quantity').value = stock.quantity
+
+            const bussinessOptions = Array.from(document.getElementsByClassName('bussiness-list'))
+            bussinessOptions.find(t => t.value == stock.bussiness_id).selected = true;
+
+            const productOptions = Array.from(document.getElementsByClassName('product-list'))
+            productOptions.find(t => t.value == stock.product_id).selected = true;
+
+        }
+    }
+    editing()
 
 </script>
 {% endblock %}
