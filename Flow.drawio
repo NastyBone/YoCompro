@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.0.16 Chrome/132.0.6834.196 Electron/34.2.0 Safari/537.36" version="26.0.16">
   <diagram name="Página-1" id="JkejbjwRbI5Mm3JxXKyr">
-    <mxGraphModel dx="3763" dy="1420" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="3404" dy="1152" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -897,19 +897,22 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="dOirgz0_V3Rg2CDJSkMz-12" value="edit profile/&lt;br&gt;update password" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#FF6666;fontSize=16;" parent="1" vertex="1">
-          <mxGeometry x="-1125" y="2426" width="120" height="60" as="geometry" />
+          <mxGeometry x="-1120" y="2500" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="dOirgz0_V3Rg2CDJSkMz-13" value="view user profile" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#FF6666;fontSize=16;" parent="1" vertex="1">
-          <mxGeometry x="-1125" y="2495" width="120" height="60" as="geometry" />
+          <mxGeometry x="-1120" y="2569" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="RoSXJmhyBCkWnJRdju99-1" value="manage users" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#FF6666;fontSize=16;" parent="1" vertex="1">
           <mxGeometry x="-1125" y="2358" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="il2jlSibGmTkn9zjHced-1" value="login" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#FF6666;fontSize=16;" vertex="1" parent="1">
-          <mxGeometry x="-983" y="2366" width="120" height="60" as="geometry" />
+        <mxCell id="il2jlSibGmTkn9zjHced-1" value="login" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#FF6666;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="-936" y="2364" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="il2jlSibGmTkn9zjHced-2" value="sign up" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#FF6666;fontSize=16;" vertex="1" parent="1">
-          <mxGeometry x="-983" y="2432" width="120" height="60" as="geometry" />
+        <mxCell id="il2jlSibGmTkn9zjHced-2" value="sign up" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#FF6666;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="-936" y="2430" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="R0UNN7TXEcjg7FZUZKiq-1" value="all list shit" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;gradientColor=#ffd966;strokeColor=#FF6666;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="-931" y="2567" width="120" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

@@ -17,18 +17,12 @@ def index():
 def user_register():
     data = request.get_json()
     password = data.get("password")
-    if verify_existing_email(data.get("email")):
-        return "Email already exists", 400
     if password != data.get("confirm-password"):
         return "Password does not match", 400
-    if len(password) > 12 or len(password) < 8:
-        return "Password must be 8-12 character long", 400
-    regex_result = regex_password_match(password)
-    if regex_result != True:
-        print("here??")
-        return regex_result, 400
+    if verify_existing_email(data.get("email")):
+        return "Email already exists", 400
+    verify_password(password)
     register_data = register(data)
-    print(register_data)
     create_list(register_data.get("id"))
     return "Success!"
 
@@ -36,8 +30,11 @@ def user_register():
 @auth_bp.route("/login", methods=["POST"])
 def user_login():
     data = request.get_json()
+    verify_password(data.get("password"))
     response = login(data["email"], data["password"])
-    return jsonify(response)
+    if isinstance(response, ValueError):
+        return response.args[0], 400
+    return "Success!", 200
 
 
 @auth_bp.route("/logout", methods=["GET"])
@@ -55,3 +52,11 @@ def register_form():
 @auth_bp.route("/login", methods=["GET"])
 def login_form():
     return render_template("auth/login.html")
+
+
+def verify_password(password):
+    if len(password) > 12 or len(password) < 8:
+        return "Password must be 8-12 character long", 400
+    regex_result = regex_password_match(password)
+    if regex_result != True:
+        return regex_result, 400

@@ -30,7 +30,6 @@ def index():
 @products_bp.route("/all", methods=["GET"])
 def find_all():
     response = get_all()
-    print(response)
     return jsonify(response)
 
 
@@ -38,7 +37,6 @@ def find_all():
 def find():
     id = request.args.get("id")
     response = get(id)
-    print(response)
     return jsonify(response)
 
 
@@ -79,7 +77,6 @@ def edit_status():
 @products_bp.route("/form", methods=["GET"])
 def form():
     id = request.args.get("id", None)
-    print(id)
     if id:
         product = get(id)
         current_tags = tags_by_products(id)
@@ -191,7 +188,6 @@ def get_products_by_status(status):
 
 @products_bp.route("<slug>/search/bussiness", methods=["GET"])
 def bussiness_by_products(slug):
-    print("is here??")
     lat = session.get("lat", None)
     lon = session.get("lon", None)
     page = request.args.get("page", None)

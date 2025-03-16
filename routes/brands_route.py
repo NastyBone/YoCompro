@@ -66,7 +66,6 @@ def edit_status():
 @brands_bp.route("/form", methods=["GET"])
 def form():
     id = request.args.get("id", None)
-    print(id)
     if id:
         brand = get(id)
     else:
@@ -95,7 +94,6 @@ def popular_bussines(slug):
 def find_by_product_filter(slug):
     page = request.args.get("page", None)
     filter = request.args.get("filter", "popular")
-    print(filter, "filter")
     json = request.args.get("json", False)
     name = request.args.get("name", "")
     if filter not in filter_list:
@@ -134,7 +132,6 @@ def find_by_slug(slug):
     [newest, count] = produscts_newest(slug, True)
     [bussiness, count] = bussiness_popular(city, slug, True)
 
-    print(bussiness)
     return render_template(
         "details/detail_brand.html",
         brand=response,

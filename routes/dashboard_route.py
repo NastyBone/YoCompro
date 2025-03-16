@@ -18,7 +18,6 @@ dashboard_bp = Blueprint("dashboard", __name__)
 
 @dashboard_bp.route("/", methods=["GET"])
 def main():
-    print(session)
     city = session.get("city", None)
     lat = session.get("lat", None)
     lon = session.get("lon", None)

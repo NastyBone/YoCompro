@@ -112,13 +112,11 @@ def find_auxiliar(type, id):
             id, False, start_pagination, end_pagination, score, time
         )
     elif type == "products":
-        print(id, False, start_pagination, end_pagination, score, time)
         [response, count] = get_by_product(
             id, False, start_pagination, end_pagination, score, time
         )
     else:
         ValueError("Type not valid")
-    print(response)
     return jsonify({"data": response, "count": count / 12})  # 12 per page
 
 

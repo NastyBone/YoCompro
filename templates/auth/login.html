@@ -28,9 +28,15 @@
             body: JSON.stringify({
                 email, password,
             })
-        }).catch(e => {
-            console.log(e)
-        })
+        }).then(res => res.text())
+            .then(res => {
+                console.log(res)
+                alert(res)
+            }).catch(e => {
+                console.log(e)
+
+                alert(e)
+            })
 
     }
 </script>

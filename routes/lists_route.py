@@ -5,28 +5,27 @@ from guard import *
 lists_bp = Blueprint("lists", __name__)
 
 
-@lists_bp.route('/test')
+@lists_bp.route("/test")
 def index():
-    return 'Hello Lists!'
+    return "Hello Lists!"
 
 
-@lists_bp.route('/', methods=['GET'])
+@lists_bp.route("/", methods=["GET"])
 def find():
-    id = request.args.get('id')
+    id = request.args.get("id")
     response = get(id)
     return jsonify(response)
 
 
-@lists_bp.route('/all', methods=['GET'])
+@lists_bp.route("/all", methods=["GET"])
 def find_all():
     response = get_all()
     return jsonify(response)
 
 
-@lists_bp.route('/', methods=['POST'])
+@lists_bp.route("/", methods=["POST"])
 def create():
     data = request.get_json()
-    print(data)
     response = insert(data)
     return jsonify(response)
 
@@ -40,35 +39,35 @@ def create():
 #     return 'Hello Lists!'
 
 
-@lists_bp.route('/', methods=['DELETE'])
+@lists_bp.route("/", methods=["DELETE"])
 @secure_access()
 def remove():
-    id = request.args.get('id')
+    id = request.args.get("id")
     response = delete(id)
     return jsonify(response)
 
 
-@lists_bp.route('/add', methods=['POST'])
+@lists_bp.route("/add", methods=["POST"])
 @secure_access()
 def add_product():
-    id = request.args.get('id')
-    stock_id = request.args.get('stock_id')
+    id = request.args.get("id")
+    stock_id = request.args.get("stock_id")
     response = insert_product(id, stock_id)
     return jsonify(response)
 
 
-@lists_bp.route('/remove', methods=['POST'])
+@lists_bp.route("/remove", methods=["POST"])
 @secure_access()
 def remove_product():
-    id = request.args.get('id')
-    stock_id = request.args.get('stock_id')
+    id = request.args.get("id")
+    stock_id = request.args.get("stock_id")
     response = delete_product(id, stock_id)
     return jsonify(response)
 
 
-@lists_bp.route('/user', methods=['GET'])
+@lists_bp.route("/user", methods=["GET"])
 @secure_access()
 def find_by_user():
-    id = request.args.get('user_id')
+    id = request.args.get("user_id")
     response = get_by_user(id)
     return jsonify(response)

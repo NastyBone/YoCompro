@@ -31,7 +31,6 @@ def index():
 @bussiness_bp.route("/all", methods=["GET"])
 def find_all():
     response = get_all()
-    print(response)
     return jsonify(response)
 
 
@@ -90,7 +89,6 @@ def form():
         bussiness = [None]
         current_tags = []
     tags = get_all_tags()
-    print(current_tags)
     return render_template(
         "form_create/form_create_bussiness.html",
         tags=tags,
@@ -112,7 +110,6 @@ def find_by_slug(slug):
     lat = session.get("lat", 0)
     lon = session.get("lon", 0)
     bussiness = get_by_slug(slug, lat, lon)
-    print(bussiness)
     if not bussiness:
         print("Not found")
         return ValueError("Not found")

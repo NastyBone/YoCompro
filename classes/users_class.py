@@ -20,15 +20,12 @@ class ResponseUser:
 
 
 class UserLogin(object):
-    def __init__(self, id, name, email, password, role, city, lat, lon):
+    def __init__(self, id, name, email, password, role):
         self.name = name
         self.email = email
         self.password = password
         self.role = role
         self.id = id
-        self.city = city
-        self.lat = lat
-        self.lon = lon
 
     def __getitem__(self, key):
         return getattr(self, key)

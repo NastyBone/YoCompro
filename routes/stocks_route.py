@@ -52,7 +52,6 @@ def remove():
 @stocks_bp.route("/form", methods=["GET"])
 def form():
     id = request.args.get("id", None)
-    print(id)
     if id:
         stock = get(id)
     else:

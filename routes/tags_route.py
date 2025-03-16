@@ -30,7 +30,6 @@ def edit():
     data = request.get_json()
     id = request.args.get("id")
     response = update(id, data)
-    print(response)
     return jsonify(response)
 
 
@@ -38,7 +37,6 @@ def edit():
 def remove():
     id = request.args.get("id")
     response = delete(id)
-    print(response)
     return jsonify(response)
 
 
@@ -47,7 +45,6 @@ def edit_status():
     id = request.args.get("id")
     status = request.get_json()["status"]
     response = update_status(id, status)
-    print(response)
     return jsonify(response)
 
 
@@ -65,7 +62,6 @@ def get_tags_by_status(status):
 @tags_bp.route("/form", methods=["GET"])
 def form():
     id = request.args.get("id", None)
-    print(id)
     if id:
         tag = get(id)
     else:

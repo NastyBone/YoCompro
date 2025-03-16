@@ -91,6 +91,12 @@ def handle_bad_request(e):
     return redirect("/forbidden")
 
 
+@app.errorhandler(werkzeug.exceptions.BadRequest)
+def handle_bad_request(e):
+    print("erroringgg")
+    return e
+
+
 @app.route("/error", methods=["GET"])
 def exception():
     return render_template("misc/error.html")
