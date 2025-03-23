@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid d-flex justify-content-center align-items-center h-100 flex-column">
+    <h4 class="tw-font-semibold tw-text-3xl tw-mb-4 tw-inline-block">Edit Profile</h4>
+    <form onsubmit="event.preventDefault(); return changeProfile(this)" class="tw-w-1/3">
+        <div class="mb-4">
+            <label for="name">Name</label>
+            <input type="name" name="name" id="name" class="form-control" required>
+        </div>
+
+        <div class="mb-4">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-large">Update Profile</button>
+    </form>
+    <h4 class="tw-font-semibold tw-text-3xl tw-mb-4 tw-mt-8 tw-inline-block">Change Password</h4>
+    <form onsubmit="event.preventDefault(); return changePassword(this)" class="tw-w-1/3">
+        <div class="mb-4">
+            <label for="password">Password</label>
+
+            <input type="password" name="password" id="password" class="form-control" required>
+        </div>
+        <div class="mb-4">
+            <label for="confirm-password">Confirm Password</label>
+
+            <input type="password" name="confirm-password" id="confirm-password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-large">Update Password</button>
+    </form>
+</div>
+<script>
+    async function changeProfile(e) {
+        const email = e.email.value
+        const name = e.name.value
+
+        await fetch('/users', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name, email
+            })
+        })
+            .then(data => data.text())
+            .then(data => {
+                alert(data)
+            })
+            .catch(e => {
+                console.log(e)
+            })
+
+    }
+    async function changePassword(e) {
+        const password = e.password.value
+        const confirmPassword = e.password.value
+
+        await fetch('/auth/password', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                password, 'confirm-password': confirmPassword
+            })
+        })
+            .then(data => data.text())
+            .then(data => {
+                alert(data)
+            })
+            .catch(e => {
+                console.log(e)
+            })
+
+    }
+</script>
+<script>
+    function setFields() {
+        const user = `{{ user | tojson }}`
+        const { email, name } = JSON.parse(user)[0]
+        document.getElementById('email').value = email
+        document.getElementById('name').value = name
+    }
+    setFields()
+</script>
+{% endblock content %}

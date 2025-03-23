@@ -37,6 +37,17 @@ def user_login():
     return "Success!", 200
 
 
+@auth_bp.route("/password", methods=["PUT"])
+def edit_password():
+    id = current_user.get_id() or 3
+    data = request.get_json()
+    password = data.get("password")
+    if password != data.get("confirm-password"):
+        return "Password does not match", 400
+    update_password(id, password)
+    return "Success!"
+
+
 @auth_bp.route("/logout", methods=["GET"])
 @login_required()
 def user_logout():

@@ -137,6 +137,7 @@ X Forbiden view
 == SECURITY
 - Protect routes based on roles
 - Edit and creation requires guards
+- Check security for specific users on editing self and its things
 
 == FIXES
 - Better handling on backend errors

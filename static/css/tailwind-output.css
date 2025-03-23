@@ -642,6 +642,14 @@ video {
   margin-top: -5px;
 }
 
+.tw-mt-6 {
+  margin-top: 1.5rem;
+}
+
+.tw-mt-8 {
+  margin-top: 2rem;
+}
+
 .tw-inline-block {
   display: inline-block;
 }
@@ -705,10 +713,6 @@ video {
 
 .tw-w-full {
   width: 100%;
-}
-
-.tw-w-40 {
-  width: 10rem;
 }
 
 .tw-min-w-min {
