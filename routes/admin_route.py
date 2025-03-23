@@ -1,14 +1,16 @@
 from flask import Blueprint, request, jsonify, session, render_template
+from guard import login_required
 from services.stats_service import (
     bussiness_stats as bussiness,
     products_stats as products,
     tags_stats as tags,
     users_stats as users,
 )
-from helpers import set_pagination, status_list, type_list
+from helpers import set_pagination, status_list, type_list, roles_list
 from services.products_service import get_by_status as products_by_status
 from services.bussiness_service import get_by_status as bussinnes_by_status
 from services.tags_service import get_by_status as tags_by_status
+from services.users_service import get as get_user, update_role, update as update_user
 
 # TODO: Protect
 admin_bp = Blueprint("admin", __name__)
@@ -56,3 +58,23 @@ def general_search():
         items=response,
         pages=count / 12,  # 12 per page
     )
+
+
+@admin_bp.route("/profile-edit", methods=["GET"])
+@login_required()
+def edit_profile_from_admin():
+    id = request.args.get("id")
+    response = get_user(id)
+    return render_template("admin/edit_user.html", user=response)
+
+
+@admin_bp.route("/edit-user", methods=["PUT"])
+@login_required()
+def update_profile_from_admin():
+    data = request.get_json()
+    id = request.args.get("id")
+    if data.get("role") not in roles_list:
+        return "Role not found", 400
+    update_user(id, data)
+    update_role(id, data.get("role"))
+    return "Success!"

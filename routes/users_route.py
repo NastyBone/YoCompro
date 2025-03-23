@@ -72,7 +72,6 @@ def remove():
 @login_required()
 def edit_profile():
     id = current_user.get_id() or 3
-    print("ID", id)
     response = get(id)
     return render_template("auth/form_edit_user.html", user=response)
 

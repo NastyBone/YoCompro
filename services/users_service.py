@@ -93,11 +93,12 @@ def get_id_by_email(email):
 
 def update_role(id, role):
     try:
+        print(id, role)
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
             "UPDATE users SET role = ? WHERE id = ? RETURNING id, name, email, role",
-            (id, role),
+            (role, id),
         ).fetchall()
         connection.commit()
         return res
