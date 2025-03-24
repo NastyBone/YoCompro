@@ -10,7 +10,11 @@ from helpers import set_pagination, status_list, type_list, roles_list
 from services.products_service import get_by_status as products_by_status
 from services.bussiness_service import get_by_status as bussinnes_by_status
 from services.tags_service import get_by_status as tags_by_status
-from services.users_service import get as get_user, update_role, update as update_user
+from services.users_service import (
+    get as get_user,
+    update_role,
+    update as update_user,
+)
 
 # TODO: Protect
 admin_bp = Blueprint("admin", __name__)

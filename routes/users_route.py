@@ -1,4 +1,4 @@
-from helpers import roles_list
+from helpers import roles_list, set_pagination
 from guard import role_required
 from flask import Blueprint, request, jsonify, render_template
 from flask_login import current_user
@@ -29,8 +29,20 @@ def find():
 
 @users_bp.route("/all", methods=["GET"])
 def find_all():
-    response = get_all()
-    return jsonify(response)
+    page = request.args.get("page", None)
+    to_json = request.args.get("json", False)
+    name = request.args.get("name", "")
+    type = request.args.get("type", None)
+    [start_pagination, end_pagination] = set_pagination(page)
+    [response, count] = get_all(name, type, start_pagination, end_pagination)
+    if to_json:
+        return jsonify({"data": response, "count": count, "pages": count / 12})
+    return render_template(
+        "/admin/users_manager.html",
+        users=response,
+        count=count,
+        pages=count / 12,
+    )
 
 
 @users_bp.route("/", methods=["POST"])

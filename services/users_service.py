@@ -1,6 +1,6 @@
 import sqlite3
 import bcrypt
-from helpers import dict_factory
+from helpers import dict_factory, like_string, limit_or_pagination
 
 
 def get(id):
@@ -18,13 +18,34 @@ def get(id):
         raise Exception(error)
 
 
-def get_all():
+def get_all(name, filter, start_page, end_page):
     try:
+        if filter:
+            filter_string = f"AND role = '{filter}'"
+        print(filter)
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
-        res = connection.execute("SELECT id, name, email, role  FROM users").fetchall()
+        res = connection.execute(
+            f"""
+            SELECT id, name, email, role, created_at FROM users
+            WHERE name LIKE ?
+            {filter_string if filter else ""}
+            ORDER BY name
+            {limit_or_pagination(False, start_page, end_page)}
+            """,
+            (like_string(name),),
+        ).fetchall()
+
+        count = connection.execute(
+            f"""
+            SELECT COUNT(*) as count FROM users
+            WHERE name LIKE ?
+            {filter_string if filter else ""}
+            """,
+            (like_string(name),),
+        ).fetchone()
         connection.commit()
-        return res
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)

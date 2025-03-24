@@ -638,16 +638,12 @@ video {
   margin-top: 1rem;
 }
 
-.tw-mt-\[-5px\] {
-  margin-top: -5px;
-}
-
-.tw-mt-6 {
-  margin-top: 1.5rem;
-}
-
 .tw-mt-8 {
   margin-top: 2rem;
+}
+
+.tw-mt-\[-5px\] {
+  margin-top: -5px;
 }
 
 .tw-inline-block {

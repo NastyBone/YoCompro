@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form id="search__for" class="tw-flex tw-flex-col tw-w-full"
+    onsubmit="event.preventDefault(); return getResults(this);">
+    <div class="container tw-mb-4">
+        <!-- Search bar -->
+        <p class="tw-text-xl tw-mb-2">
+            Enter something you're looking for </p>
+        <div id="search__input" class="input-group mb-3">
+
+            <button class="btn btn-primary" id="submit__search__button" type="submit">Search</button>
+
+            <input type="text" name="name" value="{{keyword}}" class="form-control">
+            <input type="number" name="page" id="input_page" hidden="true">
+        </div>
+
+
+    </div>
+    <div class="tw-flex">
+        <!-- Sidebar -->
+        <div id="search__sidebar"
+            class="bg-primary-subtle text-color-baseblue p-2 tw-w-1/5 tw-rounded-[10px] tw-min-w-min">
+            <p class="tw-text-center tw-text-xl tw-font-semibold tw-m-3">Filters</p>
+            <select class="form-select flex-grow" aria-label=".form-select-lg example" name="filter"
+                id="filter__options">
+                <option value="" selected="selected" disabled>-- Select Type --</option>
+                <option class="filter-option" value="CLIENT">Client</option>
+                <option class="filter-option" value="ADMIN">Admin</option>
+                <option class="filter-option" value="OWNER">Owner</option>
+            </select>
+        </div>
+        <!-- Content -->
+        <div id="search__container" class="tw-w-4/5 px-2">
+            <!-- Elements -->
+
+            <div class="tw-gap-2 tw-flex tw-flex-col" id="search__elements">
+
+                {% for user in users %}
+
+                <div class="card">
+                    <div>
+                        <div class="card-body tw-flex tw-flex-col tw-gap-1">
+                            <p class="card-title tw-text-lg tw-font-semibold">{{user.name}}</p>
+                            <div class="tw-flex tw-justify-around">
+                                <span>Email: {{user.email}}</span>
+                                <span>Role: {{user.role}}</span>
+                                <span>Joined: {{user.created_at}}</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-footer tw-flex tw-gap-2">
+                        <button type="button" class="btn btn-danger btn-sm tw-w-1/2"
+                            onclick="alert('delete from admin')"><img
+                                src="{{ url_for('static', filename='bootstrap-icons/trash-fill.svg') }}" alt="Logo"
+                                width="14" height="10" class="d-inline-block text-light mb-1"></button>
+                        <button type="button" class="btn btn-secondary btn-sm tw-w-1/2"
+                            onclick="alert('edit from admin')"><img
+                                src="{{ url_for('static', filename='bootstrap-icons/pencil-fill.svg') }}" alt="Logo"
+                                width="14" height="10" class="d-inline-block text-light mb-1"></button>
+                    </div>
+                </div>
+                {% endfor %}
+
+
+
+            </div>
+            <div id="not-results">
+                {% if items == [] %}
+                <p class="tw-text-3xl tw-mt-4 tw-font-semibold tw-text-center">No results</p>
+                {% endif %}
+            </div>
+            <!-- Pagination -->
+            <div id="pagination" class="tw-mt-4"></div>
+        </div>
+    </div>
+
+
+</form>
+
+<!-- Pagination : EXPORT SCRIPT -->
+<script>
+    function setPaginationElement(pages, index) {
+        console.log(pages, index)
+        const paginationArea = document.getElementById('pagination');
+        const pagesCount = pages < 1 ? 1 : pages;
+        // Clear previous pagination
+        paginationArea.innerHTML = '';
+
+        // Create navigation structure
+        const nav = document.createElement('nav');
+        nav.setAttribute('aria-label', 'Page navigation example');
+        nav.className = 'tw-flex tw-justify-center';
+
+        const ul = document.createElement('ul');
+        ul.className = 'pagination';
+
+        // Previous button
+        const prevLi = document.createElement('li');
+        prevLi.className = `page-item ${index == 1 ? 'disabled' : ''}`;
+        const prevLink = document.createElement('a');
+        prevLink.className = 'page-link';
+        prevLink.href = '#';
+        prevLink.innerText = 'Previous';
+        prevLink.addEventListener('click', () => {
+            event.preventDefault()
+            document.getElementById('input_page').value = index - 1; // Set the 
+            document.getElementById('submit__search__button').click()
+        })
+        prevLi.appendChild(prevLink);
+        ul.appendChild(prevLi);
+
+        // Create page items
+        for (let i = 0; i < pagesCount; i++) {
+            const li = document.createElement('li');
+            li.className = 'page-item';
+            const link = document.createElement('a');
+            link.className = `page-link ${index === i + 1 ? 'active' : ''}`;
+            link.href = '#';
+            link.innerText = i + 1;
+
+            // Add click event listener
+            link.addEventListener('click', function (event) {
+                event.preventDefault(); // Prevent the default anchor behavior
+                document.getElementById('input_page').value = i + 1; // Set the hidden input value
+                document.getElementById('submit__search__button').click(); // Submit the form
+            });
+
+            li.appendChild(link);
+            ul.appendChild(li);
+        }
+
+        // Next button
+        const nextLi = document.createElement('li');
+        nextLi.className = 'page-item';
+        const nextLink = document.createElement('a');
+        nextLink.className = `page-link ${index >= pagesCount ? 'disabled' : ''}`;
+        nextLink.href = '#';
+        nextLink.innerText = 'Next';
+        nextLink.addEventListener('click', () => {
+            event.preventDefault()
+            document.getElementById('input_page').value = index + 1; // Set the 
+            document.getElementById('submit__search__button').click()
+        })
+        nextLi.appendChild(nextLink);
+        ul.appendChild(nextLi);
+
+        // Append the list to the navigation
+        nav.appendChild(ul);
+        paginationArea.appendChild(nav);
+    }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        setPaginationElement(`{{pages}}`, 1)
+
+    });
+
+</script>
+<!-- Requests -->
+<script>
+    async function getResults(e) {
+        const page = e.page.value
+        const filter = document.getElementById('filter__options').value
+        const toSearch = e.name.value ? `name=${e.name.value}` : ""
+        const response = await fetch(`all?type=${filter}&${toSearch}${page > 1 ? '&page=' + page : ''}&json=true`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+
+        const content = await response.json();
+        const data = content.data
+        const cardContainer = document.getElementById('search__elements')
+        cardContainer.innerHTML = '';
+        const htmlContent = data.map(user => ` <div class="card">
+                    <div>
+                        <div class="card-body tw-flex tw-flex-col tw-gap-1">
+                            <p class="card-title tw-text-lg tw-font-semibold">${user.name}</p>
+                            <div class="tw-flex tw-justify-around">
+                                <span>Email: ${user.email}</span>
+                                <span>Role: ${user.role}</span>
+                                <span>Joined: ${user.created_at}</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-footer tw-flex tw-gap-2">
+                        <button type="button" class="btn btn-danger btn-sm tw-w-1/2"
+                            onclick="alert('delete from admin')"><img
+                                src="{{ url_for('static', filename='bootstrap-icons/trash-fill.svg') }}" alt="Logo"
+                                width="14" height="10" class="d-inline-block text-light mb-1"></button>
+                        <button type="button" class="btn btn-secondary btn-sm tw-w-1/2"
+                            onclick="alert('edit from admin')"><img
+                                src="{{ url_for('static', filename='bootstrap-icons/pencil-fill.svg') }}" alt="Logo"
+                                width="14" height="10" class="d-inline-block text-light mb-1"></button>
+                    </div>
+                </div>`).join('')
+        cardContainer.innerHTML = htmlContent;
+        const noResultsContainer = document.getElementById('not-results')
+        if (data.length > 0) {
+            noResultsContainer.innerHTML = '';
+            setPaginationElement(content.count, +page)
+        } else {
+            noResultsContainer.innerHTML = `<p class="tw-text-3xl tw-mt-4 tw-font-semibold tw-text-center">No results</p>`
+            setPaginationElement(1, 1)
+
+        }
+
+        return false
+    }
+</script>
+{% endblock %}
