@@ -268,12 +268,12 @@ def insert_rating(user_id, bussiness_id, product_id, score, comment=None):
 
             # Intenta actualizar la calificación existente
             cursor.execute(
-                """
+                f"""
                 UPDATE ratings
                 SET score = ?, comment = ?, created_at = CURRENT_TIMESTAMP
-                WHERE user_id = ? AND bussiness_id = ? AND product_id = ?
+                WHERE user_id = ? AND  {"product_id" if product_id else "bussiness_id"} = ?
             """,
-                (score, comment, user_id, bussiness_id, product_id),
+                (score, comment, user_id, bussiness_id or product_id),
             )
 
             # Verifica si se actualizó alguna fila
