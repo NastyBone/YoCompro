@@ -30,7 +30,8 @@ def create():
     comment = data.get("comment", None)
     product_id = data.get("product_id", None)
     bussiness_id = data.get("bussiness_id", None)
-    user_id = 3  # current_user.get_id()
+    user_id = current_user.get_id()
+    print(user_id)
     if not user_id:
         return jsonify({"error": "User not found"}), 404
     response = insert_rating(user_id, bussiness_id, product_id, score, comment)

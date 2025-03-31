@@ -26,7 +26,7 @@
                 </div>
                 <div class="tw-flex tw-flex-col tw-w-1/3 tw-rounded-[10px] bg-primary-subtle tw-p-2 tw-m-auto">
                     <div class="tw-text-lg tw-font-semibold">
-                        Leave a comment:
+                        Leave or edit your comment:
                     </div>
                     <Textarea id="comment" class="tw-p-2" placeholder="Select a score to submit"></Textarea>
                 </div>
@@ -85,9 +85,21 @@
 
                 {% for item in ratings %}
 
-                <div class="tw-flex tw-flex-col tw-w-full tw-gap-2 tw-rounded-[10px] bg-primary-subtle tw-p-2">
-                    <div class="tw-text-lg tw-font-semibold">
-                        {{item.name}}
+                <div class="tw-flex tw-flex-col tw-w-full tw-gap-2 tw-rounded-[10px] bg-primary-subtle tw-p-2"
+                    id={{item.id}}>
+                    <div class="tw-text-lg tw-font-semibold tw-justify-between tw-flex">
+                        <span>{{item.name}}</span> <span>
+                            {% if item.user_id == current_user.get_id()%}
+                            <button type="button" class="btn btn-danger btn-sm"
+                                onclick='event.preventDefault(); deleteComment("{{item.id}}")'><img
+                                    src=" {{ url_for('static', filename='bootstrap-icons/trash-fill.svg' ) }}"
+                                    alt="Logo" width="14" height="10" class="d-inline-block text-light mb-1"></button>
+                            <button type="button" class="btn btn-secondary btn-sm"
+                                onclick='setComment("{{item.comment}}")'><img
+                                    src="{{ url_for('static', filename='bootstrap-icons/pencil-fill.svg') }}" alt="Logo"
+                                    width="14" height="10" class="d-inline-block text-light mb-1"></button>
+                            {% endif %}
+                        </span>
                     </div>
                     <div>
                         {{item.comment}}
@@ -263,14 +275,26 @@
                 method: 'GET',
             })
 
+            const currentUserId = "{{ current_user.get_id() }}"
             const content = await response.json();
             const data = content.data
             const cardContainer = document.getElementById('rating__elements')
             cardContainer.innerHTML = '';
-            const htmlContent = data.map(item => `<div class="tw-flex tw-flex-col tw-w-full tw-gap-2 tw-rounded-[10px] bg-primary-subtle tw-p-2">
-                    <div class="tw-text-lg tw-font-semibold">
-                        ${item.name}
-                    </div>
+            const htmlContent = data.map(item => `<div class="tw-flex tw-flex-col tw-w-full tw-gap-2 tw-rounded-[10px] bg-primary-subtle tw-p-2"  id=${item.id}>
+                    <div class="tw-text-lg tw-font-semibold tw-justify-between tw-flex">
+                    <span>${item.name}</span> <span>
+                        ${item.user_id == currentUserId ? ` <button type="button" class="btn btn-danger btn-sm"
+                            onclick='event.preventDefault(); deleteComment(${item.id})'><img
+                                src=" {{ url_for('static', filename='bootstrap-icons/trash-fill.svg' ) }}"
+                               alt="Logo" width="14" height="10" class="d-inline-block text-light mb-1"></button>
+                         <button type="button" class="btn btn-secondary btn-sm"
+                             onclick='setComment(${item.comment})'><img
+                                 src="{{ url_for('static', filename='bootstrap-icons/pencil-fill.svg') }}" alt="Logo"
+                                 width="14" height="10" class="d-inline-block text-light mb-1"></button>
+                         `: ""}
+                       
+                     </span>
+                 </div>
                     <div>
                         ${item.comment}
                     </div>
@@ -286,6 +310,26 @@
             setPaginationElement(content.count, +page)
 
             return false
+        }
+    </script>
+
+    <!-- Edit and Delete -->
+    <script>
+        async function deleteComment(id) {
+            const currentUserId = "{{ current_user.get_id() }}"
+            const response = await fetch(`/ratings?id=${id}&user_id=${currentUserId}`, {
+                method: 'DELETE',
+            })
+            if (response.ok) {
+                alert('Comment deleted successfully');
+                await getResults(document.getElementById('ratings__form'))
+            } else {
+                alert('Error deleting comment');
+            }
+        }
+        async function setComment(comment) {
+            const commentInput = document.getElementById('comment');
+            commentInput.value = comment;
         }
     </script>
 </div>

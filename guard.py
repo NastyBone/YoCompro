@@ -54,7 +54,6 @@ def secure_access():
     def decorator(func):
         @wraps(func)
         def check_if_belongs(*args, **kwargs):
-            print("here")
             logged_id = current_user.get_id()
             id = request.args.get("user_id", request.args.get("owner_id", 0))
             if int(id) != logged_id:
