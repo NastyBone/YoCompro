@@ -118,7 +118,7 @@ X Forbiden view
 ### NOTES
 
 == TODOs
-- TODO: Manage users
+X TODO: Manage users
 - TODO: Add function to removing and editing items (users, bussiness, stocks, tags, products, brands)
 - TODO: Same above with owners (for stocks and bussiness)
 - Figure out how to edit status

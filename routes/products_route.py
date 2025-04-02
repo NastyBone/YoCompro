@@ -225,24 +225,37 @@ def bussiness_by_products(slug):
 def find_by_bussiness_filter(slug, filter=filter_list["newest"]):
     lat = session.get("lat", None)
     lon = session.get("lon", None)
+    json_req = request.args.get("json", None)
     page = request.args.get("page", None)
+    user_id = current_user.get_id()
     [start_pagination, end_pagination] = set_pagination(page)
     product = get_by_slug(slug)
     if filter == "nearest":
-        response = get_bussiness_has_product_by_distance(
+        [response, count] = get_bussiness_has_product_by_distance(
             product_id=product["id"],
+            user_id=user_id,
             lat=lat,
             lon=lon,
             start_page=start_pagination,
             end_page=end_pagination,
         )
     elif filter == "cheapest":
-        response = get_bussiness_has_product_by_price(
+        [response, count] = get_bussiness_has_product_by_price(
             product_id=product["id"],
+            user_id=user_id,
             start_page=start_pagination,
             end_page=end_pagination,
         )
-    return jsonify(response)
+    if not json_req:
+        return render_template(
+            "search/product_search.html",
+            items=response,
+            product=product,
+            count=count,
+            pages=count / 12,
+        )
+    else:
+        return jsonify({"data": response, "count": count / 12})
 
 
 # DESCARTADO

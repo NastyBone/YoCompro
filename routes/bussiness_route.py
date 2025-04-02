@@ -215,18 +215,35 @@ def find_by_product_filter(slug, filter=filter_list["newest"]):
     if filter not in filter_list:
         return "error"
     page = request.args.get("page", None)
+    lat = session.get("lat", 0)
+    lon = session.get("lon", 0)
+    name = request.args.get("name", "")
+    bussiness = get_by_slug(slug, lat, lon)
     [start_pagination, end_pagination] = set_pagination(page)
     if filter == filter_list["top_rated"]:
-        response = top_rated_products(slug, False, start_pagination, end_pagination)
+        [response, count] = top_rated_products(
+            name, slug, False, start_pagination, end_pagination
+        )
     elif filter == filter_list["popular"]:
-        response = popular_products(slug, False, start_pagination, end_pagination)
+        [response, count] = popular_products(
+            name, slug, False, start_pagination, end_pagination
+        )
     elif filter == filter_list["most_discount"]:
-        response = get_most_discount_by_bussiness(
-            slug, False, start_pagination, end_pagination
+        [response, count] = get_most_discount_by_bussiness(
+            name, slug, False, start_pagination, end_pagination
         )
     else:
-        response = newest_products(slug, False, start_pagination, end_pagination)
-    return render_template("", products=response)
+        [response, count] = newest_products(
+            name, slug, False, start_pagination, end_pagination
+        )
+    print(response)
+    return render_template(
+        "search/bussiness_search.html",
+        bussiness=bussiness,
+        items=response,
+        count=count,
+        pages=count / 12,
+    )
 
 
 @bussiness_bp.route("/<status>", methods=["GET"])
