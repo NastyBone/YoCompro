@@ -50,7 +50,9 @@ def remove():
 @lists_bp.route("/add", methods=["POST"])
 @secure_access()
 def add_product():
-    id = request.args.get("id")
+    list_by_user = get_by_user(current_user.get_id())
+    id = list_by_user[0].get("list_id")
+    print(list_by_user[0])
     stock_id = request.args.get("stock_id")
     response = insert_product(id, stock_id)
     return jsonify(response)
@@ -59,7 +61,8 @@ def add_product():
 @lists_bp.route("/remove", methods=["POST"])
 @secure_access()
 def remove_product():
-    id = request.args.get("id")
+    list_by_user = get_by_user(current_user.get_id())
+    id = list_by_user[0].get("list_id")
     stock_id = request.args.get("stock_id")
     response = delete_product(id, stock_id)
     return jsonify(response)

@@ -78,7 +78,7 @@ def get_by_user(user_id):
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-               SELECT  l.*, p.* FROM products p
+               SELECT  l.id as list_id, p.* FROM products p
                JOIN stocks s ON s.product_id = p.id
                JOIN lists_stocks ls ON s.id = ls.stock_id
                JOIN lists l ON l.id = ls.list_id

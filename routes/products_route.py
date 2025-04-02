@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify, render_template, session
+from flask_login import current_user
 from services.products_service import *
 from classes.product_class import *
 from services.brands_service import (
@@ -198,7 +199,15 @@ def bussiness_by_products(slug):
     [start_pagination, end_pagination] = set_pagination(page)
     product = get_by_slug(slug)
     [response, count] = search_by_products(
-        slug, word, lat, lon, start_pagination, end_pagination, filter, order
+        slug,
+        word,
+        lat,
+        lon,
+        current_user.get_id(),
+        start_pagination,
+        end_pagination,
+        filter,
+        order,
     )
     if not json_req:
         return render_template(

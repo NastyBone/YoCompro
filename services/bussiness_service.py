@@ -839,6 +839,7 @@ def search_by_products(
     bussiness_word,
     lat,
     lon,
+    user_id,
     start_page,
     end_page,
     bussiness_filter,
@@ -848,7 +849,17 @@ def search_by_products(
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            f""" SELECT b.*, s.price, s.discount, ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance FROM bussiness b
+            f""" SELECT b.*, s.id as stock_id, s.price, s.discount, ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance,  EXISTS (
+        SELECT 1 
+        FROM lists l 
+        JOIN lists_stocks ls ON l.id = ls.list_id 
+        WHERE ls.stock_id IN (
+            SELECT s.id 
+            FROM stocks s 
+            WHERE s.bussiness_id = b.id
+        ) 
+        AND l.user_id = ?  -- Cambia 12 por el user_id que deseas verificar
+    ) AS is_favorite FROM bussiness b
                 JOIN stocks s ON s.bussiness_id = b.id
                 JOIN products p ON s.product_id = p.id
                 WHERE p.slug LIKE ?
@@ -857,7 +868,14 @@ def search_by_products(
                 ORDER BY {bussiness_filtering(bussiness_filter, order)}
                 {limit_or_pagination(False, start_page, end_page)}
            """,
-            (lat, lat, lon, like_string(product_slug), like_string(bussiness_word)),
+            (
+                lat,
+                lat,
+                lon,
+                user_id,
+                like_string(product_slug),
+                like_string(bussiness_word),
+            ),
         ).fetchall()
         count = connection.execute(
             """ SELECT COUNT(b.id) as count FROM bussiness b

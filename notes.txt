@@ -142,7 +142,7 @@ X Forbiden view
 == FIXES
 - Better handling on backend errors
 - Fix searches where if not rated or added into a list, appear anyways or doesnt (prlly a left o right join)
-- owner_id = 3 (or 3)
+- owner_id = 3 (or 3) 12
 - Add contact (address, mail, phone) to bussiness details
 
 X Add view more button to dashboards components, it will lead to full views (not limited, but paginated)
