@@ -54,7 +54,9 @@ def add_product():
     id = list_by_user[0].get("list_id")
     print(list_by_user[0])
     stock_id = request.args.get("stock_id")
+    print(stock_id, id)
     response = insert_product(id, stock_id)
+    print(response)
     return jsonify(response)
 
 

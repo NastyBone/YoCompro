@@ -686,25 +686,14 @@ LIMIT 5""",
 
 # DONE: Bussiness which have that product by cheap
 def get_bussiness_has_product_by_price(
-    product_id, user_id, limited=False, start_page=None, end_page=None, order="DESC"
+    product_id, limited=False, start_page=None, end_page=None, order="DESC"
 ):
     try:
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT b.*, s.price, s.quantity, s.discount
-             EXISTS (
-        SELECT 1 
-        FROM lists l 
-        JOIN lists_stocks ls ON l.id = ls.list_id 
-        WHERE ls.stock_id IN (
-            SELECT s.id 
-            FROM stocks s 
-            WHERE s.bussiness_id = b.id
-        ) 
-        AND l.user_id = ?
-    ) AS is_favorite FROM bussiness b
+            SELECT b.*, s.price, s.quantity, s.discount FROM bussiness b
             JOIN stocks s on s.bussiness_id = b.id 
             JOIN products p on s.product_id = p.id
             WHERE p.id = ?
@@ -713,10 +702,7 @@ def get_bussiness_has_product_by_price(
             ORDER BY s.price {order}
             {limit_or_pagination(limited, start_page, end_page)}
             """,
-            (
-                user_id,
-                product_id,
-            ),
+            (product_id,),
         ).fetchall()
         count = {"count": 0}
         if not limited:
@@ -739,32 +725,14 @@ def get_bussiness_has_product_by_price(
 
 # DONE: Bussiness which have that product by distance
 def get_bussiness_has_product_by_distance(
-    product_id,
-    user_id,
-    lat,
-    lon,
-    limited=False,
-    start_page=None,
-    end_page=None,
-    order="DESC",
+    product_id, lat, lon, limited=False, start_page=None, end_page=None, order="DESC"
 ):
     try:
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT b.*, s.price as price, s.quantity as quantity,s.discount as discount, ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance,
-            EXISTS (
-        SELECT 1 
-        FROM lists l 
-        JOIN lists_stocks ls ON l.id = ls.list_id 
-        WHERE ls.stock_id IN (
-            SELECT s.id 
-            FROM stocks s 
-            WHERE s.bussiness_id = b.id
-        ) 
-        AND l.user_id = ?
-    ) AS is_favorite
+            SELECT b.*, s.price as price, s.quantity as quantity,s.discount as discount, ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance
             FROM bussiness b
             JOIN stocks s ON s.bussiness_id = b.id
             JOIN products p ON s.product_id = p.id
@@ -778,7 +746,6 @@ def get_bussiness_has_product_by_distance(
                 lat,
                 lat,
                 lon,
-                user_id,
                 product_id,
             ),
         ).fetchall()
@@ -882,7 +849,7 @@ def search_by_products(
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            f""" SELECT b.*, s.id as stock_id, s.price, s.discount, ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance,  EXISTS (
+            f""" SELECT b.*, s.id as stock_id, s.price, s.discount, ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance, EXISTS (
         SELECT 1 
         FROM lists l 
         JOIN lists_stocks ls ON l.id = ls.list_id 

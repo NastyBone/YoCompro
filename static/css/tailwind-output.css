@@ -748,6 +748,10 @@ video {
   align-items: center;
 }
 
+.tw-justify-end {
+  justify-content: flex-end;
+}
+
 .tw-justify-center {
   justify-content: center;
 }

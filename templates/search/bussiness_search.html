@@ -76,6 +76,16 @@
                         <p class="card-title tw-text-lg tw-font-semibold"> {{item.name}}</p>
                         <p class="card-text">{{item.description}}</p>
                     </div>
+                    <div class="card-header tw-flex tw-justify-end">
+                        <button href="" type="button" class="" id="{{item.stock_id}}"
+                            onclick='event.preventDefault(); bookmarkButton(this)'>
+                            {% if item.is_favorite > 0 %}
+                            <img src='{{ url_for("static", filename="bootstrap-icons/bookmark-fill.svg") }}' value="1">
+                            {% else %}
+                            <img src='{{ url_for("static", filename="bootstrap-icons/bookmark.svg") }}' value="0">
+                            {% endif %}
+                        </button>
+                    </div>
                 </a>
                 {% endfor %}
 
@@ -211,5 +221,39 @@
 
         return false
     }
+</script>
+<script>
+    function bookmarkButton(button) {
+        const item = button.querySelector('img')
+        const isFavorite = item.getAttribute('value');
+        const stockId = button.id
+        const userId = "{{current_user.get_id()}}"
+        console.log(stockId, isFavorite, userId)
+
+        fetch(`/lists/${parseInt(isFavorite) ? 'remove' : 'add'}?stock_id=${stockId}&user_id=${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data[0]) {
+                    if (isFavorite == 0) {
+                        item.setAttribute('src', '{{ url_for("static", filename="bootstrap-icons/bookmark-fill.svg") }}')
+                        item.setAttribute('value', 1)
+                    } else {
+                        item.setAttribute('src', '{{ url_for("static", filename="bootstrap-icons/bookmark.svg") }}')
+                        item.setAttribute('value', 0)
+                    }
+                    alert('Success');
+                } else {
+                    console.log(data);
+                    console.error('Error:', data.message);
+                }
+            });
+
+
+    };
 </script>
 {% endblock %}

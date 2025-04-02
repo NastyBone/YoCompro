@@ -959,6 +959,7 @@ def get_by_status(status, start_page, end_page, word):
 def search_by_bussiness(
     bussiness_slug,
     product_word,
+    user_id,
     start_page,
     end_page,
     product_filter,
@@ -968,7 +969,17 @@ def search_by_bussiness(
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            f""" SELECT p.*, s.price, s.discount, COUNT(l.id) as count FROM products p
+            f""" SELECT p.*, s.price, s.discount, COUNT(l.id) as count, s.id as stock_id, EXISTS (
+        SELECT 1 
+        FROM lists l 
+        JOIN lists_stocks ls ON l.id = ls.list_id 
+        WHERE ls.stock_id IN (
+            SELECT s.id 
+            FROM stocks s 
+            WHERE s.bussiness_id = b.id
+        ) 
+        AND l.user_id = ?  -- Cambia 12 por el user_id que deseas verificar
+    ) AS is_favorite FROM products p
                 JOIN stocks s ON s.product_id = p.id
                 JOIN bussiness b ON s.bussiness_id = b.id
                 JOIN ratings r On r.bussiness_id = b.id
@@ -979,7 +990,7 @@ def search_by_bussiness(
                 ORDER BY {product_filtering(product_filter, order)}
                 {limit_or_pagination(False, start_page, end_page)}
            """,
-            (like_string(bussiness_slug), like_string(product_word)),
+            (user_id, like_string(bussiness_slug), like_string(product_word)),
         ).fetchall()
         count = connection.execute(
             """ SELECT COUNT(p.id) as count FROM bussiness b

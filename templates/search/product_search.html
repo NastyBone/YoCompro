@@ -242,7 +242,7 @@
         const stockId = button.id
         const userId = "{{current_user.get_id()}}"
 
-        fetch(`/lists/${isFavorite ? 'remove' : 'add'}?stock_id=${stockId}&user_id=${userId}`, {
+        fetch(`/lists/${parseInt(isFavorite) ? 'remove' : 'add'}?stock_id=${stockId}&user_id=${userId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

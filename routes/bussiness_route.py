@@ -146,8 +146,15 @@ def products_by_bussiness(slug):
     bussiness = get_by_slug(slug, lat, lon)
     [start_pagination, end_pagination] = set_pagination(page)
     [response, count] = search_by_bussiness(
-        slug, word, start_pagination, end_pagination, filter, order
+        slug,
+        word,
+        current_user.get_id(),
+        start_pagination,
+        end_pagination,
+        filter,
+        order,
     )
+    print(response)
     if not json_req:
         return render_template(
             "search/bussiness_search.html",
