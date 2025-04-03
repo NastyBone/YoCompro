@@ -60,7 +60,7 @@ def edit_status():
     status = request.get_json()["status"]
     id = request.args.get("id")
     response = update_status(id, status)
-    return jsonify(response)
+    return "Success!"
 
 
 @brands_bp.route("/form", methods=["GET"])

@@ -50,6 +50,20 @@
 
         <button type="submit" class="btn btn-primary btn-large">Submit</button>
     </form>
+    {% if current_user.has_role('ADMIN') %}
+    <form onsubmit="event.preventDefault(); return editStatus()" class="tw-flex tw-flex-col tw-gap-4 tw-mb-4">
+        <h2 class="tw-font-semibold tw-text-3xl">Edit Bussiness Status</h2>
+        <div class="tw-mt-4">
+            <label for="status">Status</label>
+            <select name="status" id="bussiness_status" class="form-control" required>
+                <option value="" disabled selected>Select Status</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+                <option value="in_review">In Review</option>
+            </select>
+            <button type="submit" class="btn btn-primary btn-large  tw-mt-2 tw-w-full">Update Status</button>
+    </form>
+    {% endif %}
 </div>
 <script>
     async function createBussiness() {
@@ -120,7 +134,6 @@
     function editing() {
         const bussiness = JSON.parse(('{{bussiness[0] | tojson}}'))
         const currentTags = JSON.parse(('{{current_tags | tojson}}'))
-        console.log(bussiness)
         if (bussiness) {
             document.getElementById('bussiness_name').value = bussiness.name
             document.getElementById('bussiness_description').value = bussiness.description
@@ -134,9 +147,32 @@
                 setTagList(dataString)
                 options.find(t => t.value == dataString).selected = true;
             })
+            document.getElementById('bussiness_status').value = bussiness.status.toLowerCase().split(' ').join('_')
         }
     }
     editing()
 
+</script>
+<script>
+    function editStatus() {
+        const bussiness = JSON.parse(('{{bussiness[0] | tojson}}'))
+        const status = document.getElementById('bussiness_status').value
+        fetch(`/bussiness?id=${bussiness.id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                status
+            })
+        })
+            .then(res => res.text())
+            .then(data => {
+                alert(data)
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
 </script>
 {% endblock %}

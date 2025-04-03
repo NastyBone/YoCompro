@@ -116,12 +116,13 @@ X Allow location view
 X Forbiden view
 
 ### NOTES
+X Add contact (address, mail, phone) to bussiness details
 
 == TODOs
 X TODO: Manage users
+- Figure out how to edit status
 - TODO: Add function to removing and editing items (users, bussiness, stocks, tags, products, brands)
 - TODO: Same above with owners (for stocks and bussiness)
-- Figure out how to edit status
 - Connect views through buttons
 
 == FEATURES

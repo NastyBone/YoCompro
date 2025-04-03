@@ -17,6 +17,20 @@
         </div>
         <button type="submit" class="btn btn-primary btn-large">Submit</button>
     </form>
+    {% if current_user.has_role('ADMIN') %}
+    <form onsubmit="event.preventDefault(); return editStatus()" class="tw-flex tw-flex-col tw-gap-4 tw-mb-4">
+        <h2 class="tw-font-semibold tw-text-3xl">Edit Brand Status</h2>
+        <div class="tw-mt-4">
+            <label for="status">Status</label>
+            <select name="status" id="brand_status" class="form-control" required>
+                <option value="" disabled selected>Select Status</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+                <option value="in_review">In Review</option>
+            </select>
+            <button type="submit" class="btn btn-primary btn-large  tw-mt-2 tw-w-full">Update Status</button>
+    </form>
+    {% endif %}
 </div>
 <script>
     async function createBrand() {
@@ -49,10 +63,32 @@
         if (brand) {
             document.getElementById('brand_name').value = brand.name
             document.getElementById('brand_country').value = brand.country
-
+            document.getElementById('brand_status').value = brand.status.toLowerCase().split(' ').join('_')
         }
     }
     editing()
 
+</script>
+<script>
+    function editStatus() {
+        const brand = JSON.parse(('{{brand[0] | tojson}}'))
+        const status = document.getElementById('brand_status').value
+        fetch(`/brands?id=${brand.id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                status
+            })
+        })
+            .then(res => res.text())
+            .then(data => {
+                alert(data)
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
 </script>
 {% endblock %}

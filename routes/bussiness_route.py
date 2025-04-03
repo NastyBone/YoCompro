@@ -76,7 +76,7 @@ def edit_status():
     id = request.args.get("id")
     status = request.get_json()["status"]
     response = update_status(id, status)
-    return jsonify(response)
+    return "Success!"
 
 
 @bussiness_bp.route("/form", methods=["GET"])

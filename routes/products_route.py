@@ -72,7 +72,7 @@ def edit_status():
     id = request.args.get("id")
     status = request.get_json()["status"]
     response = update_status(id, status)
-    return "Hello Products!"
+    return "Success"
 
 
 @products_bp.route("/form", methods=["GET"])

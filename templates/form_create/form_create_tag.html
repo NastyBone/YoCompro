@@ -18,6 +18,20 @@
 
         <button type="submit" class="btn btn-primary btn-large">Submit</button>
     </form>
+    {% if current_user.has_role('ADMIN') %}
+    <form onsubmit="event.preventDefault(); return editStatus()" class="tw-flex tw-flex-col tw-gap-4 tw-mb-4">
+        <h2 class="tw-font-semibold tw-text-3xl">Edit Tag Status</h2>
+        <div class="tw-mt-4">
+            <label for="status">Status</label>
+            <select name="status" id="tag_status" class="form-control" required>
+                <option value="" disabled selected>Select Status</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+                <option value="in_review">In Review</option>
+            </select>
+            <button type="submit" class="btn btn-primary btn-large  tw-mt-2 tw-w-full">Update Status</button>
+    </form>
+    {% endif %}
 </div>
 <script>
     async function createTag() {
@@ -47,37 +61,39 @@
 </script>
 
 <script>
-    const tags_area = document.getElementById('tags__area')
-    function setTagList(value) {
-        const existingTags = document.querySelectorAll('.tag-button')
-        const [id, name] = value.split(',')
-        const tag = { 'id': parseInt(id), name }
-        const tagExists = Array.from(existingTags).find(tag => tag.id === id)
-        if (tagExists) {
-            return
-        }
-        const buttonTag = document.createElement('button')
-        buttonTag.classList.add('btn', 'btn-primary', 'btn-small', 'tag-button', 'tw-m-2')
-        buttonTag.innerText = name
-        buttonTag.id = id;
-        buttonTag.onclick = () => {
-            buttonTag.remove()
-        }
-        tags_area.appendChild(buttonTag)
-
-    }
-
-</script>
-<script>
     function editing() {
         const tag = JSON.parse(('{{tag[0] | tojson}}'))
 
         if (tag) {
             document.getElementById('tag_name').value = tag.name
             document.getElementById('tag_description').value = tag.description
+            document.getElementById('tag_status').value = tag.status.toLowerCase().split(' ').join('_')
         }
     }
     editing()
 
+</script>
+
+<script>
+    function editStatus() {
+        const tag = JSON.parse(('{{tag[0] | tojson}}'))
+        const status = document.getElementById('tag_status').value
+        fetch(`/tags?id=${tag.id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                status
+            })
+        })
+            .then(res => res.text())
+            .then(data => {
+                alert(data)
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
 </script>
 {% endblock %}

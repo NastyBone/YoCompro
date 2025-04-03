@@ -99,13 +99,15 @@ def delete(id):
 
 def update_status(id, status):
     try:
+        print(status)
         int(id)
         if status not in status_list:
             raise ValueError("Not in list")
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            "UPDATE products SET status = ? WHERE id = ? RETURNING *", ([status], id)
+            "UPDATE products SET status = ? WHERE id = ? RETURNING *",
+            (status_list[status], id),
         ).fetchall()
         connection.commit()
         return res
