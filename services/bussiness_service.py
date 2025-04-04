@@ -464,9 +464,9 @@ def get_by_owner_popular(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT b.*, s.id as stock_id, COUNT(l.id) as count FROM bussiness b
-            JOIN stocks s on s.bussiness_id = b.id
-            JOIN lists_stocks l on l.stock_id = s.id
+            SELECT b.*, COUNT(l.id) as count FROM bussiness b
+            LEFT JOIN stocks s on s.bussiness_id = b.id
+            LEFT JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.user_id = ?
             AND b.status LIKE ?
             AND slug LIKE ?

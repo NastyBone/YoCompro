@@ -197,12 +197,12 @@
                     </a>
                     <div class="card-footer tw-flex tw-gap-2">
                         <button type="button" class="btn btn-danger btn-sm tw-w-1/2"  onclick="event.preventDefault(); goDelete(event.target)"
-                        id=${item.stock_id}"><img
+                        id=${item.brand_id ? item.stock_id : item.id}"><img
                                 src="{{ url_for('static', filename='bootstrap-icons/trash-fill.svg') }}" alt="Logo"
-                                width="14" height="10" class="d-inline-block text-light mb-1" id=${item.stock_id}></button>
-                        <button type="button" class="btn btn-secondary btn-sm tw-w-1/2" id=${item.stock_id} onclick="event.preventDefault(); goEdit(event.target)"><img
+                                width="14" height="10" class="d-inline-block text-light mb-1" id=${item.brand_id ? item.stock_id : item.id}></button>
+                        <button type="button" class="btn btn-secondary btn-sm tw-w-1/2" id=${item.brand_id ? item.stock_id : item.id} onclick="event.preventDefault(); goEdit(event.target)"><img
                                 src="{{ url_for('static', filename='bootstrap-icons/pencil-fill.svg') }}" alt="Logo"
-                                width="14" height="10" class="d-inline-block text-light mb-1" id=${item.stock_id}></button>
+                                width="14" height="10" class="d-inline-block text-light mb-1" id=${item.brand_id ? item.stock_id : item.id}></button>
                     </div>
                 </div>`).join('')
         cardContainer.innerHTML = htmlContent;
@@ -238,7 +238,9 @@
             })
     }
     function goEdit(e) {
-        window.location.href = `/stocks/form?id=` + e.id
+        const type = document.getElementById('type__options').value
+
+        window.location.href = `/${type === 'products' ? 'stocks' : 'bussiness'}/form?id=` + e.id
 
     }
 </script>
