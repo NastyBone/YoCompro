@@ -69,14 +69,16 @@
             <ul class="navbar-nav mb-2 mb-lg-0">
                 {% if current_user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Log Out</a>
+                    <button class="nav-link active" aria-current="page" onclick="event.preventDefault(); logout()">Log
+                        Out</button>
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Sign In</a>
+                    <a class="nav-link active" aria-current="page" href="{{url_for('auth.user_register')}}">Sign
+                        In</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Log In</a>
+                    <a class="nav-link active" aria-current="page" href="{{url_for('auth.user_login')}}">Log In</a>
                 </li>
                 {% endif %}
                 {% if current_user.role == "CLIENT"%}
@@ -88,4 +90,22 @@
         </div>
     </div>
 </nav>
+<script>
+    async function logout() {
+        await fetch('/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(res => res.text())
+            .then(data => {
+                alert(data)
+                window.location.href = '/';
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+</script>
 {% endblock %}

@@ -116,11 +116,11 @@ X Allow location view
 X Forbiden view
 
 ### NOTES
-X Add contact (address, mail, phone) to bussiness details
+
 
 == TODOs
 X TODO: Manage users
-- Figure out how to edit status
+X Figure out how to edit status
 - TODO: Add function to removing and editing items (users, bussiness, stocks, tags, products, brands)
 - TODO: Same above with owners (for stocks and bussiness)
 - Connect views through buttons
@@ -144,7 +144,7 @@ X TODO: Manage users
 - Better handling on backend errors
 - Fix searches where if not rated or added into a list, appear anyways or doesnt (prlly a left o right join)
 - owner_id = 3 (or 3) 12
-- Add contact (address, mail, phone) to bussiness details
+X Add contact (address, mail, phone) to bussiness details
 
 X Add view more button to dashboards components, it will lead to full views (not limited, but paginated)
 X Add links to card items

@@ -36,7 +36,10 @@ session = Session(app)
 
 @login_manager.user_loader
 def load_user(userid):
-    user = get_with_password(userid)[0]
+    user = get_with_password(userid)
+    if len(user) == 0:
+        return None
+    user = user[0]
     user_login = UserLogin(
         id=user["id"],
         name=user["name"],

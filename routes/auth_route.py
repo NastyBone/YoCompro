@@ -52,7 +52,7 @@ def edit_password():
 @login_required()
 def user_logout():
     logout()
-    return jsonify(True)
+    return "Success!", 200
 
 
 @auth_bp.route("/register", methods=["GET"])

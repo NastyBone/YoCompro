@@ -66,7 +66,7 @@ def edit():
 def remove():
     id = request.args.get("id")
     response = delete(id)
-    return jsonify(True)
+    return "Success!"
 
 
 # CLIENT
@@ -91,7 +91,7 @@ def edit_profile():
 @users_bp.route("/admin/update-role", methods=["GET"])
 @login_required()
 def edit_role():
-    id = current_user.get_id() or 3
+    id = request.args.get("id")
     response = get(id)
     return render_template("auth/form_edit_user.html", user=response)
 

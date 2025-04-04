@@ -88,7 +88,7 @@ def delete(id):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            "DELETE FROM users WHERE id = ? RETURNING *", id
+            "DELETE FROM users WHERE id = ? RETURNING *", (id,)
         ).fetchall()
         connection.commit()
         return res
