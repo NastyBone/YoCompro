@@ -141,6 +141,7 @@ X Figure out how to edit status
 - Check security for specific users on editing self and its things
 
 == FIXES
+- Fix image desapearing on item fetch
 - Better handling on backend errors
 - Fix searches where if not rated or added into a list, appear anyways or doesnt (prlly a left o right join)
 - owner_id = 3 (or 3) 12

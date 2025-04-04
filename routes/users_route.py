@@ -66,6 +66,7 @@ def edit():
 def remove():
     id = request.args.get("id")
     response = delete(id)
+    print(response)
     return "Success!"
 
 

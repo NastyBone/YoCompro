@@ -64,7 +64,7 @@ def edit():
 def remove():
     id = request.args.get("id")
     response = delete(id)
-    return jsonify(response)
+    return "Success!"
 
 
 @products_bp.route("/", methods=["PATCH"])

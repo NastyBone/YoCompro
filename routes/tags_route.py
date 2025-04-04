@@ -37,7 +37,7 @@ def edit():
 def remove():
     id = request.args.get("id")
     response = delete(id)
-    return jsonify(response)
+    return "Success!"
 
 
 @tags_bp.route("/", methods=["PATCH"])

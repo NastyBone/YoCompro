@@ -52,7 +52,7 @@ def edit():
 def remove():
     id = request.args.get("id")
     response = delete(id)
-    return jsonify(response)
+    return "Success!"
 
 
 @brands_bp.route("/", methods=["PATCH"])

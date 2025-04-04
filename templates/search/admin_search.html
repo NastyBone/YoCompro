@@ -58,13 +58,13 @@
                     </a>
                     <div class="card-footer tw-flex tw-gap-2">
                         <button type="button" class="btn btn-danger btn-sm tw-w-1/2"
-                            onclick="alert('delete from admin')"><img
+                            onclick="event.preventDefault(); goDelete(event.target)" id="{{item.id}}"><img
                                 src="{{ url_for('static', filename='bootstrap-icons/trash-fill.svg') }}" alt="Logo"
-                                width="14" height="10" class="d-inline-block text-light mb-1"></button>
-                        <button type="button" class="btn btn-secondary btn-sm tw-w-1/2"
-                            onclick="alert('edit from admin')"><img
+                                width="14" height="10" class="d-inline-block text-light mb-1" id="{{item.id}}"></button>
+                        <button type="button" class="btn btn-secondary btn-sm tw-w-1/2" id="{{item.id}}"
+                            onclick="event.preventDefault(); goEdit(event.target)"><img
                                 src="{{ url_for('static', filename='bootstrap-icons/pencil-fill.svg') }}" alt="Logo"
-                                width="14" height="10" class="d-inline-block text-light mb-1"></button>
+                                width="14" height="10" class="d-inline-block text-light mb-1" id="{{item.id}}"></button>
                     </div>
                 </div>
                 {% endfor %}
@@ -179,7 +179,6 @@
 
         const content = await response.json();
         const data = content.data
-        console.log(data);
         const cardContainer = document.getElementById('search__elements')
         cardContainer.innerHTML = '';
         const htmlContent = data.map(item => `<div class="card" >
@@ -190,12 +189,12 @@
                         <p class="card-text">${item.description ?? ''}</p>
                     </a>
                     <div class="card-footer tw-flex tw-gap-2">
-                        <button type="button" class="btn btn-danger btn-sm tw-w-1/2"  onclick="alert('delete from admin')"><img
-                                src="{{ url_for('static', filename='bootstrap-icons/trash-fill.svg') }}" alt="Logo"
+                        <button type="button" class="btn btn-danger btn-sm tw-w-1/2"  onclick="event.preventDefault(); goDelete(event.target)" id=${item.id}><img
+                                src="{{ url_for('static', filename='bootstrap-icons/trash-fill.svg') }}" alt="Logo"  id="${item.id}"
                                 width="14" height="10" class="d-inline-block text-light mb-1"></button>
-                        <button type="button" class="btn btn-secondary btn-sm tw-w-1/2"  onclick="alert('edit from admin')"><img
+                        <button type="button" class="btn btn-secondary btn-sm tw-w-1/2"  onclick="event.preventDefault(); goEdit(event.target)" id=${item.id}><img
                                 src="{{ url_for('static', filename='bootstrap-icons/pencil-fill.svg') }}" alt="Logo"
-                                width="14" height="10" class="d-inline-block text-light mb-1"></button>
+                                width="14" height="10" class="d-inline-block text-light mb-1"  id="${item.id}"></button>
                     </div>
                 </div>`).join('')
         cardContainer.innerHTML = htmlContent;
@@ -210,6 +209,34 @@
         }
 
         return false
+    }
+
+    async function goDelete(e) {
+        const type = document.getElementById('type__options').value
+        console.log(e);
+        console.log(e.id);
+        alert('Are you sure you want to delete this item?')
+        fetch(`/${type}?id=` + e.id, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(res => res.text())
+            .then(data => {
+                alert(data);
+                window.location.reload()
+
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+    function goEdit(e) {
+        console.log(e);
+        const type = document.getElementById('type__options').value
+        window.location.href = `/${type}/form?id=` + e.id
+
     }
 </script>
 <!-- Set Selects  -->

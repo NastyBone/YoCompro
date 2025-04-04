@@ -54,11 +54,11 @@
                         <button type="button" class="btn btn-danger btn-sm tw-w-1/2" onclick="goDelete(event.target)"
                             id="{{user.id}}"><img
                                 src="{{ url_for('static', filename='bootstrap-icons/trash-fill.svg') }}" alt="Logo"
-                                width="14" height="10" class="d-inline-block text-light mb-1"></button>
+                                width="14" height="10" class="d-inline-block text-light mb-1" id="{{user.id}}"></button>
                         <button type="button" class="btn btn-secondary btn-sm tw-w-1/2" id="{{user.id}}"
                             onclick="goEdit(event.target)"><img
                                 src="{{ url_for('static', filename='bootstrap-icons/pencil-fill.svg') }}" alt="Logo"
-                                width="14" height="10" class="d-inline-block text-light mb-1"></button>
+                                width="14" height="10" class="d-inline-block text-light mb-1" id="{{user.id}}"></button>
                     </div>
                 </div>
                 {% endfor %}
@@ -189,13 +189,13 @@
                     </div>
                     <div class="card-footer tw-flex tw-gap-2">
                         <button type="button" class="btn btn-danger btn-sm tw-w-1/2"
-                            onclick="alert('delete from admin')"><img
+                            onclick="goEdit(event.target)" id="${user.id}"><img
                                 src="{{ url_for('static', filename='bootstrap-icons/trash-fill.svg') }}" alt="Logo"
-                                width="14" height="10" class="d-inline-block text-light mb-1"></button>
+                                width="14" height="10" class="d-inline-block text-light mb-1" id="${user.id}"></button>
                         <button type="button" class="btn btn-secondary btn-sm tw-w-1/2"
-                            onclick="alert('edit from admin')"><img
-                                src="{{ url_for('static', filename='bootstrap-icons/pencil-fill.svg') }}" alt="Logo"
-                                width="14" height="10" class="d-inline-block text-light mb-1"></button>
+                            onclick="goEdit(event.target)"
+                            id="${user.id}"><img src="{{ url_for('static', filename='bootstrap-icons/pencil-fill.svg') }}" alt="Logo"
+                                width="14" height="10" class="d-inline-block text-light mb-1" id="${user.id}"></button>
                     </div>
                 </div>`).join('')
         cardContainer.innerHTML = htmlContent;
@@ -213,21 +213,22 @@
     }
 
     function goDelete(e) {
-        window.location.reload()
 
-        // fetch('/users?id=' + e.id, {
-        //     method: 'DELETE',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        // })
-        //     .then(res => res.text())
-        //     .then(data => {
-        //         alert(data);
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //     })
+        fetch('/users?id=' + e.id, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(res => res.text())
+            .then(data => {
+                alert(data);
+                window.location.reload()
+
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
     function goEdit(e) {
         window.location.href = '/admin/profile-edit?id=' + e.id
