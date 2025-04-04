@@ -662,7 +662,7 @@ def get_by_brand(id):
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-            SELECT p.*, FROM products p
+            SELECT p.* FROM products p
             JOIN brands br on p.brand_id = br.id
             WHERE br.id = ?
             AND p.status = "APPROVED"
@@ -689,17 +689,17 @@ def get_popular_by_owner(
     status="approved",
 ):
     try:
-        print(owner_id, status_list[status], like_string(word))
+        print(status_list[status], owner_id, word)
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT p.*, COUNT(l.id) as count FROM products p
+            SELECT p.*, s.id as stock_id, COUNT(l.id) as count FROM products p
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.user_id = ?
-            AND p.status LIKE ?
+            AND p.status = ?
             AND p.slug LIKE ?
             GROUP BY p.id
             ORDER BY count {order}
@@ -743,7 +743,7 @@ def get_top_rated_by_owner(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT p.*, AVG(score) as avg_score FROM products p
+            SELECT p.*, s.id as stock_id, AVG(score) as avg_score FROM products p
             JOIN ratings ON ratings.product_id = p.id
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = b.id
@@ -761,12 +761,12 @@ def get_top_rated_by_owner(
             count = connection.execute(
                 f""" 
             SELECT COUNT(*) as count FROM products p
-            JOIN stocks s ON s.product_id = p.id
-            JOIN bussiness b ON s.bussiness_id = b.id
-            JOIN lists_stocks l on l.stock_id = s.id
-            WHERE b.city LIKE ?
+           JOIN ratings ON ratings.product_id = p.id
+            JOIN stocks s on s.product_id = p.id
+            JOIN bussiness b on s.bussiness_id = b.id
+            WHERE b.user_id = ?
+            AND p.status LIKE ?
             AND p.slug LIKE ?
-            AND p.status = "APPROVED"
             """,
                 (owner_id, like_string(word)),
             ).fetchone()

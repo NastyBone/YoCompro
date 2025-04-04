@@ -55,6 +55,7 @@ def general_search():
     [start_pagination, end_pagination] = set_pagination(None)
     if type == "products":
         if filter == "popular":
+            print("OWNER ID", owner_id)
             [response, count] = products_popular(
                 owner_id, False, start_pagination, end_pagination
             )
@@ -144,7 +145,7 @@ def popular_products():
     status = request.args.get("status", None)
     if status not in status_list:
         return "error"
-    owner = current_user.get_id() or 3
+    owner = 3
     [start_pagination, end_pagination] = set_pagination(page)
     [response, count] = products_popular(
         owner,

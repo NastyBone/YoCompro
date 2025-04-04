@@ -46,7 +46,7 @@ def edit():
 def remove():
     id = request.args.get("id")
     response = delete(id)
-    return jsonify(response)
+    return "Success!"
 
 
 @stocks_bp.route("/form", methods=["GET"])

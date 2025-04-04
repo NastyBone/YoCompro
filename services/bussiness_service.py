@@ -464,7 +464,7 @@ def get_by_owner_popular(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT b.*, COUNT(l.id) as count FROM bussiness b
+            SELECT b.*, s.id as stock_id, COUNT(l.id) as count FROM bussiness b
             JOIN stocks s on s.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.user_id = ?
@@ -512,7 +512,7 @@ def get_by_owner_top_rated(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT b.*, AVG(score) as avg_score FROM bussiness b
+            SELECT b.*, s.id as stock_id, AVG(score) as avg_score FROM bussiness b
             JOIN ratings ON ratings.bussiness_id = b.id
             WHERE b.user_id = ?
             AND b.status LIKE ?
@@ -775,7 +775,7 @@ def get_newest(city, start_page, end_page):
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-            SELECT p.*, FROM bussiness b
+            SELECT p.* FROM bussiness b
             WHERE b.city LIKE ?
             ORDER BY b.created_at
             LIMIT ?

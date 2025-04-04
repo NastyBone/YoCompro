@@ -213,8 +213,6 @@
 
     async function goDelete(e) {
         const type = document.getElementById('type__options').value
-        console.log(e);
-        console.log(e.id);
         alert('Are you sure you want to delete this item?')
         fetch(`/${type}?id=` + e.id, {
             method: 'DELETE',
@@ -233,7 +231,6 @@
             })
     }
     function goEdit(e) {
-        console.log(e);
         const type = document.getElementById('type__options').value
         window.location.href = `/${type}/form?id=` + e.id
 
