@@ -39,7 +39,7 @@
 
         <button type="submit" class="btn btn-primary btn-large">Submit</button>
     </form>
-    {% if current_user.has_role('ADMIN') %}
+    {% if current_user.has_role('ADMIN') and item.id %}
     <form onsubmit="event.preventDefault(); return editStatus()" class="tw-flex tw-flex-col tw-gap-4 tw-mb-4">
         <h2 class="tw-font-semibold tw-text-3xl">Edit Product Status</h2>
         <div class="tw-mt-4">

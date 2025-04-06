@@ -78,17 +78,29 @@ def get_by_user(user_id):
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-               SELECT  l.id as list_id, p.* FROM products p
+               SELECT l.id as list_id, s.price, s.discount, p.*, b.name as bussiness_name, b.address, s.id as stock_id FROM products p
                JOIN stocks s ON s.product_id = p.id
                JOIN lists_stocks ls ON s.id = ls.stock_id
                JOIN lists l ON l.id = ls.list_id
+               JOIN bussiness b ON b.id = s.bussiness_id
                WHERE l.user_id = ?
                GROUP BY (p.id)
                """,
             (user_id,),
         ).fetchall()
+        count = connection.execute(
+            f""" 
+            SELECT COUNT(*) as count FROM products p
+                JOIN stocks s ON s.product_id = p.id
+               JOIN lists_stocks ls ON s.id = ls.stock_id
+               JOIN lists l ON l.id = ls.list_id
+               JOIN bussiness b ON b.id = s.bussiness_id
+               WHERE l.user_id = ?
+            """,
+            (user_id,),
+        ).fetchone()
         connection.commit()
-        return res
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)

@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, render_template, request, jsonify
 from services.lists_services import *
 from guard import *
 
@@ -63,7 +63,7 @@ def add_product():
 @lists_bp.route("/remove", methods=["POST"])
 @secure_access()
 def remove_product():
-    list_by_user = get_by_user(current_user.get_id())
+    [list_by_user, count] = get_by_user(current_user.get_id())
     id = list_by_user[0].get("list_id")
     stock_id = request.args.get("stock_id")
     response = delete_product(id, stock_id)
@@ -73,6 +73,8 @@ def remove_product():
 @lists_bp.route("/user", methods=["GET"])
 @secure_access()
 def find_by_user():
-    id = request.args.get("user_id")
-    response = get_by_user(id)
-    return jsonify(response)
+    id = current_user.get_id()
+    [response, count] = get_by_user(id)
+    return render_template(
+        "lists/list.html", list=response, count=count, pages=count / 12
+    )

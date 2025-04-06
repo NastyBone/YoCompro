@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container tw-flex tw-flex-col tw-gap-6 tw-w-full">
+    <h2 class="tw-font-semibold tw-text-3xl tw-mb-4 tw-inline-block">My list</h2>
+
+    <div id="search__container" class="tw-w-4/5 px-2">
+
+        <div class="tw-grid tw-grid-cols-[repeat(auto-fill,_minmax(250px,_1fr))] tw-grid-rows-[repeat(auto,_auto)] tw-gap-2"
+            id="list__elements">
+            {% for item in list %}
+            <a class="card" href="{{url_for('products.find_by_slug', slug=item.slug)}}">
+                <div class="card-header tw-flex tw-justify-between">
+                    <div>
+                        <strong>{{item.price | round(2)}}$ USD</strong>
+                    </div>
+                    <div>
+                        <strong>{{item.discount | round(1)}}% discount</strong>
+                    </div>
+                </div>
+                <div class="card-body tw-flex tw-flex-col tw-gap-1">
+                    <img src="{{ url_for('static', filename='images/generic.png') }}" alt="" class="img-card-top mb-2">
+                    <p class="card-title tw-text-lg tw-font-semibold"> {{item.name}}</p>
+                    <p class="card-text">From <strong>{{item.bussiness_name}}</strong></p>
+                </div>
+                <div class="card-header tw-flex tw-justify-center">
+                    <button href="" type="button" class="btn btn-sm tw-w-full btn-danger" id="{{item.stock_id}}"
+                        onclick='event.preventDefault(); bookmarkButton(this)'>
+                        <img src="{{ url_for('static', filename='bootstrap-icons/trash-fill.svg') }}" alt="Logo"
+                            width="14" height="10" class="d-inline-block text-light mb-1" id="{{item.stock_id}}">
+                    </button>
+                </div>
+            </a>
+            {% endfor %}
+
+        </div>
+        <div id="pagination" class="tw-mt-4"></div>
+    </div>
+</div>
+<script>
+    function setPaginationElement(pages, index) {
+
+        const paginationArea = document.getElementById('pagination');
+        const pagesCount = pages < 1 ? 1 : pages;
+        // Clear previous pagination
+        paginationArea.innerHTML = '';
+
+        // Create navigation structure
+        const nav = document.createElement('nav');
+        nav.setAttribute('aria-label', 'Page navigation example');
+        nav.className = 'tw-flex tw-justify-center';
+
+        const ul = document.createElement('ul');
+        ul.className = 'pagination';
+
+        // Previous button
+        const prevLi = document.createElement('li');
+        prevLi.className = `page-item ${index == 1 ? 'disabled' : ''}`;
+        const prevLink = document.createElement('a');
+        prevLink.className = 'page-link';
+        prevLink.href = '#';
+        prevLink.innerText = 'Previous';
+        prevLink.addEventListener('click', () => {
+            event.preventDefault()
+            document.getElementById('input_page').value = index - 1; // Set the 
+            document.getElementById('submit__search__button').click()
+        })
+        prevLi.appendChild(prevLink);
+        ul.appendChild(prevLi);
+
+        // Create page items
+        for (let i = 0; i < pagesCount; i++) {
+            const li = document.createElement('li');
+            li.className = 'page-item';
+            const link = document.createElement('a');
+            link.className = `page-link ${index === i + 1 ? 'active' : ''}`;
+            link.href = '#';
+            link.innerText = i + 1;
+
+            // Add click event listener
+            link.addEventListener('click', function (event) {
+                event.preventDefault(); // Prevent the default anchor behavior
+                document.getElementById('input_page').value = i + 1; // Set the hidden input value
+                document.getElementById('submit__search__button').click(); // Submit the form
+            });
+
+            li.appendChild(link);
+            ul.appendChild(li);
+        }
+
+        // Next button
+        const nextLi = document.createElement('li');
+        nextLi.className = 'page-item';
+        const nextLink = document.createElement('a');
+        nextLink.className = `page-link ${index >= pagesCount ? 'disabled' : ''}`;
+        nextLink.href = '#';
+        nextLink.innerText = 'Next';
+        nextLink.addEventListener('click', () => {
+            event.preventDefault()
+            document.getElementById('input_page').value = index + 1; // Set the 
+            document.getElementById('submit__search__button').click()
+        })
+        nextLi.appendChild(nextLink);
+        ul.appendChild(nextLi);
+
+        // Append the list to the navigation
+        nav.appendChild(ul);
+        paginationArea.appendChild(nav);
+    }
+    setPaginationElement(`{{pages}}`, 1)
+</script>
+<script>
+    function bookmarkButton(button) {
+        const item = button.querySelector('img')
+        const stockId = button.id
+        const userId = "{{current_user.get_id()}}"
+        console.log('aaaaaa')
+        fetch(`/lists/remove?stock_id=${stockId}&user_id=${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data[0]) {
+                    alert('Success');
+                    window.location.reload();
+                } else {
+                    console.error('Error:', data.message);
+                }
+            });
+
+
+    };
+</script>
+{% endblock content %}

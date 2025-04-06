@@ -51,7 +51,8 @@
                         Profile
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item"
+                                href="{{url_for('lists.find_by_user', user_id=current_user.get_id())}}">
                                 <img src="{{ url_for('static', filename='bootstrap-icons/star.svg') }}" alt="Logo"
                                     width="20" height="15" class="d-inline-block mb-1">
                                 My List</a></li>
