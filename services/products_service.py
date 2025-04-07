@@ -99,8 +99,6 @@ def delete(id):
 
 def update_status(id, status):
     try:
-        print(status)
-        int(id)
         if status not in status_list:
             raise ValueError("Not in list")
         with sqlite3.connect("database.db") as connection:
@@ -689,15 +687,14 @@ def get_popular_by_owner(
     status="approved",
 ):
     try:
-        print(status_list[status], owner_id, word)
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT p.*, s.id as stock_id, COUNT(l.id) as count FROM products p
+            SELECT p.*, s.id as stock_id, COALESCE(COUNT(l.id), 0) as count FROM products p
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = b.id
-            JOIN lists_stocks l on l.stock_id = s.id
+            LEFT JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.user_id = ?
             AND p.status = ?
             AND p.slug LIKE ?
@@ -768,7 +765,7 @@ def get_top_rated_by_owner(
             AND p.status LIKE ?
             AND p.slug LIKE ?
             """,
-                (owner_id, like_string(word)),
+                (owner_id, status_list[status], like_string(word)),
             ).fetchone()
         connection.commit()
         return [res, count["count"]]
@@ -846,7 +843,7 @@ def get_by_filter(type, slug, filter, start_page, end_page):
             with sqlite3.connect("database.db") as connection:
                 connection.row_factory = dict_factory
         res = connection.execute(
-            f"""SELECT * FROM products,
+            f"""SELECT * FROM products
                 WHERE slug LIKE ?
                 AND p.status = "APPROVED"
                 LIMIT ?

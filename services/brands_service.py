@@ -95,7 +95,6 @@ def update_status(id, status):
             raise ValueError("Not in list")
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
-        print(status)
         res = connection.execute(
             "UPDATE brands SET status = ? WHERE id = ? RETURNING *",
             (status_list[status], id),
@@ -113,8 +112,8 @@ def get_by_name(name):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            'SELECT * FROM brands WHERE name LIKE = ? AND status = "APPROVED"',
-            ("%" + name + "%"),
+            'SELECT * FROM brands WHERE name LIKE ? AND status = "APPROVED"',
+            ("%" + name + "%",),
         ).fetchall()
 
         connection.commit()

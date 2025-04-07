@@ -30,7 +30,8 @@ def main():
         owner, limited=True, order="ASC"
     )
     [less_rated_products, count] = products_top_rated(owner, limited=True, order="ASC")
-
+    # print("wut")
+    # print(popular_products)
     return render_template(
         "/dashboards/owner_dashboard.html",
         popular_products=popular_products,

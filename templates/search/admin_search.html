@@ -48,7 +48,7 @@
                 {% for item in items %}
 
                 <div class="card">
-                    <a href="{{url_for('products.find_by_slug', slug=item.slug)}}">
+                    <a href="{{url_for('products.find_by_slug', slug=item.slug)}}" class="tw-h-full">
                         <div class="card-body tw-flex tw-flex-col tw-gap-1">
                             <img src="{{ url_for('static', filename='images/generic.png') }}" alt=""
                                 class="img-card-top mb-2">

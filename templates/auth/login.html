@@ -30,8 +30,8 @@
             })
         }).then(res => res.text())
             .then(res => {
-                console.log(res)
                 alert(res)
+                window.location.href = '/';
             }).catch(e => {
                 console.log(e)
 

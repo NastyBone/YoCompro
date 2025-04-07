@@ -87,14 +87,26 @@
                     <a class="nav-link active" aria-current="page" href="#">Become Owner</a>
                 </li>
                 {% endif %}
+                {% if current_user.role == "OWNER"%}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{url_for('owner.main')}}">Owner
+                        Dashboard</a>
+                </li>
+                {% endif %}
+                {% if current_user.role == "ADMIN"%}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{url_for('admin.stats')}}">Admin
+                        Dashboard</a>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </div>
 </nav>
 <script>
     async function logout() {
-        await fetch('/logout', {
-            method: 'POST',
+        await fetch('/auth/logout', {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }

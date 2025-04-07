@@ -313,7 +313,7 @@ def get_top_rated(city, start_page, end_page):
             (like_string(city),),
         ).fetchone()
         connection.commit()
-        return [res, 1]
+        return [res, count["count"]]
     except Exception as error:
         print(error)
         raise Exception(error)
@@ -512,13 +512,13 @@ def get_by_owner_top_rated(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT b.*, s.id as stock_id, AVG(score) as avg_score FROM bussiness b
-            JOIN ratings ON ratings.bussiness_id = b.id
+            SELECT b.*, s.id as stock_id, COALESCE(AVG(score), 0) as avg_score  FROM bussiness b
+            LEFT JOIN ratings ON ratings.bussiness_id = b.id
+            LEFT JOIN stocks s on s.bussiness_id = b.id
             WHERE b.user_id = ?
             AND b.status LIKE ?
             AND slug LIKE ?
             GROUP BY b.id
-            HAVING AVG(score) IS NOT NULL
             ORDER BY avg_score {order}
             {limit_or_pagination(limited, start_page, end_page)}
             """,
@@ -529,12 +529,14 @@ def get_by_owner_top_rated(
             count = connection.execute(
                 f""" 
             SELECT COUNT(*) as count FROM bussiness b
-            JOIN ratings ON ratings.bussiness_id = b.id
+            LEFT JOIN ratings ON ratings.bussiness_id = b.id
+            LEFT JOIN stocks s on s.bussiness_id = b.id
             WHERE b.user_id = ?
             AND slug LIKE ?
-            AND b.status = "APPROVED"
+            AND b.status LIKE ?
+            GROUP BY b.id
             """,
-                (owner_id, like_string(word)),
+                (owner_id, like_string(word), status_list[status]),
             ).fetchone()
         connection.commit()
         return [res, count["count"]]
