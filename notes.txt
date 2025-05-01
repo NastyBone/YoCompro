@@ -123,12 +123,12 @@ X TODO: Manage users
 X Figure out how to edit status
 X TODO: Add function to removing and editing items (users, bussiness, stocks, tags, products, brands)
 X TODO: Same above with owners (for stocks and bussiness)
+X Redirection or messages after submit form (clear form also)
+X Add create brand and product to admin
 - Connect views through buttons
-- Add create brand and product to admin
 - Add edit stock/bussiness on products/bussiness details
 - Connect images even to forms
 - Be aware of redirections (handle notfound on posts and redirect on edit/creating)
-- Redirection or messages after submit form (clear form also)
 - Beware that tags does not have images, so adapt admin search to not forceload it or add a defaul image
 - Change certain buttons on layout according to role
 

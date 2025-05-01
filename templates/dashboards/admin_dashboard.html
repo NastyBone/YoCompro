@@ -3,6 +3,16 @@
 {% block content %}
 <div class="container tw-flex tw-flex-col tw-gap-12">
     <!-- users count -->
+    <div class="container-title tw-flex tw-gap-6">
+        <div>
+            <h1 class="tw-font-semibold tw-text-4xl tw-mt-2 tw-mb-4">Welcome {{ current_user.name }}</h1>
+        </div>
+        <a class="btn btn-primary tw-h-fit tw-self-center" href="{{url_for('brands.form')}}">Create
+            Brand</a>
+        <a class="btn btn-primary tw-h-fit tw-self-center" href="{{url_for('products.form')}}">Create Products</a>
+        <a class="btn btn-primary tw-h-fit tw-self-center" href="{{url_for('admin.general_search')}}">Go Search</a>
+
+    </div>
     <div class="tw-text-center">
         <div class="container-title tw-flex tw-gap-6 tw-mb-4">
             <h2 class="tw-font-semibold tw-text-3xl tw-mb-4 tw-inline-block">Users Count</h2>
