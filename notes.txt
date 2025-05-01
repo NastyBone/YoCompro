@@ -124,14 +124,17 @@ X Figure out how to edit status
 X TODO: Add function to removing and editing items (users, bussiness, stocks, tags, products, brands)
 X TODO: Same above with owners (for stocks and bussiness)
 - Connect views through buttons
-
-== FEATURES
+- Add create brand and product to admin
+- Add edit stock/bussiness on products/bussiness details
 - Connect images even to forms
 - Be aware of redirections (handle notfound on posts and redirect on edit/creating)
 - Redirection or messages after submit form (clear form also)
 - Beware that tags does not have images, so adapt admin search to not forceload it or add a defaul image
-- On product details, add extra request for low stocks on bussiness in case is an owner, for bussiness details, add extra request for low stock products
 - Change certain buttons on layout according to role
+
+== FEATURES
+
+- On product details, add extra request for low stocks on bussiness in case is an owner, for bussiness details, add extra request for low stock products
 - Another detail still missing, the count of 'listed' by users on item
 - Similar products?
 
