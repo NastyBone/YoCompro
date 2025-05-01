@@ -106,6 +106,24 @@ def get_by_user(user_id):
         raise Exception(error)
 
 
+def get_id_by_user(user_id):
+    try:
+        with sqlite3.connect("database.db") as connection:
+            connection.row_factory = dict_factory
+        res = connection.execute(
+            """
+               SELECT l.id as list_id FROM lists l
+               WHERE l.user_id = ?
+               """,
+            (user_id,),
+        ).fetchall()
+        connection.commit()
+        return res
+    except Exception as error:
+        print(error)
+        raise Exception(error)
+
+
 def insert_product(id, stock_id):
     try:
         with sqlite3.connect("database.db") as connection:
