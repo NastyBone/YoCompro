@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, render_template, session
+from flask import Blueprint, json, request, jsonify, render_template, session
 from flask_login import current_user
 from services.products_service import *
 from classes.product_class import *
@@ -12,11 +12,12 @@ from services.bussiness_service import (
     get_bussiness_has_product_by_price,
     search_by_products,
 )
-from helpers import roles_list, set_pagination, filter_list
+from helpers import generate_filename, roles_list, set_pagination, filter_list
 from services.tags_service import (
     get_all as get_all_tags,
     get_tags_by_products as tags_by_products,
 )
+from services.images_service import insert as insert_image
 
 products_bp = Blueprint("products", __name__)
 
@@ -43,10 +44,23 @@ def find():
 
 @products_bp.route("/", methods=["POST"])
 def create():
-    data = request.get_json()
-    data["slug"] = slug_generator(data["name"])
-    response = insert(data)
-    tags = tags_setter(response[0]["id"], data["tags"])
+    data = request.form
+    image = request.files.get("image")
+    image_name = generate_filename(image.filename)
+    response = insert(
+        {
+            "name": data.get("name"),
+            "slug": slug_generator(data.get("name")),
+            "brand_id": data.get("brand_id"),
+            "description": data.get("description"),
+        }
+    )
+    path = f"static/images/brands/{image_name}"
+    image.save(path)
+    insert_image(
+        image_name, response[0]["id"], "/" + path, "images_products", "product_id"
+    )
+    tags = tags_setter(response[0]["id"], json.loads(data.get("tags")))
     return jsonify(response)
 
 

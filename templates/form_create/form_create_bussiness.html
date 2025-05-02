@@ -36,8 +36,9 @@
                 required>
         </div>
         <div>
-            <label for="brand_image">Upload image</label>
-            <input type="file" name="brand_image" id="brand_image" accept="image/*" class="form-control">
+            <label for="bussiness_image">Upload image</label>
+            <input required type="file" name="bussiness_image" id="bussiness_image" accept="image/*"
+                class="form-control">
         </div>
         <div>
             <label for="bussiness_tag">Tags</label>
@@ -83,7 +84,7 @@
         const phone = document.getElementById('bussiness_phone').value;
         const rif = document.getElementById('bussiness_rif').value;
         const address = document.getElementById('bussiness_address').value;
-        const image = document.getElementById('brand_image').files[0];
+        const image = document.getElementById('bussiness_image').files[0];
 
         const tags = document.querySelectorAll('.tag-button')
         const tag_ids = Array.from(tags).map(tag => { return { 'id': parseInt(tag.id) } })
@@ -98,6 +99,9 @@
         formData.append('lat', lat);
         formData.append('lon', lon);
         formData.append('tags', JSON.stringify(tag_ids))
+        if (bussiness) {
+            formData.append('id', bussiness.id);
+        }
         const data = {
             name,
             description,

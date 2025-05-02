@@ -25,6 +25,10 @@
             </select>
         </div>
         <div>
+            <label for="products_image">Upload image</label>
+            <input required type="file" name="products_image" id="products_image" accept="image/*" class="form-control">
+        </div>
+        <div>
             <label for="product_tag">Tags</label>
             <select name="product_tag" id="product_tag" class="form-control" required
                 onchange="event.preventDefault(); return setTagList(event.target.value)" multiple>
@@ -62,18 +66,20 @@
         const tags = document.querySelectorAll('.tag-button')
         const tag_ids = Array.from(tags).map(tag => { return { 'id': parseInt(tag.id) } })
         const brand_id = document.getElementById('product_brand').value;
-        const data = {
-            name,
-            description,
-            brand_id,
-            tags: tag_ids
+        const image = document.getElementById('products_image').files[0];
+        const formData = new FormData();
+        formData.append('image', image);
+        formData.append('name', name);
+        formData.append('description', description);
+        formData.append('brand_id', brand_id);
+        formData.append('tags', JSON.stringify(tag_ids));
+        if (product) {
+            formData.append('id', product.id);
         }
         await fetch(`/products${product ? '?id=' + product.id : ''}`, {
             method: product ? 'PUT' : 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
+            headers: {},
+            body: formData
         })
             .then(res => res.json())
             .then(data => {
