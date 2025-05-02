@@ -134,36 +134,36 @@ CREATE TABLE images_bussiness (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
      id INTEGER PRIMARY KEY AUTOINCREMENT,
     bussiness_id INTEGER NOT NULL,
-    image_id INTEGER NOT NULL,
-    FOREIGN KEY (bussiness_id) REFERENCES bussiness(id) ON DELETE CASCADE,
-    FOREIGN KEY (image_id) REFERENCES images(id) ON DELETE CASCADE
+    image_name TEXT NOT NULL,
+    image_path TEXT NOT NULL,
+    FOREIGN KEY (bussiness_id) REFERENCES bussiness(id) ON DELETE CASCADE
 );
 
 CREATE TABLE images_products (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     product_id INTEGER NOT NULL,
-    image_id INTEGER NOT NULL,
-    FOREIGN KEY (product_id) REFERENCES bussiness(id) ON DELETE CASCADE,
-    FOREIGN KEY (image_id) REFERENCES images(id) ON DELETE CASCADE
+    image_name TEXT NOT NULL,
+    image_path TEXT NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES bussiness(id) ON DELETE CASCADE
 );
 
 CREATE TABLE images_brands (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
      id INTEGER PRIMARY KEY AUTOINCREMENT,
     brand_id INTEGER NOT NULL,
-    image_id INTEGER NOT NULL,
-    FOREIGN KEY (brand_id) REFERENCES brands(id) ON DELETE CASCADE,
-    FOREIGN KEY (image_id) REFERENCES images(id) ON DELETE CASCADE
+    image_name TEXT NOT NULL,
+    image_path TEXT NOT NULL,
+    FOREIGN KEY (brand_id) REFERENCES brands(id) ON DELETE CASCADE
 );
 
 CREATE TABLE documents_bussiness (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
      id INTEGER PRIMARY KEY AUTOINCREMENT,
     bussiness_id INTEGER NOT NULL,
-    image_id INTEGER NOT NULL,
+    image_name TEXT NOT NULL,
+    image_path TEXT NOT NULL,
     FOREIGN KEY (bussiness_id) REFERENCES bussiness(id) ON DELETE CASCADE,
-    FOREIGN KEY (image_id) REFERENCES images(id) ON DELETE CASCADE
 );
 
 CREATE TABLE documents_owners (

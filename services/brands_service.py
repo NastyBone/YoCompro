@@ -13,7 +13,11 @@ def get(id):
         int(id)
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
-        res = connection.execute("SELECT * FROM brands WHERE id = ?", (id,)).fetchall()
+        res = connection.execute(
+            """SELECT b.*, image_path as path FROM brands b 
+                                 LEFT JOIN images_brands ib ON ib.brand_id = b.id WHERE b.id = ?""",
+            (id,),
+        ).fetchall()
 
         connection.commit()
         return res
@@ -27,7 +31,9 @@ def get_all():
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            "SELECT * FROM brands WHERE status = 'APPROVED' "
+            """SELECT b.*, image_path as path FROM brands b 
+            LEFT JOIN images_brands ib ON ib.brand_id 
+            WHERE status = 'APPROVED' """
         ).fetchall()
 
         connection.commit()
@@ -112,7 +118,9 @@ def get_by_name(name):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            'SELECT * FROM brands WHERE name LIKE ? AND status = "APPROVED"',
+            """SELECT b.*, image_path as path FROM brands b
+            LEFT JOIN images_brands ib ON ib.brand_id = b.id
+            WHERE name LIKE ? AND status = "APPROVED""",
             ("%" + name + "%",),
         ).fetchall()
 
@@ -129,8 +137,9 @@ def get_popular():
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-            SELECT b.*, COUNT(l.id) as count FROM brands b JOIN products p on p.brand_id = b.id 
+            SELECT b.*, COUNT(l.id) as count, image_path as path FROM brands b JOIN products p on p.brand_id = b.id 
             JOIN stocks s on s.product_id = p.id 
+            LEFT JOIN images_brands ib on ib.brand_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id 
             GROUP BY b.id 
             ORDER BY count
@@ -151,8 +160,9 @@ def get_popular_by_bussiness(bussiness_id, limited, start_page=None, end_page=No
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT br.*, COUNT(l.id) as count FROM brands br
+            SELECT br.*, COUNT(l.id) as count, image_path as path FROM brands br
             JOIN products p on p.brand_id = br.id
+            LEFT JOIN images_brands ib on ib.brand_id = br.id
             JOIN stocks s on s.product_id = p.id 
             JOIN bussiness b on s.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id
@@ -169,6 +179,7 @@ def get_popular_by_bussiness(bussiness_id, limited, start_page=None, end_page=No
             count = connection.execute(
                 f"""
             SELECT COUNT(*) as count FROM brands br 
+            LEFT JOIN images_brands ib on ib.brand_id = br.id
             JOIN products p on p.brand_id = br.id 
             JOIN stocks s on s.product_id = p.id 
             JOIN bussiness b on s.bussiness_id = b.id 
@@ -190,7 +201,8 @@ def get_by_product_id(product_id):
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-            SELECT br.* FROM brands br
+            SELECT br.*, image_path as path FROM brands br
+            LEFT JOIN images_brands ib on ib.brand_id = br.id
             JOIN products p on p.brand_id = br.id
             WHERE p.id = ? AND br.status = "APPROVED"
             GROUP BY br.id
@@ -198,6 +210,7 @@ def get_by_product_id(product_id):
             (product_id,),
         ).fetchall()
         connection.commit()
+        print("RES", res)
         return res
     except Exception as error:
         print(error)
@@ -209,7 +222,8 @@ def get_with_details(slug):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """SELECT * FROM brands br
+            """SELECT br.*, image_path as path FROM brands br
+            LEFT JOIN images_brands ib ON ib.brand_id = br.id
            WHERE br.slug LIKE ?
             AND br.status = "APPROVED"
                       """,
@@ -230,14 +244,18 @@ def get_by_status(status, start_page, end_page, word):
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT * FROM brands br WHERE status = ? AND name LIKE ? ORDER BY name  
+            SELECT br.*, image_path as path FROM brands br
+            LEFT JOIN images_brands ib ON ib.brand_id = br.id
+            WHERE status = ? AND name LIKE ? ORDER BY name  
             {limit_or_pagination(False, start_page, end_page)}
            """,
             (status_list[status], like_string(word)),
         ).fetchall()
         count = connection.execute(
             """
-        SELECT COUNT(*) as count FROM brands WHERE status = ? AND name LIKE ?
+        SELECT COUNT(*) as count FROM brands br
+        LEFT JOIN images_brands ib ON ib.brand_id = br.id
+        WHERE status = ? AND name LIKE ?
         """,
             (status_list[status], like_string(word)),
         ).fetchone()

@@ -15,6 +15,10 @@
             <input type="text" name="brand_country" id="brand_country" placeholder="i.e. Venezuela" required
                 class="form-control">
         </div>
+        <div>
+            <label for="brand_image">Upload image</label>
+            <input type="file" name="brand_image" id="brand_image" accept="image/*" class="form-control">
+        </div>
         <button type="submit" class="btn btn-primary btn-large">Submit</button>
     </form>
     {% if current_user.has_role('ADMIN') %}
@@ -37,18 +41,22 @@
         const brand = JSON.parse(('{{brand[0] | tojson}}'))
         const name = document.getElementById('brand_name').value;
         const country = document.getElementById('brand_country').value;
-        const data = {
-            name,
-            country
+        const image = document.getElementById('brand_image').files[0];
+        const formData = new FormData();
+        formData.append('image', image);
+        formData.append('name', name);
+        formData.append('country', country);
+        if (brand) {
+            formData.append('id', brand.id);
         }
+
         await fetch(`/brands${brand ? '?id=' + brand.id : ''}`, {
             method: brand ? 'PUT' : 'POST',
             headers: {
-                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: formData
         })
-            .then(res => res.json())
+            .then(res => res.text())
             .then(data => {
                 console.log(data);
                 alert('Brand created successfully')

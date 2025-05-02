@@ -33,6 +33,10 @@ login_manager.init_app(app)
 app.config.from_object(__name__)
 session = Session(app)
 
+# FILES
+app.config["UPLOAD_FOLDER"] = "static/uploads"
+app.config["ALLOWED_EXTENSIONS"] = {"png", "jpg", "jpeg"}
+
 
 @login_manager.user_loader
 def load_user(userid):

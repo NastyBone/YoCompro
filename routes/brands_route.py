@@ -1,12 +1,21 @@
 from flask import Blueprint, redirect, request, jsonify, render_template, session
 from services.brands_service import *
-from helpers import filter_list, roles_list, slug_generator, type_list, set_pagination
+from helpers import (
+    filter_list,
+    roles_list,
+    slug_generator,
+    type_list,
+    set_pagination,
+    generate_filename,
+)
 from services.products_service import (
     get_popular_by_brand as products_popular,
     get_newest_by_brand as produscts_newest,
     get_top_rated_by_brand as products_top_rated,
 )
 from services.bussiness_service import get_popular_by_brand as bussiness_popular
+import bcrypt
+from services.images_service import insert as insert_image
 
 brands_bp = Blueprint("brands", __name__)
 
@@ -33,9 +42,22 @@ def find_all():
 
 @brands_bp.route("/", methods=["POST"])
 def create():
-    data = request.get_json()
-    data["slug"] = slug_generator(data["name"])
-    response = insert(data)
+    data = request.form
+    image = request.files.get("image")
+    if image:
+        print("Image found")
+    salt = bcrypt.gensalt()
+    image_name = generate_filename(image.filename)
+    path = f"static/images/brands/{image_name}"
+    response = insert(
+        {
+            "name": data.get("name"),
+            "country": data.get("country"),
+            "slug": slug_generator(data.get("name")),
+        }
+    )
+    image.save(path)
+    insert_image(image_name, response[0]["id"], path, "images_brands")
     return jsonify(response)
 
 
@@ -131,7 +153,7 @@ def find_by_slug(slug):
     [top_rated, count] = products_top_rated(slug, True)
     [newest, count] = produscts_newest(slug, True)
     [bussiness, count] = bussiness_popular(city, slug, True)
-
+    print("aaaa", response)
     return render_template(
         "details/detail_brand.html",
         brand=response,
@@ -150,4 +172,5 @@ def get_brands_by_status(status):
     page = request.args.get("page", None)
     [start_pagination, end_pagination] = set_pagination(page)
     [response, count] = get_by_status(status, start_pagination, end_pagination, name)
+    print(response)
     return jsonify({"data": response, "count": count / 12})

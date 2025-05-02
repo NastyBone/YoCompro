@@ -1,4 +1,5 @@
-import uuid
+import uuid, os
+from datetime import datetime
 from unidecode import unidecode
 
 status_list = {"approved": "APPROVED", "in_review": "IN REVIEW", "rejected": "REJECTED"}
@@ -100,3 +101,11 @@ def regex_password_match(password):
     if not special_rule.find(password):
         return "Password requires at least one special character (!,@,#,$,%,^,&,*,(,),_,+,.)"
     return True
+
+
+def generate_filename(original_name):
+    base_name, ext = os.path.splitext(original_name)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    new_name = f"/{base_name}_{timestamp}{ext}"
+
+    return new_name

@@ -9,3 +9,4 @@ from stocks_service import *
 from tags_service import *
 from users_service import *
 from stats_service import *
+from images_service import *
