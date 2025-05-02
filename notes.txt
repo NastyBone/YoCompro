@@ -133,6 +133,7 @@ X Add create brand and product to admin
 - Change certain buttons on layout according to role
 - SHOW STOCK
 - Fix case when you enter details of something but is not approved yet
+- Allow edit images (change them)
 
 == FEATURES
 

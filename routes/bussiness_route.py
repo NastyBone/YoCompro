@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, jsonify, session
+from flask import Blueprint, json, request, render_template, jsonify, session
 from flask_login import current_user
 
 from services.bussiness_service import *
@@ -12,11 +12,18 @@ from services.tags_service import (
     get_all as get_all_tags,
     get_tags_by_bussiness as tags_by_bussiness,
 )
+from services.images_service import insert as insert_image
 
 from services.brands_service import get_popular_by_bussiness as brands_popular
 from services.ratings_service import get_average_by_bussiness as rating_bussiness
 from services.users_service import check_ownership
-from helpers import set_pagination, roles_list, filter_list, type_list
+from helpers import (
+    generate_filename,
+    set_pagination,
+    roles_list,
+    filter_list,
+    type_list,
+)
 
 bussiness_bp = Blueprint("bussiness", __name__)
 
@@ -43,13 +50,32 @@ def find():
 
 @bussiness_bp.route("/", methods=["POST"])
 def create():
-    data = request.get_json()
-    data["slug"] = slug_generator(data["name"])
-    data["city"] = session["city"]
-    data["user_id"] = current_user.get_id() or 3
+    data = request.form
+    image = request.files.get("image")
+    image_name = generate_filename(image.filename)
+    path = f"static/images/bussiness/{image_name}"
+
+    response = insert(
+        {
+            "name": data.get("name"),
+            "city": session["city"],
+            "user_id": current_user.get_id() or 3,
+            "slug": slug_generator(data.get("name")),
+            "description": data.get("description"),
+            "address": data.get("address"),
+            "phone": data.get("phone"),
+            "email": data.get("email"),
+            "rif": data.get("rif"),
+            "lat": data.get("lat"),
+            "lon": data.get("lon"),
+        }
+    )
+    image.save(path)
+    insert_image(
+        image_name, response[0]["id"], "/" + path, "images_bussiness", "bussiness_id"
+    )
     check_ownership(current_user.get_id() or 3)
-    response = insert(data)
-    tags = tags_setter(response[0]["id"], data["tags"])
+    tags = tags_setter(response[0]["id"], json.loads(data.get("tags")))
     return jsonify(response)
 
 

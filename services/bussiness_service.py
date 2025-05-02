@@ -16,7 +16,8 @@ def get(id):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            "SELECT * FROM bussiness WHERE id = ?", (id,)
+            "SELECT b.*, image_path as path FROM bussiness b LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id WHERE id = ?",
+            (id,),
         ).fetchall()
 
         connection.commit()
@@ -30,7 +31,9 @@ def get_all():
     try:
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
-        res = connection.execute("SELECT * FROM bussiness").fetchall()
+        res = connection.execute(
+            "SELECT b.*, image_path as path FROM bussiness b LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id"
+        ).fetchall()
 
         connection.commit()
         return res
@@ -144,8 +147,9 @@ def get_by_slug(slug, lat, lon):
             connection.row_factory = dict_factory
         res = connection.execute(
             """SELECT b.*, COALESCE(AVG(score), 0) as avg_score, 
-              ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance
+              ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance, image_path as path
             FROM bussiness b 
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
              LEFT JOIN ratings r ON r.bussiness_id = b.id
             WHERE slug LIKE ? AND status = 'APPROVED'""",
             (
@@ -172,8 +176,9 @@ def get_popular_by_brand(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT b.*, COUNT(l.id) as count FROM bussiness b
-            JOIN stocks s on s.bussiness_id = b.id 
+            SELECT b.*, COUNT(l.id) as count, image_path as path FROM bussiness b
+            JOIN stocks s on s.bussiness_id = b.id
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id 
             JOIN products p on s.product_id = p.id
             JOIN brands br on p.brand_id = br.id
@@ -195,6 +200,7 @@ def get_popular_by_brand(
             SELECT COUNT(*) as count FROM bussiness b
             JOIN stocks s on s.bussiness_id = b.id 
             JOIN lists_stocks l on l.stock_id = s.id 
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             JOIN products p on s.product_id = p.id
             JOIN brands br on p.brand_id = br.id
             WHERE city LIKE ? AND br.slug LIKE ?
@@ -228,8 +234,9 @@ def get_popular(city, start_page, end_page):
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-            SELECT b.*, COUNT(l.id) as count FROM bussiness b
+            SELECT b.*, COUNT(l.id) as count, image_path as path FROM bussiness b
             JOIN stocks s on s.bussiness_id = b.id 
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id 
             WHERE b.city LIKE ?
             AND b.status = "APPROVED"
@@ -244,6 +251,7 @@ def get_popular(city, start_page, end_page):
         count = connection.execute(
             f""" 
             SELECT COUNT(*) as count FROM bussiness b
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             JOIN stocks s on s.bussiness_id = b.id 
             JOIN lists_stocks l on l.stock_id = s.id 
             WHERE b.city LIKE ?
@@ -266,9 +274,9 @@ def get_popular_limited(city):
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-            SELECT b.*, COUNT(l.id) as count , RANK() OVER (ORDER BY COUNT(l.id) DESC) as rank
- FROM bussiness b
+            SELECT b.*, COUNT(l.id) as count , RANK() OVER (ORDER BY COUNT(l.id) DESC) as rank, image_path as path FROM bussiness b
             JOIN stocks s on s.bussiness_id = b.id 
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id 
             WHERE b.city LIKE ?
             AND b.status = "APPROVED"
@@ -292,8 +300,10 @@ def get_top_rated(city, start_page, end_page):
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-            SELECT b.*, AVG(r.score) as avg_score FROM bussiness b
+            SELECT b.*, AVG(r.score) as avg_score, image_path as path
+            FROM bussiness b
             JOIN ratings r ON r.bussiness_id = b.id
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             WHERE b.city LIKE ?
             AND b.status = "APPROVED"
             GROUP BY b.id 
@@ -307,6 +317,7 @@ def get_top_rated(city, start_page, end_page):
             f"""
             SELECT COUNT(*) as count FROM bussiness b
             JOIN ratings r ON r.bussiness_id = b.id
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             WHERE b.city LIKE ?
             AND b.status = "APPROVED"
             """,
@@ -326,8 +337,10 @@ def get_top_rated_limited(city):
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-            SELECT b.*, AVG(r.score) as avg_score, RANK() OVER (ORDER BY AVG(r.score) ASC) as rank FROM bussiness b
+            SELECT b.*, AVG(r.score) as avg_score, RANK() OVER (ORDER BY AVG(r.score) ASC) as rank, image_path as path
+            FROM bussiness b
             JOIN ratings r ON r.bussiness_id = b.id
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             WHERE b.city LIKE ?
             AND b.status = "APPROVED"
             GROUP BY b.id 
@@ -352,8 +365,10 @@ def get_by_most_discount(city, start_page, end_page):
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-            SELECT b.*, AVG(s.discount) as avg_disc FROM bussiness b
+            SELECT b.*, AVG(s.discount) as avg_disc, image_path as path
+            FROM bussiness b
             JOIN stocks s ON s.bussiness_id = b.id
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             WHERE b.city LIKE ?
             AND b.status = "APPROVED"
             GROUP BY b.id
@@ -366,7 +381,8 @@ def get_by_most_discount(city, start_page, end_page):
         count = connection.execute(
             f""" 
             SELECT COUNT(*) as count FROM bussiness b
-           JOIN stocks s ON s.bussiness_id = b.id
+            JOIN stocks s ON s.bussiness_id = b.id
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             WHERE b.city LIKE ?
             AND b.status = "APPROVED"
             """,
@@ -387,9 +403,10 @@ def get_by_most_discount_limited(city):
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-            SELECT b.*, AVG(s.discount) as avg_disc, RANK() OVER (ORDER BY AVG(s.discount) DESC) as rank
+            SELECT b.*, AVG(s.discount) as avg_disc, RANK() OVER (ORDER BY AVG(s.discount) DESC) as rank, image_path as path
             FROM bussiness b
             JOIN stocks s ON s.bussiness_id = b.id
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             WHERE b.city LIKE ?
             AND b.status = "APPROVED"
             LIMIT 5
@@ -413,9 +430,11 @@ def get_most_discount_by_bussiness(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT p.*, AVG(s.discount) as avg_disc, s.price, s.discount FROM products p
+            SELECT p.*, AVG(s.discount) as avg_disc, s.price, s.discount, s.quantity, image_path as path
+            FROM products p
             JOIN stocks s ON s.product_id = p.id
             JOIN bussiness b ON b.id = s.bussiness_id
+            LEFT JOIN images_products ip ON ip.product_id = p.id
             WHERE b.slug LIKE ?
             AND p.slug LIKE ?
             AND b.status = "APPROVED"
@@ -436,6 +455,7 @@ def get_most_discount_by_bussiness(
             SELECT COUNT(*) as count FROM products p
             JOIN stocks s ON s.product_id = p.id
             JOIN bussiness b ON b.id = s.bussiness_id
+            LEFT JOIN images_products ip ON ip.product_id = p.id
             WHERE b.slug LIKE ?
             AND b.status = "APPROVED"
             """,
@@ -464,8 +484,9 @@ def get_by_owner_popular(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT b.*, COUNT(l.id) as count FROM bussiness b
+            SELECT b.*, COUNT(l.id) as count, image_path as path FROM bussiness b
             LEFT JOIN stocks s on s.bussiness_id = b.id
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             LEFT JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.user_id = ?
             AND b.status LIKE ?
@@ -482,6 +503,7 @@ def get_by_owner_popular(
                 f""" 
             SELECT COUNT(*) as count FROM bussiness b
             JOIN stocks s on s.bussiness_id = b.id
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             JOIN lists_stocks l on l.stock_id = s.id
             WHERE b.user_id = ?
             AND slug LIKE ?
@@ -512,8 +534,11 @@ def get_by_owner_top_rated(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT b.*, s.id as stock_id, COALESCE(AVG(score), 0) as avg_score  FROM bussiness b
+            SELECT b.*, s.id as stock_id, COALESCE(AVG(score), 0) as avg_score, 
+            image_path as path
+            FROM bussiness b
             LEFT JOIN ratings ON ratings.bussiness_id = b.id
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             LEFT JOIN stocks s on s.bussiness_id = b.id
             WHERE b.user_id = ?
             AND b.status LIKE ?
@@ -529,6 +554,7 @@ def get_by_owner_top_rated(
             count = connection.execute(
                 f""" 
             SELECT COUNT(*) as count FROM bussiness b
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             LEFT JOIN ratings ON ratings.bussiness_id = b.id
             LEFT JOIN stocks s on s.bussiness_id = b.id
             WHERE b.user_id = ?
@@ -552,7 +578,9 @@ def get_by_owner(owner_id, start_page, end_page, limited=False):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            f"""SELECT * FROM bussiness b WHERE user_id = ? 
+            f"""SELECT b.*, image_path as path FROM bussiness b 
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
+            WHERE user_id = ? 
             AND b.status = "APPROVED"
             {limit_or_pagination(limited, start_page, end_page)} """,
             (owner_id,),
@@ -576,8 +604,9 @@ def get_by_search_tags(word, tags, start_page, end_page):
                 tag_field = ",".join(["?"] * len(tags))
                 res = connection.execute(
                     f"""
-            SELECT b.* FROM bussiness b
+            SELECT b.*, image_path as path FROM bussiness b
             JOIN tags_bussiness tb ON tb.bussiness_id = b.id
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             WHERE tb.tag_id IN ({tag_field}) AND
             b.name LIKE ?
             AND b.status = "APPROVED"
@@ -591,6 +620,7 @@ def get_by_search_tags(word, tags, start_page, end_page):
                 count = connection.execute(
                     f""" 
                 SELECT COUNT(*) as count FROM bussiness b
+                LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
            JOIN tags_bussiness tb ON tb.bussiness_id = b.id
             WHERE tb.tag_id IN ({tag_field}) AND
             b.name LIKE ?
@@ -602,7 +632,8 @@ def get_by_search_tags(word, tags, start_page, end_page):
             else:
                 res = connection.execute(
                     f"""
-            SELECT b.* FROM bussiness b
+            SELECT b.*, image_path as path FROM bussiness b
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             WHERE
             b.name LIKE ?
             AND b.status = "APPROVED"
@@ -616,6 +647,7 @@ def get_by_search_tags(word, tags, start_page, end_page):
         count = connection.execute(
             f""" 
             SELECT COUNT(*) as count FROM bussiness b
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             WHERE b.status = "APPROVED"
             AND b.name LIKE ? 
             """,
@@ -637,8 +669,9 @@ def get_by_nearest(lat, lon, city, start_page, end_page):
         res = connection.execute(
             """
                         
-    SELECT b.*, ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance
+    SELECT b.*, ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance, image_path as path
     FROM bussiness b
+    LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
     WHERE city LIKE ?
     AND b.status = "APPROVED"
     ORDER BY distance ASC
@@ -650,6 +683,7 @@ def get_by_nearest(lat, lon, city, start_page, end_page):
         count = connection.execute(
             f""" 
             SELECT COUNT(*) as count FROM bussiness b
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             WHERE b.city LIKE ?
             AND b.status = "APPROVED"
             """,
@@ -671,8 +705,9 @@ def get_by_nearest_limited(lat, lon, city):
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-SELECT * , RANK() OVER (ORDER BY ( 3959 * acos( cos( radians(?) ) * cos( radians(lat) ) * cos( radians(lon) - radians(?) ) + sin( radians(?) ) * sin( radians(lat) ) ) )  DESC) as rank
-FROM bussiness
+SELECT * , RANK() OVER (ORDER BY ( 3959 * acos( cos( radians(?) ) * cos( radians(lat) ) * cos( radians(lon) - radians(?) ) + sin( radians(?) ) * sin( radians(lat) ) ) )  DESC) as rank, image_path as path
+FROM bussiness b
+LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
 WHERE city LIKE ?
 AND status = 'APPROVED'
 LIMIT 5""",
@@ -695,8 +730,9 @@ def get_bussiness_has_product_by_price(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT b.*, s.price, s.quantity, s.discount FROM bussiness b
+            SELECT b.*, s.price, s.quantity, s.discount, image_path as path FROM bussiness b
             JOIN stocks s on s.bussiness_id = b.id 
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             JOIN products p on s.product_id = p.id
             WHERE p.id = ?
             AND b.status = "APPROVED"
@@ -711,6 +747,7 @@ def get_bussiness_has_product_by_price(
             count = connection.execute(
                 f""" 
             SELECT COUNT(*) as count FROM bussiness b
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             JOIN stocks s on s.bussiness_id = b.id 
             JOIN products p on s.product_id = p.id
             WHERE p.id = ?
@@ -752,10 +789,11 @@ def get_bussiness_has_product_by_distance(
             WHERE s.bussiness_id = b.id
         ) 
         AND l.user_id = ?
-    ) AS is_favorite
+    ) AS is_favorite, image_path as path
             FROM bussiness b
             JOIN stocks s ON s.bussiness_id = b.id
             JOIN products p ON s.product_id = p.id
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             WHERE p.id = ?
             AND b.status = "APPROVED"
             GROUP BY b.id
@@ -777,6 +815,7 @@ def get_bussiness_has_product_by_distance(
             SELECT COUNT(*) as count FROM bussiness b
             JOIN stocks s ON s.bussiness_id = b.id
             JOIN products p on s.product_id = p.id
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             WHERE p.id = ?
             AND b.status = "APPROVED"
             """,
@@ -796,7 +835,8 @@ def get_newest(city, start_page, end_page):
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-            SELECT p.* FROM bussiness b
+            SELECT b.*, image_path as path FROM bussiness b
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
             WHERE b.city LIKE ?
             ORDER BY b.created_at
             LIMIT ?
@@ -819,14 +859,18 @@ def get_by_status(status, start_page, end_page, word):
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT * FROM bussiness WHERE status = ? AND name LIKE ? ORDER BY name  
+            SELECT b.*, image_path as path
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
+            FROM bussiness b WHERE status = ? AND name LIKE ? ORDER BY name  
             {limit_or_pagination(False, start_page, end_page)}
            """,
             (status_list[status], like_string(word)),
         ).fetchall()
         count = connection.execute(
             """
-        SELECT COUNT(*) as count FROM bussiness WHERE status = ? AND name LIKE ?
+        SELECT COUNT(*) as count FROM bussiness 
+        LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
+        WHERE status = ? AND name LIKE ?
         """,
             (status_list[status], like_string(word)),
         ).fetchone()
@@ -842,8 +886,9 @@ def get_with_details(id):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """SELECT b.*, u.name as user_name, u.email as user_email FROM bussiness b
-JOIN users u ON b.user_id = u.id
+            """SELECT b.*, u.name as user_name, u.email as user_email, image_path as path FROM bussiness b
+            JOIN users u ON b.user_id = u.id
+            LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
            WHERE b.id = ?
             AND b.status = "APPROVED""",
             (id,),
@@ -880,9 +925,10 @@ def search_by_products(
             WHERE s.bussiness_id = b.id
         ) 
         AND l.user_id = ?
-    ) AS is_favorite FROM bussiness b
+    ) AS is_favorite, image_path as path FROM bussiness b
                 JOIN stocks s ON s.bussiness_id = b.id
                 JOIN products p ON s.product_id = p.id
+                LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
                 WHERE p.slug LIKE ?
                 AND b.name LIKE ? 
                 AND b.status = "APPROVED" and p.status = "APPROVED"
@@ -901,6 +947,7 @@ def search_by_products(
         count = connection.execute(
             """ SELECT COUNT(b.id) as count FROM bussiness b
                 JOIN stocks s ON s.bussiness_id = b.id
+                LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
                 JOIN products p ON s.product_id = p.id
                 WHERE p.slug LIKE ?
                 AND b.name LIKE ? 

@@ -6,7 +6,7 @@
 <div class="card tw-flex-tw-gap-3-tw-p-4 tw-w-full tw-h-1/3">
     <!-- --     Image -- -->
     <div class="card-body tw-w-full tw-h-1/3 tw-flex tw-items-center tw-justify-center">
-        <img src="{{ url_for('static', filename='images/generic.png') }}" alt="{{ bussiness.name }}"
+        <img src="{{ item.path or '/static/images/generic.png' }}" alt="{{ bussiness.name }}"
             class="card-img tw-w-1/4 tw-h-1/4">
         <!-- --     Description -- -->
         <div class="tw-w-2/3 tw-text-center">
@@ -71,8 +71,7 @@
                         </div>
                     </div>
                     <div class="card-body tw-flex tw-flex-col tw-gap-1">
-                        <img src="{{ url_for('static', filename='images/generic.png') }}" alt=""
-                            class="img-card-top mb-2">
+                        <img src="{{ item.path or '/static/images/generic.png' }}" alt="" class="img-card-top mb-2">
                         <p class="card-title tw-text-lg tw-font-semibold"> {{item.name}}</p>
                         <p class="card-text">{{item.description}}</p>
                     </div>
@@ -202,7 +201,7 @@
                             </div>
                         </div>
                     <div class="card-body tw-flex tw-flex-col tw-gap-1">
-                        <img src="{{ url_for('static', filename='images/generic.png') }}" alt=""
+                        <img src="${item.path ?? '/static/images/generic.png'}" alt=""
                             class="img-card-top mb-2">
                         <p class="card-title tw-text-lg tw-font-semibold"> ${item.name}</p>
                         <p class="card-text">${item.description}</p>

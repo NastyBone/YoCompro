@@ -44,9 +44,6 @@ def find_all():
 def create():
     data = request.form
     image = request.files.get("image")
-    if image:
-        print("Image found")
-    salt = bcrypt.gensalt()
     image_name = generate_filename(image.filename)
     path = f"static/images/brands/{image_name}"
     response = insert(
@@ -57,7 +54,7 @@ def create():
         }
     )
     image.save(path)
-    insert_image(image_name, response[0]["id"], path, "images_brands")
+    insert_image(image_name, response[0]["id"], "/" + path, "images_brands", "brand_id")
     return jsonify(response)
 
 

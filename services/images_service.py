@@ -2,12 +2,12 @@ import sqlite3
 from helpers import dict_factory
 
 
-def insert(image_name, brand_id, image_path, db_type):
+def insert(image_name, brand_id, image_path, db_type, column_type):
     try:
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            f"INSERT INTO {db_type} (image_name, brand_id, image_path) VALUES (?, ?, ?) RETURNING id, image_name, brand_id, image_path",
+            f"INSERT INTO {db_type} (image_name, {column_type}, image_path) VALUES (?, ?, ?) RETURNING id, image_name, {column_type}, image_path",
             (image_name, brand_id, image_path),
         ).fetchone()
         connection.commit()

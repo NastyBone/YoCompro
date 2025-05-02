@@ -60,8 +60,7 @@
 
                         {% endif %}
                         <div class="card-body tw-flex tw-flex-col tw-gap-1">
-                            <img src="{{ url_for('static', filename='images/generic.png') }}" alt=""
-                                class="img-card-top mb-2">
+                            <img src="{{ item.path or '/static/images/generic.png' }}" alt="" class="img-card-top mb-2">
                             <p class="card-title tw-text-lg tw-font-semibold"> {{item.name}}</p>
                             <p class="card-text">{{item.description}}</p>
                         </div>
@@ -241,7 +240,7 @@
         cardContainer.innerHTML = '';
         const htmlContent = data.map(item => `<a class="card" href=../${e.type.value}/search/${item.slug}>
                     <div class="card-body tw-flex tw-flex-col tw-gap-1">
-                        <img src="{{ url_for('static', filename='images/generic.png') }}" alt=""
+                        <img src="${item.path ?? '/static/images/generic.png'}" alt=""
                             class="img-card-top mb-2">
                         <p class="card-title tw-text-lg tw-font-semibold"> ${item.name}</p>
                         <p class="card-text">${item.description}</p>

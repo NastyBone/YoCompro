@@ -36,6 +36,10 @@
                 required>
         </div>
         <div>
+            <label for="brand_image">Upload image</label>
+            <input type="file" name="brand_image" id="brand_image" accept="image/*" class="form-control">
+        </div>
+        <div>
             <label for="bussiness_tag">Tags</label>
             <select name="bussiness_tag" id="bussiness_tag" class="form-control" required
                 onchange="event.preventDefault(); return setTagList(event.target.value)" multiple>
@@ -79,10 +83,21 @@
         const phone = document.getElementById('bussiness_phone').value;
         const rif = document.getElementById('bussiness_rif').value;
         const address = document.getElementById('bussiness_address').value;
+        const image = document.getElementById('brand_image').files[0];
 
         const tags = document.querySelectorAll('.tag-button')
         const tag_ids = Array.from(tags).map(tag => { return { 'id': parseInt(tag.id) } })
-        console.log(lat, lon)
+        const formData = new FormData();
+        formData.append('image', image);
+        formData.append('name', name);
+        formData.append('description', description);
+        formData.append('email', email);
+        formData.append('phone', phone);
+        formData.append('rif', rif);
+        formData.append('address', address);
+        formData.append('lat', lat);
+        formData.append('lon', lon);
+        formData.append('tags', JSON.stringify(tag_ids))
         const data = {
             name,
             description,
@@ -96,10 +111,8 @@
         }
         await fetch(`/bussiness${bussiness ? '?id=' + bussiness.id : ''}`, {
             method: bussiness ? 'PUT' : 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
+            headers: {},
+            body: formData
         })
             .then(res => res.text())
             .then(data => {

@@ -106,6 +106,6 @@ def regex_password_match(password):
 def generate_filename(original_name):
     base_name, ext = os.path.splitext(original_name)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    new_name = f"/{base_name}_{timestamp}{ext}"
+    new_name = f"{base_name}_{timestamp}{ext}"
 
     return new_name
