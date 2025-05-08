@@ -216,7 +216,7 @@ def get_popular_by_bussiness(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT p.*, COUNT(l.id) as count, s.price, s.discount, image_path as path FROM products p
+            SELECT p.*, COUNT(l.id) as count, s.price, s.discount, s.quantity as quantity, image_path as path FROM products p
             JOIN stocks s on s.product_id = p.id
             LEFT JOIN images_products ip ON ip.product_id = p.id
             JOIN bussiness b on s.bussiness_id = b.id
@@ -474,7 +474,7 @@ def get_top_rated_by_bussiness(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT p.*, AVG(r.score) as avg_score, s.price, s.discount, image_path as path FROM products p
+            SELECT p.*, AVG(r.score) as avg_score, s.price, s.discount, s.quantity as quantity, image_path as path FROM products p
             LEFT JOIN images_products ip ON ip.product_id = p.id
             JOIN stocks s on s.product_id = p.id
             JOIN bussiness b on s.bussiness_id = b.id
@@ -627,7 +627,7 @@ def get_newest_by_bussiness(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT p.*, s.price, s.discount, image_path as path FROM products p
+            SELECT p.*, s.price, s.discount, s.quantity as quantity, image_path as path FROM products p
             JOIN stocks s on s.product_id = p.id
             LEFT JOIN images_products ip ON ip.product_id = p.id
             JOIN bussiness b on s.bussiness_id = b.id
@@ -1018,7 +1018,7 @@ def search_by_bussiness(
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            f""" SELECT p.*, s.price, s.discount, COUNT(l.id) as count, s.id as stock_id, EXISTS (
+            f""" SELECT p.*, s.price, s.discount, COUNT(l.id) as count, s.id as stock_id, s.quantity as quantity, EXISTS (
         SELECT 1 
         FROM lists l 
         JOIN lists_stocks ls ON l.id = ls.list_id 
@@ -1033,7 +1033,7 @@ def search_by_bussiness(
                 JOIN bussiness b ON s.bussiness_id = b.id
                 LEFT JOIN images_products ip ON ip.product_id = p.id
                 JOIN ratings r On r.bussiness_id = b.id
-                JOIN lists_stocks l On l.stock_id = s.id
+                LEFT JOIN lists_stocks l On l.stock_id = s.id
                 WHERE b.slug LIKE ?
                 AND p.name LIKE ? 
                 AND b.status = "APPROVED" and p.status = "APPROVED"

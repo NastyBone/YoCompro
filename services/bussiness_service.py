@@ -917,7 +917,7 @@ def search_by_products(
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            f""" SELECT b.*, s.id as stock_id, s.price, s.discount, ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance, EXISTS (
+            f""" SELECT b.*, s.id as stock_id, s.price, s.quantity as quantity, s.discount, ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance, EXISTS (
         SELECT 1 
         FROM lists l 
         JOIN lists_stocks ls ON l.id = ls.list_id 

@@ -61,7 +61,7 @@
                 id="search__elements">
 
                 {% for item in items %}
-                <a class="card" href="{{url_for('products.find_by_slug', slug=item.slug)}}">
+                <a class="card" href="{{url_for('products.find_by_slug', slug=item.slug )}}">
                     <div class="card-header tw-flex tw-justify-between">
                         <div>
                             <strong>{{item.price | round(2)}}$ USD</strong>
@@ -72,8 +72,10 @@
                     </div>
                     <div class="card-body tw-flex tw-flex-col tw-gap-1">
                         <img src="{{ item.path or '/static/images/generic.png' }}" alt="" class="img-card-top mb-2">
-                        <p class="card-title tw-text-lg tw-font-semibold"> {{item.name}}</p>
-                        <p class="card-text">{{item.description}}</p>
+                        <p class="card-title tw-text-lg tw-font-semibold"> {{item.name}}<span class="tw-font-normal">
+                        </p>
+                        <p class="card-text">{{item.description}}, <span
+                                style="font-weight: bold;">{{item.quantity}}</span> in stock</p>
                     </div>
                     <div class="card-header tw-flex tw-justify-end">
                         <button href="" type="button" class="" id="{{item.stock_id}}"

@@ -76,7 +76,8 @@
                         <div class="card-body tw-flex tw-flex-col tw-gap-1">
                             <img src="{{ item.path or '/static/images/generic.png' }}" alt="" class="img-card-top mb-2">
                             <p class="card-title tw-text-lg tw-font-semibold"> {{item.name}}</p>
-                            <p class="card-text">{{item.description}}</p>
+                            <p class="card-text">{{item.description}} , <span
+                                    style="font-weight: bold;">{{item.quantity}}</span> in stock</p>
                         </div>
                         <div class="card-header tw-flex tw-justify-center">
                             <strong>{{item.distance | round(1)}} Km away</strong>
@@ -236,7 +237,6 @@
 <script>
     function bookmarkButton(button) {
         const item = button.querySelector('img')
-        console.log(item)
         const isFavorite = item.getAttribute('value');
         const stockId = button.id
         const userId = "{{current_user.get_id()}}"

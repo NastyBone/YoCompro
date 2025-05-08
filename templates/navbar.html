@@ -87,7 +87,7 @@
                     <a class="nav-link active" aria-current="page" href="#">Become Owner</a>
                 </li>
                 {% endif %}
-                {% if current_user.role == "OWNER"%}
+                {% if current_user.role == "OWNER" %}
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{{url_for('owner.main')}}">Owner
                         Dashboard</a>

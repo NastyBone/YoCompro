@@ -891,6 +891,14 @@ video {
   font-weight: 600;
 }
 
+.tw-font-light {
+  font-weight: 300;
+}
+
+.tw-font-normal {
+  font-weight: 400;
+}
+
 .tw-text-black {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity, 1));
