@@ -17,7 +17,7 @@ from services.tags_service import (
     get_all as get_all_tags,
     get_tags_by_products as tags_by_products,
 )
-from services.images_service import insert as insert_image
+from services.images_service import insert as insert_image, update as update_image
 
 products_bp = Blueprint("products", __name__)
 
@@ -67,10 +67,29 @@ def create():
 @products_bp.route("/", methods=["PUT"])
 def edit():
     id = request.args.get("id")
-    data = request.get_json()
-    data["slug"] = slug_generator(data["name"])
-    response = update(id, data)
-    tags = tags_setter(response[0]["id"], data["tags"])
+    data = request.form
+    response = update(
+        id,
+        {
+            "name": data.get("name"),
+            "slug": slug_generator(data.get("name")),
+            "brand_id": data.get("brand_id"),
+            "description": data.get("description"),
+        },
+    )
+    image = request.files.get("image")
+    if image:
+        image_name = generate_filename(image.filename)
+        path = f"static/images/products/{image_name}"
+        image.save(path)
+        update_image(
+            image_name,
+            response[0]["id"],
+            "/" + path,
+            "images_products",
+            "product_id",
+        )
+    tags = tags_setter(response[0]["id"], data.get("tags"))
     return jsonify(response)
 
 

@@ -1,4 +1,5 @@
 import sqlite3
+from flask import json
 from helpers import limit_or_pagination, type_list
 from classes.product_class import *
 from helpers import (
@@ -15,9 +16,9 @@ def get(id):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """SELECT p.*, image_path as path FROM products
+            """SELECT p.*, image_path as path FROM products p
              LEFT JOIN images_products ip ON ip.product_id = p.id
-               WHERE id = ?""",
+               WHERE p.id = ?""",
             (id,),
         ).fetchall()
         connection.commit()
@@ -981,7 +982,7 @@ def get_by_status(status, start_page, end_page, word):
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT *, image_path as path FROM products p
+            SELECT p.*, image_path as path FROM products p
             LEFT JOIN images_products ip ON ip.product_id = p.id
             WHERE status = ? AND name LIKE ? ORDER BY name  
             {limit_or_pagination(False, start_page, end_page)}
@@ -1061,6 +1062,7 @@ def search_by_bussiness(
 
 def tags_setter(product_id, tags):
     try:
+        tags = json.loads(tags)
         int(product_id)
         with sqlite3.connect("database.db") as connection:
             cursor = connection.cursor()
