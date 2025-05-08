@@ -15,7 +15,7 @@ from services.products_service import (
 )
 from services.bussiness_service import get_popular_by_brand as bussiness_popular
 import bcrypt
-from services.images_service import insert as insert_image
+from services.images_service import insert as insert_image, update as update_image
 
 brands_bp = Blueprint("brands", __name__)
 
@@ -60,10 +60,28 @@ def create():
 
 @brands_bp.route("/", methods=["PUT"])
 def edit():
+    data = request.form
     id = request.args.get("id")
-    data = request.get_json()
-    data["slug"] = slug_generator(data["name"])
-    response = update(id, data)
+    response = update(
+        id,
+        {
+            "name": data.get("name"),
+            "country": data.get("country"),
+            "slug": slug_generator(data.get("name")),
+        },
+    )
+    image = request.files.get("image")
+    if image:
+        image_name = generate_filename(image.filename)
+        path = f"static/images/brands/{image_name}"
+        image.save(path)
+        update_image(
+            image_name,
+            response[0]["id"],
+            "/" + path,
+            "images_brands",
+            "brand_id",
+        )
     return jsonify(response)
 
 
