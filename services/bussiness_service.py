@@ -1,4 +1,6 @@
 import sqlite3
+
+from flask import json
 from classes.bussiness_class import *
 from helpers import (
     limit_or_pagination,
@@ -16,7 +18,7 @@ def get(id):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            "SELECT b.*, image_path as path FROM bussiness b LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id WHERE id = ?",
+            "SELECT b.*, image_path as path FROM bussiness b LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id WHERE b.id = ?",
             (id,),
         ).fetchall()
 
@@ -963,6 +965,7 @@ def search_by_products(
 
 
 def tags_setter(bussiness_id, tags):
+    tags = json.loads(tags)
     try:
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
@@ -973,6 +976,7 @@ def tags_setter(bussiness_id, tags):
             (bussiness_id,),
         )
         connection.commit()
+
         tags_data = [(int(tag["id"]), int(bussiness_id)) for tag in tags]
         res = connection.executemany(
             """INSERT INTO tags_bussiness (tag_id, bussiness_id) VALUES (?,?)""",

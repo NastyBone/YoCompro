@@ -12,7 +12,7 @@ from services.tags_service import (
     get_all as get_all_tags,
     get_tags_by_bussiness as tags_by_bussiness,
 )
-from services.images_service import insert as insert_image
+from services.images_service import insert as insert_image, update as update_image
 
 from services.brands_service import get_popular_by_bussiness as brands_popular
 from services.ratings_service import get_average_by_bussiness as rating_bussiness
@@ -82,11 +82,35 @@ def create():
 @bussiness_bp.route("/", methods=["PUT"])
 def edit():
     id = request.args.get("id")
-    data = request.get_json()
-    data["slug"] = slug_generator(data["name"])
-    data["city"] = session["city"]
-    response = update(id, data)
-    tags = tags_setter(response[0]["id"], data["tags"])
+    data = request.form
+    response = update(
+        id,
+        {
+            "name": data.get("name"),
+            "email": data.get("email"),
+            "description": data.get("description"),
+            "address": data.get("address"),
+            "slug": slug_generator(data.get("name")),
+            "phone": data.get("phone"),
+            "rif": data.get("rif"),
+            "lat": data.get("lat"),
+            "lon": data.get("lon"),
+            "city": session["city"],
+        },
+    )
+    image = request.files.get("image")
+    if image:
+        image_name = generate_filename(image.filename)
+        path = f"static/images/bussiness/{image_name}"
+        image.save(path)
+        update_image(
+            image_name,
+            response[0]["id"],
+            "/" + path,
+            "images_bussiness",
+            "bussiness_id",
+        )
+    tags = tags_setter(response[0]["id"], data.get("tags"))
     return jsonify(response)
 
 
@@ -146,6 +170,7 @@ def find_by_slug(slug):
     [top_discounts, count] = get_most_discount_by_bussiness("", slug, True)
     [top_rated, count] = top_rated_products("", slug, True)
     rating = rating_bussiness(int(bussiness["id"]))
+    print(popular_brands)
 
     return render_template(
         "details/details_bussiness.html",

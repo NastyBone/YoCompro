@@ -83,7 +83,7 @@
         })
             .then(res => res.json())
             .then(data => {
-                alert('Product created successfully')
+                alert(`Product ${product ? 'updated' : 'created'} successfully`)
             })
             .catch(err => {
                 console.log(err);

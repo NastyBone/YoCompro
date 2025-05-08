@@ -33,7 +33,7 @@ def get_all():
             connection.row_factory = dict_factory
         res = connection.execute(
             """
-             SELECT p.*, image_path as path FROM products 
+             SELECT p.*, image_path as path FROM products p
              LEFT JOIN images_products ip ON ip.product_id = p.id
                 """
         ).fetchall()

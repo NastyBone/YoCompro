@@ -50,7 +50,7 @@ def main():
 
 @owner_bp.route("/search", methods=["GET"])
 def general_search():
-    owner_id = 3  # current_user.get_id()
+    owner_id = current_user.get_id()
     type = request.args.get("type", "products")
     filter = request.args.get("filter", "popular")
     [start_pagination, end_pagination] = set_pagination(None)
