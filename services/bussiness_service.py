@@ -149,11 +149,15 @@ def get_by_slug(slug, lat, lon):
             connection.row_factory = dict_factory
         res = connection.execute(
             """SELECT b.*, COALESCE(AVG(score), 0) as avg_score, 
-              ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance, image_path as path
+              ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance, image_path as path, COUNT(DISTINCT l.id) as fav_count
             FROM bussiness b 
             LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
              LEFT JOIN ratings r ON r.bussiness_id = b.id
-            WHERE slug LIKE ? AND status = 'APPROVED'""",
+             LEFT JOIN stocks s ON s.bussiness_id = b.id
+             LEFT JOIN lists_stocks l ON l.stock_id = s.id
+            WHERE slug LIKE ? AND status = 'APPROVED'
+            GROUP BY b.id
+            """,
             (
                 lat,
                 lat,

@@ -132,7 +132,7 @@ X Connect images even to forms, allow update it
 -? Beware that tags does not have images, so adapt admin search to not forceload it or add a defaul image
 -X Add edit stock/bussiness on products/bussiness details
 -- Change certain buttons on layout according to role
-- SHOW STOCK
+X SHOW STOCK
 	- Within detail and search
 		- Bussiness and product search and details
 - Favorite count on details
@@ -158,6 +158,7 @@ X Connect images even to forms, allow update it
 - Better handling on backend errors
 - Fix searches where if not rated or added into a list, appear anyways or doesnt (prlly a left o right join)
 - owner_id = 3 (or 3) 12
+- Some items does not appear in the counterpart (nike airmax 2 details, acme corp details)
 X Add contact (address, mail, phone) to bussiness details
 
 X Add view more button to dashboards components, it will lead to full views (not limited, but paginated)
