@@ -887,16 +887,12 @@ video {
   font-weight: 700;
 }
 
-.tw-font-semibold {
-  font-weight: 600;
-}
-
-.tw-font-light {
-  font-weight: 300;
-}
-
 .tw-font-normal {
   font-weight: 400;
+}
+
+.tw-font-semibold {
+  font-weight: 600;
 }
 
 .tw-text-black {

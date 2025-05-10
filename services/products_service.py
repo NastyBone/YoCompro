@@ -1023,7 +1023,7 @@ def search_by_bussiness(
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            f""" SELECT p.*, s.price, s.discount, COUNT(l.id) as count, s.id as stock_id, s.quantity as quantity, EXISTS (
+            f"""SELECT p.*, s.price, s.discount, COUNT(l.id) as count, s.id as stock_id, s.quantity as quantity, EXISTS (
         SELECT 1 
         FROM lists l 
         JOIN lists_stocks ls ON l.id = ls.list_id 
@@ -1037,7 +1037,7 @@ def search_by_bussiness(
                 JOIN stocks s ON s.product_id = p.id
                 JOIN bussiness b ON s.bussiness_id = b.id
                 LEFT JOIN images_products ip ON ip.product_id = p.id
-                JOIN ratings r On r.bussiness_id = b.id
+                LEFT JOIN ratings r On r.bussiness_id = b.id
                 LEFT JOIN lists_stocks l On l.stock_id = s.id
                 WHERE b.slug LIKE ?
                 AND p.name LIKE ? 

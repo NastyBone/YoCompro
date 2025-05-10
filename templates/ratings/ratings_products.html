@@ -21,7 +21,9 @@
                         <span class="star" data-value="4">&#9733;</span>
                         <span class="star" data-value="5">&#9733;</span>
                     </div>
-
+                    <a href="{{ url_for('products.find_by_slug', slug=product.slug) }}"
+                        class="tw-text-center tw-text-xs tw-text-blue-600 dark:tw-text-blue-500 hover:tw-underline tw-mt-[-5px]">Back
+                        to details</a>
                     <span id="avg_score" style="display: none;">{{ product.avg_score }}</span>
                 </div>
                 <div class="tw-flex tw-flex-col tw-w-1/3 tw-rounded-[10px] bg-primary-subtle tw-p-2 tw-m-auto">

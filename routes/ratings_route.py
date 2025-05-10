@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, session
 from flask_login import current_user
 from services.ratings_service import *
 from services.bussiness_service import get_by_slug as get_bussiness
@@ -66,8 +66,10 @@ def find_by_user():
 @ratings_bp.route("/bussiness/<slug>", methods=["GET"])
 def find_by_bussiness(slug):
     page = request.args.get("page", None)
+    lat = session.get("lat")
+    lon = session.get("lon")
     [start_pagination, end_pagination] = set_pagination(page)
-    bussiness = get_bussiness(slug)
+    bussiness = get_bussiness(slug, lat, lon)
     [response, count] = get_by_bussiness(
         int(bussiness["id"]), False, start_pagination, end_pagination
     )
