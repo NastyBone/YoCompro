@@ -136,14 +136,14 @@ X SHOW STOCK
 	- Within detail and search
 		- Bussiness and product search and details
 X Favorite count on details
-- On ratings and search, add a go back to main details view
-- Fix case when you enter details of something but is not approved yet
+X On ratings and search, add a go back to main details view
+- Fix case when you enter details of something but is not approved yet (from owner or admin)
 
 
 == FEATURES
 
 - On owner dashboard, add extra request for low stocks
-- Similar products
+-? Similar products
 X Another detail still missing, the count of 'listed' by users on item
 -- Validate documents
 

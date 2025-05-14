@@ -2,6 +2,15 @@
 
 {% block content %}
 <div class="tw-flex tw-flex-col tw-w-full">
+    {% if product.status == "IN REVIEW" %}
+    <div class="alert alert-warning tw-mb-2">
+        <strong>Warning!</strong> This product is in review, please check back later.
+    </div>
+    {% elif product.status == "REJECTED" %}
+    <div class="alert alert-danger tw-mb-2">
+        <strong>Warning!</strong> This product has been rejected, please contact support.
+    </div>
+    {% endif %}
     <!-- -- Products details -- -->
     <div class="card tw-flex-tw-gap-3-tw-p-4 tw-w-full tw-h-1/3">
         <!-- --     Image -- -->
