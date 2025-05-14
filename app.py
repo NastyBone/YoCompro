@@ -100,8 +100,8 @@ def handle_bad_request(e):
 
 @app.errorhandler(werkzeug.exceptions.BadRequest)
 def handle_bad_request(e):
-    print("erroringgg")
-    return e
+    print(e)
+    return redirect("/error")
 
 
 @app.route("/error", methods=["GET"])
@@ -111,6 +111,13 @@ def exception():
 
 @app.errorhandler(werkzeug.exceptions.InternalServerError)
 def handle_bad_request(e):
+    print(e)
+    return redirect("/error")
+
+
+@app.errorhandler(Exception)
+def handle_bad_request(e):
+    print(e)
     return redirect("/error")
 
 

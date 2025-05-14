@@ -149,7 +149,6 @@ def find_by_slug(slug):
     )
     brand = brand_by_product(int(product["id"]))[0]
     rating = rating_by_product(int(product["id"]))[0]
-    print(product)
     # return render_template('',
     #                        product=product,
     #                        brand=brand,
