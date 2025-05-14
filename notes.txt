@@ -137,7 +137,7 @@ X SHOW STOCK
 		- Bussiness and product search and details
 X Favorite count on details
 X On ratings and search, add a go back to main details view
-- Fix case when you enter details of something but is not approved yet (from owner or admin)
+X Fix case when you enter details of something but is not approved yet (from owner or admin)
 
 
 == FEATURES

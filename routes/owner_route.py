@@ -146,7 +146,7 @@ def popular_products():
     status = request.args.get("status", None)
     if status not in status_list:
         return "error"
-    owner = 3
+    owner = current_user.get_id()
     [start_pagination, end_pagination] = set_pagination(page)
     [response, count] = products_popular(
         owner,
