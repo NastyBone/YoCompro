@@ -1,5 +1,6 @@
 from flask import Blueprint, json, request, jsonify, render_template, session
 from flask_login import current_user
+from guard import role_required
 from services.products_service import *
 from classes.product_class import *
 from services.brands_service import (
@@ -65,6 +66,7 @@ def create():
 
 
 @products_bp.route("/", methods=["PUT"])
+@role_required("ADMIN")
 def edit():
     id = request.args.get("id")
     data = request.form
