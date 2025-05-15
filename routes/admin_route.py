@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, session, render_template
+from flask import Blueprint, redirect, request, jsonify, session, render_template
 from guard import login_required
 from services.stats_service import (
     bussiness_stats as bussiness,
@@ -15,6 +15,7 @@ from services.users_service import (
     update_role,
     update as update_user,
 )
+from flask_login import current_user
 
 # TODO: Protect
 admin_bp = Blueprint("admin", __name__)
@@ -65,7 +66,6 @@ def general_search():
 
 
 @admin_bp.route("/profile-edit", methods=["GET"])
-@login_required()
 def edit_profile_from_admin():
     id = request.args.get("id")
     response = get_user(id)
@@ -73,7 +73,6 @@ def edit_profile_from_admin():
 
 
 @admin_bp.route("/edit-user", methods=["PUT"])
-@login_required()
 def update_profile_from_admin():
     data = request.get_json()
     id = request.args.get("id")
@@ -82,3 +81,10 @@ def update_profile_from_admin():
     update_user(id, data)
     update_role(id, data.get("role"))
     return "Success!"
+
+
+@admin_bp.before_request
+@login_required()
+def before_request():
+    if not current_user.has_role("ADMIN"):
+        return redirect("/unauthorized")

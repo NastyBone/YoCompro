@@ -4,7 +4,7 @@ from flask_login import current_user
 from services.products_service import get_all as get_all_products
 from services.bussiness_service import get_by_owner as get_bussiness_by_owner
 from helpers import set_pagination
-from guard import secure_access
+from guard import role_required, secure_access
 
 stocks_bp = Blueprint("stocks", __name__)
 
@@ -50,6 +50,7 @@ def remove():
 
 
 @stocks_bp.route("/form", methods=["GET"])
+@role_required("OWNER")
 def form():
     id = request.args.get("id", None)
     if id:

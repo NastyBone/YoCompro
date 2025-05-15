@@ -142,7 +142,7 @@ X Fix case when you enter details of something but is not approved yet (from own
 
 == FEATURES
 
-- On owner dashboard, add extra request for low stocks
+-? On owner dashboard, add extra request for low stocks
 -? Similar products
 X Another detail still missing, the count of 'listed' by users on item
 -- Validate documents
@@ -153,10 +153,10 @@ X Another detail still missing, the count of 'listed' by users on item
 - Check security for specific users on editing self and its things
 
 == FIXES
-- JOIN lists_stocks l On l.stock_id
+-? JOIN lists_stocks l On l.stock_id
+-? Fix searches where if not rated or added into a list, appear anyways or doesnt (prlly a left o right join) (This is a decision issue. It wont show non rated products in top rated section, like it wont show popular things if they re not saved by anyone)
 -? Fix image desapearing on item fetch
 X Better handling on backend errors
-- Fix searches where if not rated or added into a list, appear anyways or doesnt (prlly a left o right join)
 X owner_id = 3 (or 3) 12
 -- Some items does not appear in the counterpart 
 

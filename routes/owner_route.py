@@ -281,3 +281,10 @@ def stocks(slug):
     return jsonify({"data": response, "count": count / 12})
 
     # return render_template('', stocks=response)
+
+
+@owner_bp.before_request
+@login_required()
+def before_request():
+    if not current_user.has_role("OWNER"):
+        return redirect("/unauthorized")
