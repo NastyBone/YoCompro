@@ -6,3 +6,6 @@ bootstrap
 routes/__pycache__
 node_modules
 database.db
+.$Diagrama.drawio.bkp
+.$Flow.drawio.bkp
+static/images

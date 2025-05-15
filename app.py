@@ -7,6 +7,7 @@ from classes.users_class import UserLogin
 from routes.__index__ import *
 from location import set_location, asked_location
 import secrets
+import os
 
 # INIT CONFIG
 app = Flask(__name__)
@@ -138,5 +139,19 @@ def check_location():
     return "", 500
 
 
+def create_directories():
+    directories = [
+        "static/images",
+        "static/images/brands",
+        "static/images/bussiness",
+        "static/images/products",
+    ]
+
+    for directory in directories:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+
 if __name__ == "__app__":
+    create_directories()
     app.run(debug=True)
