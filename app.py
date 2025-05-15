@@ -68,7 +68,6 @@ def allow_location():
 
 @app.route("/refresh-location", methods=["GET"])
 def refresh_location():
-    print("reseting")
     asked_location(None)
     return "", 201
 
@@ -83,9 +82,15 @@ def handle_bad_request(e):
     return redirect("/not-found")
 
 
-@app.route("/unauthorized", methods=["GET"])
+@app.route("/unauthorized", methods=["GET", "PUT", "DELETE"])
 def unauthorized():
     return render_template("misc/not_authorized.html")
+
+
+@app.errorhandler(werkzeug.exceptions.Unauthorized)
+def handle_bad_request(e):
+    print(e)
+    return redirect("/unauthorized")
 
 
 @app.route("/forbidden", methods=["GET"])
@@ -104,7 +109,7 @@ def handle_bad_request(e):
     return redirect("/error")
 
 
-@app.route("/error", methods=["GET"])
+@app.route("/error", methods=["GET", "PUT", "POST"])
 def exception():
     return render_template("misc/error.html")
 

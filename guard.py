@@ -1,6 +1,8 @@
 from functools import wraps
 from flask_login import current_user
 from flask import abort, request, redirect
+from services.stocks_service import get as get_stock
+from services.bussiness_service import get as get_bussiness
 
 
 def role_required(role_name):
@@ -27,7 +29,6 @@ def login_required():
         @wraps(func)
         def check_log(*args, **kwargs):
             if not current_user:
-                print("redirect to log in")
                 redirect("/auth/login")
             return func(*args, **kwargs)
 
@@ -41,7 +42,6 @@ def logged_in_guard():
         @wraps(func)
         def check_no_log(*args, **kwargs):
             if current_user.is_authenticated:
-                print("redirect to dashboard")
                 redirect("/auth/dashboard")
             return func(*args, **kwargs)
 
@@ -62,5 +62,30 @@ def secure_access():
             return func(*args, **kwargs)
 
         return check_if_belongs
+
+    return decorator
+
+
+def belongs_to_owner():
+    def decorator(func):
+        @wraps(func)
+        def authorize(*args, **kwargs):
+            if request.method == "PUT":
+                logged_id = current_user.get_id()
+                if request.json:
+                    id = request.json.get("bussiness_id", 0)
+                else:
+                    id = 0
+                id = int(id)
+                if id != 0:
+                    id = get_stock(int(request.args.get("id")))[0].get("bussiness_id")
+                else:
+                    id = request.form.get("id")
+                bussiness = get_bussiness(id)
+                if bussiness[0].get("user_id") != logged_id:
+                    return "ERROR", 401
+            return func(*args, **kwargs)
+
+        return authorize
 
     return decorator

@@ -65,7 +65,19 @@
             },
             body: JSON.stringify(data)
         })
-            .then(res => res.json())
+            .then(res => {
+                if (res.status == 200) {
+                    return res.text()
+                }
+                if (res.status == 401) {
+                    window.location.href = '/unauthorized'
+                    throw new Error('Unauthorized')
+                }
+                else {
+                    window.location.href = '/error'
+                    throw new Error('Error')
+                }
+            })
             .then(data => {
                 alert(`Stock ${stock ? 'updated' : 'created'} successfully`)
             })

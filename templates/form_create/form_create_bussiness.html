@@ -37,8 +37,12 @@
         </div>
         <div>
             <label for="bussiness_image">Upload image</label>
-            <input required type="file" name="bussiness_image" id="bussiness_image" accept="image/*"
+            {% if bussiness[0] %}
+            <input type="file" name="bussiness_image" id="bussiness_image" accept="image/*" class="form-control">
+            {% else %}
+            <input type="file" name="bussiness_image" id="bussiness_image" accept="image/*" required
                 class="form-control">
+            {% endif %}
         </div>
         <div>
             <label for="bussiness_tag">Tags</label>
@@ -118,12 +122,26 @@
             headers: {},
             body: formData
         })
-            .then(res => res.text())
+            .then(res => {
+                if (res.status == 200) {
+                    return res.text()
+                }
+                if (res.status == 401) {
+                    window.location.href = '/unauthorized'
+                    throw new Error('Unauthorized')
+                }
+                else {
+                    window.location.href = '/error'
+                    throw new Error('Error')
+                }
+
+            })
             .then(data => {
                 alert(`Bussiness ${bussiness ? 'updated' : 'created'} successfully`)
             })
             .catch(err => {
-                console.log(err);
+                console.log(err.code)
+
             })
     }
 </script>

@@ -1,4 +1,5 @@
 from flask import Blueprint, redirect, request, jsonify, render_template, session
+from guard import role_required
 from services.brands_service import *
 from helpers import (
     filter_list,
@@ -41,6 +42,7 @@ def find_all():
 
 
 @brands_bp.route("/", methods=["POST"])
+@role_required("ADMIN")
 def create():
     data = request.form
     image = request.files.get("image")
@@ -59,6 +61,7 @@ def create():
 
 
 @brands_bp.route("/", methods=["PUT"])
+@role_required("ADMIN")
 def edit():
     data = request.form
     id = request.args.get("id")

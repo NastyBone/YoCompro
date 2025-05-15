@@ -148,7 +148,7 @@ X Another detail still missing, the count of 'listed' by users on item
 -- Validate documents
 
 == SECURITY
-- Protect routes based on roles
+X Protect routes based on roles
 - Edit and creation requires guards
 - Check security for specific users on editing self and its things
 

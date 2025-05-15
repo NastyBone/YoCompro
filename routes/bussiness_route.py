@@ -1,6 +1,7 @@
 from flask import Blueprint, json, request, render_template, jsonify, session
 from flask_login import current_user
 
+from guard import belongs_to_owner
 from services.bussiness_service import *
 from services.products_service import (
     get_newest_by_bussiness as newest_products,
@@ -80,6 +81,7 @@ def create():
 
 
 @bussiness_bp.route("/", methods=["PUT"])
+@belongs_to_owner()
 def edit():
     id = request.args.get("id")
     data = request.form
