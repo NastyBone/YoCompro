@@ -65,7 +65,8 @@
                                 <img src="{{ item.path or '/static/images/generic.png' }}" alt=""
                                     class="img-card-top mb-2">
                                 <p class="card-title tw-text-lg tw-font-semibold"> {{item.name}}</p>
-                                <p class="card-text">{{item.description}}</p>
+                                <p class="card-text">{{item.description}}, <span
+                                        style="font-weight: bold;">{{item.quantity}}</span> in stock</p>
                             </div>
                         </a>
                         <div class="card-footer tw-flex tw-gap-2">

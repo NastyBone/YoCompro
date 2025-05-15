@@ -58,8 +58,8 @@
         })
             .then(res => res.text())
             .then(data => {
-                console.log(data);
                 alert(`Brand ${brand ? 'updated' : 'created'} successfully`)
+                window.location.href = '/dashboard'
             })
             .catch(err => {
                 console.log(err);

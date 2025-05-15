@@ -730,7 +730,7 @@ def get_popular_by_owner(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT p.*, s.id as stock_id, COALESCE(COUNT(l.id), 0) as count, image_path as path FROM products p
+            SELECT p.*, s.id as stock_id, s.quantity as quantity, COALESCE(COUNT(l.id), 0) as count, image_path as path FROM products p
             JOIN stocks s on s.product_id = p.id
             LEFT JOIN images_products ip ON ip.product_id = p.id
             JOIN bussiness b on s.bussiness_id = b.id
@@ -781,7 +781,7 @@ def get_top_rated_by_owner(
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT p.*, s.id as stock_id, AVG(score) as avg_score, image_path as path FROM products p
+            SELECT p.*, s.id as stock_id, s.quantity as quantity, AVG(score) as avg_score, image_path as path FROM products p
             JOIN ratings ON ratings.product_id = p.id
             LEFT JOIN images_products ip ON ip.product_id = p.id
             JOIN stocks s on s.product_id = p.id

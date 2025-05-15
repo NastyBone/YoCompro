@@ -80,6 +80,7 @@
             })
             .then(data => {
                 alert(`Stock ${stock ? 'updated' : 'created'} successfully`)
+                window.location.href = '/dashboard'
             })
             .catch(err => {
                 console.log(err);

@@ -61,7 +61,7 @@ def create():
     insert_image(
         image_name, response[0]["id"], "/" + path, "images_products", "product_id"
     )
-    tags = tags_setter(response[0]["id"], json.loads(data.get("tags")))
+    tags = tags_setter(response[0]["id"], data.get("tags"))
     return jsonify(response)
 
 

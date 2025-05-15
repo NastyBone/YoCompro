@@ -84,6 +84,8 @@
             .then(res => res.json())
             .then(data => {
                 alert(`Product ${product ? 'updated' : 'created'} successfully`)
+                window.location.href = '/dashboard'
+
             })
             .catch(err => {
                 console.log(err);

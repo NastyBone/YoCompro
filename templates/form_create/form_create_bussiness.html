@@ -138,6 +138,8 @@
             })
             .then(data => {
                 alert(`Bussiness ${bussiness ? 'updated' : 'created'} successfully`)
+                window.location.href = '/dashboard'
+
             })
             .catch(err => {
                 console.log(err.code)
