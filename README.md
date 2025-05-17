@@ -2,9 +2,21 @@
 
 Promo Radar is a web application developed as a final project for the CS50 Harvard Introduction to Computer Science course by David Malan. The project aims to help users discover businesses, products, and discounts in their city, with features for searching, filtering, and managing business and product information.
 
+#### Name
+José Prieto
+#### Project Name
+Promo Radar / YoCompro
+#### Username on Github / edX
+NastyBone
+#### City / Country
+Maturín, Monagas, Venezuela.
+#### Recording Date
+2025-05-17
+
 ## About
 
 This project was built as part of my journey through CS50. While the complexity and scope of Promo Radar go beyond the requirements of the course, it was a valuable learning experience. I encountered and learned from many design challenges, especially regarding planning, setting boundaries, and defining clear goals for the application. These lessons were as important as the technical skills gained.
+
 
 ## Features
 
