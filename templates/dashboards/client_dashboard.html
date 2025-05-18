@@ -13,7 +13,7 @@
         </div>
         <div class="tw-container tw-flex gap-3">
             {% for item in popular_products %}
-            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+            <a class="card tw-grow tw-shrink tw-max-w-[25%] tw-min-w-[20%]"
                 href="{{ url_for('products.find_by_slug', slug=item.slug) }}">
                 <div class="card-body tw-flex tw-flex-col tw-gap-1">
                     <img src="{{ item.path or '/static/images/generic.png' }}" alt="" class="img-card-top mb-2">
@@ -35,7 +35,7 @@
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in top_products %}
-            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+            <a class="card tw-grow tw-shrink tw-max-w-[25%] tw-min-w-[20%]"
                 href="{{ url_for('products.find_by_slug', slug=item.slug) }}">
                 <div class="card-body tw-flex tw-flex-col tw-gap-1">
                     <img src="{{ item.path or '/static/images/generic.png' }}" alt="" class="img-card-top mb-2">
@@ -57,7 +57,7 @@
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in newest_products %}
-            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+            <a class="card tw-grow tw-shrink tw-max-w-[25%] tw-min-w-[20%]"
                 href="{{ url_for('products.find_by_slug', slug=item.slug) }}">
                 <div class="card-body tw-flex tw-flex-col tw-gap-1">
                     <img src="{{ item.path or '/static/images/generic.png' }}" alt="" class="img-card-top mb-2">
@@ -80,7 +80,7 @@
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in nearest_bussiness %}
-            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+            <a class="card tw-grow tw-shrink tw-max-w-[25%] tw-min-w-[20%]"
                 href="{{ url_for('bussiness.find_by_slug', slug=item.slug) }}">
                 <div class="card-body tw-flex tw-flex-col tw-gap-1">
                     <img src="{{ item.path or '/static/images/generic.png' }}" alt="" class="img-card-top mb-2">
@@ -103,7 +103,7 @@
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in popular_bussiness %}
-            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+            <a class="card tw-grow tw-shrink tw-max-w-[25%] tw-min-w-[20%]"
                 href="{{ url_for('bussiness.find_by_slug', slug=item.slug) }}">
                 <div class="card-body tw-flex tw-flex-col tw-gap-1">
                     <img src="{{ item.path or '/static/images/generic.png' }}" alt="" class="img-card-top mb-2">
@@ -125,7 +125,7 @@
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in top_bussiness %}
-            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+            <a class="card tw-grow tw-shrink tw-max-w-[25%] tw-min-w-[20%]"
                 href="{{ url_for('bussiness.find_by_slug', slug=item.slug) }}">
                 <div class="card-body tw-flex tw-flex-col tw-gap-1">
                     <img src="{{ item.path or '/static/images/generic.png' }}" alt="" class="img-card-top mb-2">
@@ -149,7 +149,7 @@
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in most_discount %}
-            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+            <a class="card tw-grow tw-shrink tw-max-w-[25%] tw-min-w-[20%]"
                 href="{{ url_for('bussiness.find_by_slug', slug=item.slug) }}">
                 <div class="card-body tw-flex tw-flex-col tw-gap-1">
                     <img src="{{ item.path or '/static/images/generic.png' }}" alt="" class="img-card-top mb-2">

@@ -83,7 +83,7 @@
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in bussiness_by_distance %}
-            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+            <a class="card tw-grow tw-shrink tw-max-w-[25%] tw-min-w-[20%]"
                 href="{{ url_for('bussiness.find_by_slug', slug=item.slug) }}">
                 <div class="card-header tw-flex tw-justify-between">
                     <div>
@@ -116,7 +116,7 @@
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in bussiness_by_price %}
-            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+            <a class="card tw-grow tw-shrink tw-max-w-[25%] tw-min-w-[20%]"
                 href="{{ url_for('bussiness.find_by_slug', slug=item.slug) }}">
                 <div class="card-header tw-flex tw-justify-between">
                     <div>

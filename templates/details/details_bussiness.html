@@ -101,7 +101,7 @@
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in popular %}
-            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+            <a class="card tw-grow tw-shrink tw-max-w-[25%] tw-min-w-[20%]"
                 href="{{ url_for('products.find_by_slug', slug=item.slug ) }}">
                 <div class="card-header tw-flex tw-justify-between">
                     <div>
@@ -134,7 +134,7 @@
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in top_rated %}
-            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+            <a class="card tw-grow tw-shrink tw-max-w-[25%] tw-min-w-[20%]"
                 href="{{ url_for('products.find_by_slug', slug=item.slug ) }}">
                 <div class="card-header tw-flex tw-justify-between">
                     <div>
@@ -167,7 +167,7 @@
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in top_discounts %}
-            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+            <a class="card tw-grow tw-shrink tw-max-w-[25%] tw-min-w-[20%]"
                 href="{{ url_for('products.find_by_slug', slug=item.slug ) }}">
                 <div class="card-header tw-flex tw-justify-between">
                     <div>
@@ -200,7 +200,7 @@
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in newest %}
-            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+            <a class="card tw-grow tw-shrink tw-max-w-[25%] tw-min-w-[20%]"
                 href="{{ url_for('products.find_by_slug', slug=item.slug ) }}">
                 <div class="card-header tw-flex tw-justify-between">
                     <div>
@@ -233,7 +233,7 @@
         </div>
         <div class="container tw-flex tw-gap-3">
             {% for item in popular_brands %}
-            <a class="card tw-grow tw-shrink tw-max-w-[25%]"
+            <a class="card tw-grow tw-shrink tw-max-w-[25%] tw-min-w-[20%]"
                 href="{{ url_for('bussiness.get_brands_by_bussiness', slug=item.slug )}}">
                 <div class="card-body tw-flex tw-flex-col tw-gap-1">
                     <img src="{{ item.path or '/static/images/generic.png' }}" alt="" class="img-card-top mb-2">

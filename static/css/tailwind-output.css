@@ -711,6 +711,10 @@ video {
   width: 100%;
 }
 
+.tw-min-w-\[20\%\] {
+  min-width: 20%;
+}
+
 .tw-min-w-min {
   min-width: -moz-min-content;
   min-width: min-content;
