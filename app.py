@@ -33,7 +33,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 app.config.from_object(__name__)
 session = Session(app)
-
 # FILES
 app.config["UPLOAD_FOLDER"] = "static/uploads"
 app.config["ALLOWED_EXTENSIONS"] = {"png", "jpg", "jpeg"}
@@ -112,7 +111,7 @@ def handle_bad_request(e):
 
 @app.route("/error", methods=["GET", "PUT", "POST"])
 def exception():
-    return render_template("misc/error.html")
+    return render_template("misc/error.html"), 500
 
 
 @app.errorhandler(werkzeug.exceptions.InternalServerError)
@@ -152,6 +151,6 @@ def create_directories():
             os.makedirs(directory)
 
 
-if __name__ == "__app__":
+if __name__ == "app":
     create_directories()
     app.run(debug=True)

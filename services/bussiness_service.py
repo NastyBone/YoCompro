@@ -865,16 +865,16 @@ def get_by_status(status, start_page, end_page, word):
             connection.row_factory = dict_factory
         res = connection.execute(
             f"""
-            SELECT b.*, image_path as path
+            SELECT b.*, image_path as path FROM bussiness b
             LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
-            FROM bussiness b WHERE status = ? AND name LIKE ? ORDER BY name  
+            WHERE status = ? AND name LIKE ? ORDER BY name  
             {limit_or_pagination(False, start_page, end_page)}
            """,
             (status_list[status], like_string(word)),
         ).fetchall()
         count = connection.execute(
             """
-        SELECT COUNT(*) as count FROM bussiness 
+        SELECT COUNT(*) as count FROM bussiness b
         LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id
         WHERE status = ? AND name LIKE ?
         """,

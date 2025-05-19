@@ -124,6 +124,7 @@ def remove():
 
 
 @bussiness_bp.route("/", methods=["PATCH"])
+@belongs_to_owner()
 def edit_status():
     id = request.args.get("id")
     status = request.get_json()["status"]

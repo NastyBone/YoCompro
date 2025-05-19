@@ -825,7 +825,7 @@ def get_by_search_tags(word, tags, start_page, end_page):
                 tag_field = ",".join(["?"] * len(tags))
                 res = connection.execute(
                     f"""
-            SELECT p.* , image_path as pathFROM products p
+            SELECT p.* , image_path as path FROM products p
             JOIN tags_products tp ON tp.product_id = p.id
             LEFT JOIN images_products ip ON ip.product_id = p.id
             WHERE tp.tag_id IN ({tag_field}) AND
@@ -846,6 +846,7 @@ def get_by_search_tags(word, tags, start_page, end_page):
             WHERE tp.tag_id IN ({tag_field}) AND
             p.name LIKE ?
             AND p.status = "APPROVED"
+            GROUP BY p.id
             HAVING COUNT(DISTINCT tp.tag_id) = ?""",
                     (*tags, like_string(word), len(tags)),
                 ).fetchone()

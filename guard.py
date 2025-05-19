@@ -72,7 +72,7 @@ def belongs_to_owner():
         def authorize(*args, **kwargs):
             if request.method == "PUT":
                 logged_id = current_user.get_id()
-                if request.json:
+                if request.content_type == "application/json":
                     id = request.json.get("bussiness_id", 0)
                 else:
                     id = 0
