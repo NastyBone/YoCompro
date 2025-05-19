@@ -128,7 +128,7 @@ def get_by_slug(name):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """SELECT p.*, COALESCE(AVG(score), 0) as avg_score, image_path as path, COUNT(DISTINCT l.id) as fav_count FROM products p 
+            """SELECT p.*, COALESCE(AVG(score), 0) as avg_score, COUNT(score) as rating_count, image_path as path, COUNT(DISTINCT l.id) as fav_count FROM products p 
             LEFT JOIN ratings r ON r.product_id = p.id 
             LEFT JOIN images_products ip ON ip.product_id = p.id
             LEFT JOIN stocks s ON s.product_id = p.id

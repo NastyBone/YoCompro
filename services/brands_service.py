@@ -210,7 +210,6 @@ def get_by_product_id(product_id):
             (product_id,),
         ).fetchall()
         connection.commit()
-        print("RES", res)
         return res
     except Exception as error:
         print(error)

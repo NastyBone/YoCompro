@@ -173,7 +173,6 @@ def find_by_slug(slug):
     [top_discounts, count] = get_most_discount_by_bussiness("", slug, True)
     [top_rated, count] = top_rated_products("", slug, True)
     rating = rating_bussiness(int(bussiness["id"]))
-
     return render_template(
         "details/details_bussiness.html",
         bussiness=bussiness,
@@ -207,7 +206,6 @@ def products_by_bussiness(slug):
         filter,
         order,
     )
-    print(response)
     if not json_req:
         return render_template(
             "search/bussiness_search.html",

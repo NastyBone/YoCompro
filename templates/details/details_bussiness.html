@@ -35,7 +35,6 @@
                     <a href="{{ url_for('ratings.find_by_bussiness', slug=bussiness.slug) }}"
                         class="tw-text-center tw-text-xs tw-text-blue-600 dark:tw-text-blue-500 hover:tw-underline tw-mt-[-5px]">View
                         More Ratings</a>
-                    <span id="avg_score" style="display: none;">{{ rating.avg_score }}</span>
                 </div>
                 <div class="tw-flex tw-justify-around tw-mt-2 tw-gap-4 ">
                     <div class="tw-flex tw-flex-col tw-justify-evenly">
@@ -254,7 +253,7 @@
         const stars = document.querySelectorAll('.star');
         const averageDisplay = document.getElementById('average');
         const countDisplay = document.getElementById('count');
-        let average = parseFloat(document.getElementById('avg_score').innerHTML);
+        let average = parseFloat(document.getElementById('average').innerHTML);
         let scoreCount = '{{ rating.count }}' | 0;
         function updateStars(rating) {
             stars.forEach(star => {
@@ -287,14 +286,12 @@
                     })
                 });
                 if (result.ok) {
-                    const score = parseInt(star.dataset.value);
-                    let totalScore = (average) * (scoreCount)
-                    scoreCount++;
-                    const newAverage = (totalScore + score) / scoreCount;
-                    averageDisplay.textContent = newAverage.toFixed(1);
-                    countDisplay.textContent = scoreCount;
-                    updateStars(average);
-                    alert('Rating saved');
+                    const count = `{{ rating.count }}`
+                    const data = await result.json()
+                    updateStars(data.avg)
+                    document.getElementById('average').innerHTML = data.avg.toFixed(1);
+                    document.getElementById('count').innerHTML = data.count;
+                    alert(`Rating ${data.count == count ? 'Updated' : 'Created'}`);
                 } else {
                     alert('Error saving rating');
                 }

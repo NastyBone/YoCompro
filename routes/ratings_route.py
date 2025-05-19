@@ -31,7 +31,6 @@ def create():
     product_id = data.get("product_id", None)
     bussiness_id = data.get("bussiness_id", None)
     user_id = current_user.get_id()
-    print(user_id)
     if not user_id:
         return jsonify({"error": "User not found"}), 404
     response = insert_rating(user_id, bussiness_id, product_id, score, comment)
@@ -73,6 +72,7 @@ def find_by_bussiness(slug):
     [response, count] = get_by_bussiness(
         int(bussiness["id"]), False, start_pagination, end_pagination
     )
+    print(bussiness)
     return render_template(
         "ratings/ratings_bussiness.html",
         ratings=response,

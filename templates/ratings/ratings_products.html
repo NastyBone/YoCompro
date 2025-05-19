@@ -24,7 +24,6 @@
                     <a href="{{ url_for('products.find_by_slug', slug=product.slug) }}"
                         class="tw-text-center tw-text-xs tw-text-blue-600 dark:tw-text-blue-500 hover:tw-underline tw-mt-[-5px]">Back
                         to details</a>
-                    <span id="avg_score" style="display: none;">{{ product.avg_score }}</span>
                 </div>
                 <div class="tw-flex tw-flex-col tw-w-1/3 tw-rounded-[10px] bg-primary-subtle tw-p-2 tw-m-auto">
                     <div class="tw-text-lg tw-font-semibold">
@@ -37,7 +36,6 @@
                         <div>
                             <p>Average</p>
                             <p class="tw-font-bold" id="average">{{ product.avg_score | round(1) }}</p>
-                            <span id="avg_score" style="display: none;">{{ product.avg_score }}</span>
                         </div>
 
                     </div>
@@ -133,7 +131,7 @@
         const stars = document.querySelectorAll('.star');
         const averageDisplay = document.getElementById('average');
         const countDisplay = document.getElementById('count');
-        let average = parseFloat(document.getElementById('avg_score').innerHTML)
+        let average = parseFloat(document.getElementById('average').innerHTML)
         let scoreCount = '{{ count }}' | 0;
         function updateStars(rating) {
             stars.forEach(star => {
@@ -168,15 +166,13 @@
                     })
                 });
                 if (result.ok) {
-                    const score = parseInt(star.dataset.value);
-                    let totalScore = (average) * (scoreCount)
-                    scoreCount++;
-                    const newAverage = (totalScore + score) / scoreCount;
-                    averageDisplay.textContent = newAverage.toFixed(1);
-                    countDisplay.textContent = scoreCount;
-                    updateStars(average);
+                    const count = `{{ product.rating_count }}`
+                    const data = await result.json()
+                    updateStars(data.avg)
+                    document.getElementById('average').innerHTML = data.avg.toFixed(1);
+                    document.getElementById('count').innerHTML = data.count;
+                    alert(`Rating ${data.count == count ? 'Updated' : 'Created'}`);
                     document.getElementById('ratings__form').dispatchEvent(new Event('change'))
-                    alert('Rating saved');
                 } else {
                     alert('Error saving rating');
                 }

@@ -148,7 +148,7 @@ def get_by_slug(slug, lat, lon):
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
         res = connection.execute(
-            """SELECT b.*, COALESCE(AVG(score), 0) as avg_score, 
+            """SELECT b.*, COALESCE(AVG(score), 0) as avg_score,  COUNT(score) as count,
               ACOS((SIN(RADIANS(?)) * SIN(RADIANS(b.lat))) + (COS(RADIANS(?)) * COS(RADIANS(b.lat))) * (COS(RADIANS(b.lon) - RADIANS(?)))) * 6371 as distance, image_path as path, COUNT(DISTINCT l.id) as fav_count
             FROM bussiness b 
             LEFT JOIN images_bussiness ib ON ib.bussiness_id = b.id

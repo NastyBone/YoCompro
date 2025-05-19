@@ -22,7 +22,6 @@
                         <span class="star" data-value="5">&#9733;</span>
                     </div>
 
-                    <span id="avg_score" style="display: none;">{{ bussiness.avg_score }}</span>
                     <a href="{{ url_for('bussiness.find_by_slug', slug=bussiness.slug) }}"
                         class="tw-text-center tw-text-xs tw-text-blue-600 dark:tw-text-blue-500 hover:tw-underline tw-mt-[-5px]">Back
                         to details</a>
@@ -38,7 +37,6 @@
                         <div>
                             <p>Average</p>
                             <p class="tw-font-bold" id="average">{{ bussiness.avg_score | round(1) }}</p>
-                            <span id="avg_score" style="display: none;">{{ bussiness.avg_score }}</span>
                         </div>
 
                     </div>
@@ -90,7 +88,18 @@
 
                 <div class="tw-flex tw-flex-col tw-w-full tw-gap-2 tw-rounded-[10px] bg-primary-subtle tw-p-2">
                     <div class="tw-text-lg tw-font-semibold">
-                        {{item.name}}
+                        <span> {{item.name}} </span> <span>
+                            {% if item.user_id == current_user.get_id()%}
+                            <button type="button" class="btn btn-danger btn-sm"
+                                onclick='event.preventDefault(); deleteComment("{{item.id}}")'><img
+                                    src=" {{ url_for('static', filename='bootstrap-icons/trash-fill.svg' ) }}"
+                                    alt="Logo" width="14" height="10" class="d-inline-block text-light mb-1"></button>
+                            <button type="button" class="btn btn-secondary btn-sm"
+                                onclick='setComment("{{item.comment}}")'><img
+                                    src="{{ url_for('static', filename='bootstrap-icons/pencil-fill.svg') }}" alt="Logo"
+                                    width="14" height="10" class="d-inline-block text-light mb-1"></button>
+                            {% endif %}
+                        </span>
                     </div>
                     <div>
                         {{item.comment}}
@@ -122,7 +131,7 @@
         const stars = document.querySelectorAll('.star');
         const averageDisplay = document.getElementById('average');
         const countDisplay = document.getElementById('count');
-        let average = parseFloat(document.getElementById('avg_score').innerHTML)
+        let average = parseFloat(document.getElementById('average').innerHTML)
         let scoreCount = '{{ count }}' | 0;
         function updateStars(rating) {
             stars.forEach(star => {
@@ -157,15 +166,13 @@
                     })
                 });
                 if (result.ok) {
-                    const score = parseInt(star.dataset.value);
-                    let totalScore = (average) * (scoreCount)
-                    scoreCount++;
-                    const newAverage = (totalScore + score) / scoreCount;
-                    averageDisplay.textContent = newAverage.toFixed(1);
-                    countDisplay.textContent = scoreCount;
-                    updateStars(average);
+                    const count = `{{ bussiness.rating_count }}`
+                    const data = await result.json()
+                    updateStars(data.avg)
+                    document.getElementById('average').innerHTML = data.avg.toFixed(1);
+                    document.getElementById('count').innerHTML = data.count;
+                    alert(`Rating ${data.count == count ? 'Updated' : 'Created'}`);
                     document.getElementById('ratings__form').dispatchEvent(new Event('change'))
-                    alert('Rating saved');
                 } else {
                     alert('Error saving rating');
                 }
@@ -272,7 +279,19 @@
             cardContainer.innerHTML = '';
             const htmlContent = data.map(item => `<div class="tw-flex tw-flex-col tw-w-full tw-gap-2 tw-rounded-[10px] bg-primary-subtle tw-p-2">
                     <div class="tw-text-lg tw-font-semibold">
-                        ${item.name}
+                       <span> ${item.name} </span>
+                       <span>
+                        ${item.user_id == currentUserId ? ` <button type="button" class="btn btn-danger btn-sm"
+                            onclick='event.preventDefault(); deleteComment(${item.id})'><img
+                                src=" {{ url_for('static', filename='bootstrap-icons/trash-fill.svg' ) }}"
+                               alt="Logo" width="14" height="10" class="d-inline-block text-light mb-1"></button>
+                         <button type="button" class="btn btn-secondary btn-sm"
+                             onclick='setComment(${item.comment})'><img
+                                 src="{{ url_for('static', filename='bootstrap-icons/pencil-fill.svg') }}" alt="Logo"
+                                 width="14" height="10" class="d-inline-block text-light mb-1"></button>
+                         `: ""}
+                       
+                     </span>
                     </div>
                     <div>
                         ${item.comment}
@@ -289,6 +308,24 @@
             setPaginationElement(content.count, +page)
 
             return false
+        }
+    </script>
+    <script>
+        async function deleteComment(id) {
+            const currentUserId = "{{ current_user.get_id() }}"
+            const response = await fetch(`/ratings?id=${id}&user_id=${currentUserId}`, {
+                method: 'DELETE',
+            })
+            if (response.ok) {
+                alert('Comment deleted successfully');
+                await getResults(document.getElementById('ratings__form'))
+            } else {
+                alert('Error deleting comment');
+            }
+        }
+        async function setComment(comment) {
+            const commentInput = document.getElementById('comment');
+            commentInput.value = comment;
         }
     </script>
 </div>

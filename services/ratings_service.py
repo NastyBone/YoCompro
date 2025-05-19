@@ -264,10 +264,10 @@ def delete_duplicate_ratings(user_id, bussiness_id, product_id):
 def insert_rating(user_id, bussiness_id, product_id, score, comment=None):
     try:
         with sqlite3.connect("database.db") as connection:
+            connection.row_factory = dict_factory
             cursor = connection.cursor()
-
             # Intenta actualizar la calificación existente
-            cursor.execute(
+            data = cursor.execute(
                 f"""
                 UPDATE ratings
                 SET score = ?, comment = ?, created_at = CURRENT_TIMESTAMP
@@ -279,7 +279,7 @@ def insert_rating(user_id, bussiness_id, product_id, score, comment=None):
             # Verifica si se actualizó alguna fila
             if cursor.rowcount == 0:
                 # Si no se actualizó, inserta una nueva calificación
-                cursor.execute(
+                data = cursor.execute(
                     """
                     INSERT INTO ratings (score, comment, user_id, bussiness_id, product_id)
                     VALUES (?, ?, ?, ?, ?)
@@ -287,7 +287,13 @@ def insert_rating(user_id, bussiness_id, product_id, score, comment=None):
                     (score, comment, user_id, bussiness_id, product_id),
                 )
 
+            res = cursor.execute(
+                f"""SELECT COUNT(*) AS count, AVG(score) as  avg FROM ratings WHERE {"product_id" if product_id else "bussiness_id"} = ?""",
+                (bussiness_id or product_id,),
+            ).fetchone()
+
             connection.commit()
+            return res
     except Exception as error:
         print(error)
         raise Exception(error)

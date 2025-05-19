@@ -32,13 +32,12 @@
                     <a href="{{ url_for('ratings.find_by_product', slug=product.slug) }}"
                         class="tw-text-center tw-text-xs tw-text-blue-600 dark:tw-text-blue-500 hover:tw-underline tw-mt-[-5px]">View
                         More Ratings</a>
-                    <span id="avg_score" style="display: none;">{{ rating.avg_score }}</span>
                 </div>
                 <div class="tw-flex tw-justify-evenly tw-mt-2 tw-gap-4 ">
                     <div class="tw-flex tw-flex-col tw-justify-evenly">
                         <div>
                             <p>Average</p>
-                            <p class="tw-font-bold" id="average">{{ rating.avg_score | round(1) }}</p>
+                            <p class="tw-font-bold" id="average">{{ rating.avg_score | round(0) }}</p>
                         </div>
                         <div class="tw-mt-2">
                             <p>Brand</p>
@@ -50,7 +49,7 @@
                     </div>
                     <div class="tw-flex tw-justify-evenly tw-flex-col">
                         <p>Favorite Count</p>
-                        <p class="tw-font-bold" id="count">{{product.fav_count}}</p>
+                        <p class="tw-font-bold" id="fav-count">{{product.fav_count}}</p>
                     </div>
                     <div class="tw-flex tw-justify-evenly tw-flex-col">
 
@@ -145,9 +144,8 @@
 
     <script>
         const stars = document.querySelectorAll('.star');
-        const averageDisplay = document.getElementById('average');
         const countDisplay = document.getElementById('count');
-        let average = parseFloat(document.getElementById('avg_score').innerHTML);
+        let average = parseFloat(document.getElementById('average').innerHTML);
         let scoreCount = '{{ rating.count }}' | 0;
 
         function updateStars(rating) {
@@ -181,14 +179,12 @@
                     })
                 });
                 if (result.ok) {
-                    const score = parseInt(star.dataset.value);
-                    let totalScore = (average) * (scoreCount)
-                    scoreCount++;
-                    const newAverage = ((totalScore + score) / scoreCount)
-                    averageDisplay.textContent = newAverage.toFixed(1)
-                    countDisplay.textContent = scoreCount;
-                    updateStars(newAverage);
-                    alert('Rating saved');
+                    const count = `{{ rating.count }}`
+                    const data = await result.json()
+                    updateStars(data.avg)
+                    document.getElementById('average').innerHTML = data.avg.toFixed(1);
+                    document.getElementById('count').innerHTML = data.count;
+                    alert(`Rating ${data.count == count ? 'Updated' : 'Created'}`);
                 } else {
                     alert('Error saving rating');
                 }
