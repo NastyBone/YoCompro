@@ -214,7 +214,7 @@ def get_popular_limited(city):
 
 # DONE: Popular Products of that bussiness
 def get_popular_by_bussiness(
-    slug, bussiness, limited=False, start_page=None, end_page=None, order="DESC"
+    slug, bussiness, limited=False, start_page=None, end_page=None, order="ASC"
 ):
     try:
         with sqlite3.connect("database.db") as connection:
@@ -262,7 +262,7 @@ def get_popular_by_bussiness(
 
 # DONE: Popular Products by Brand
 def get_popular_by_brand(
-    slug, limited=False, start_page=None, end_page=None, order="DESC", word=""
+    slug, limited=False, start_page=None, end_page=None, order="ASC", word=""
 ):
     try:
         with sqlite3.connect("database.db") as connection:
@@ -430,7 +430,7 @@ def get_top_rated_limited(city):
 
 # DONE: Top Rated Products By Brand
 def get_top_rated_by_brand(
-    slug, limited=False, start_page=None, end_page=None, order="DESC", word=""
+    slug, limited=False, start_page=None, end_page=None, order="ASC", word=""
 ):
     try:
         with sqlite3.connect("database.db") as connection:
@@ -472,7 +472,7 @@ def get_top_rated_by_brand(
 
 # DONE: Top Rated Products By Bussiness
 def get_top_rated_by_bussiness(
-    slug, bussiness, limited=False, start_page=None, end_page=None, order="DESC"
+    slug, bussiness, limited=False, start_page=None, end_page=None, order="ASC"
 ):
     try:
         with sqlite3.connect("database.db") as connection:
@@ -585,7 +585,7 @@ def get_newest_limited(city):
 
 # DONE Recent Added Products
 def get_newest_by_brand(
-    slug, limited=False, start_page=None, end_page=None, order="DESC", word=""
+    slug, limited=False, start_page=None, end_page=None, order="ASC", word=""
 ):
     try:
         with sqlite3.connect("database.db") as connection:
@@ -625,7 +625,7 @@ def get_newest_by_brand(
 
 # DONE Recent Added Products
 def get_newest_by_bussiness(
-    slug, bussiness, limited=False, start_page=None, end_page=None, order="DESC"
+    slug, bussiness, limited=False, start_page=None, end_page=None, order="ASC"
 ):
     try:
         with sqlite3.connect("database.db") as connection:
@@ -721,7 +721,7 @@ def get_popular_by_owner(
     limited=False,
     start_page=None,
     end_page=None,
-    order="DESC",
+    order="ASC",
     word="",
     status="approved",
 ):
@@ -772,7 +772,7 @@ def get_top_rated_by_owner(
     limited=False,
     start_page=None,
     end_page=None,
-    order="DESC",
+    order="ASC",
     word="",
     status="approved",
 ):

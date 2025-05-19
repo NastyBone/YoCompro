@@ -87,7 +87,7 @@ def delete(id):
 # DONE: Get comment by user
 
 
-def get_by_user(user_id, limited=False, start_page=None, end_page=None, order="DESC"):
+def get_by_user(user_id, limited=False, start_page=None, end_page=None, order="ASC"):
     try:
         with sqlite3.connect("database.db") as connection:
             connection.row_factory = dict_factory
@@ -118,8 +118,8 @@ def get_by_bussiness(
     limited=False,
     start_page=None,
     end_page=None,
-    order_rating="DESC",
-    order_time="DESC",
+    order_rating="ASC",
+    order_time="ASC",
 ):
     try:
         limited_select_user = ""
@@ -165,8 +165,8 @@ def get_by_product(
     limited=False,
     start_page=None,
     end_page=None,
-    order_rating="DESC",
-    order_time="DESC",
+    order_rating="ASC",
+    order_time="ASC",
 ):
     try:
         limited_select_user = ""

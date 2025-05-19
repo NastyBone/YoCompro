@@ -99,7 +99,7 @@
                 More</a>
         </div>
         <div class="container tw-flex tw-gap-3">
-            {% for item in popular %}
+            {% for item in popular_products %}
             <a class="card tw-grow tw-shrink tw-max-w-[25%] tw-min-w-[20%]"
                 href="{{ url_for('products.find_by_slug', slug=item.slug ) }}">
                 <div class="card-header tw-flex tw-justify-between">
@@ -117,7 +117,12 @@
                         in stock</p>
                 </div>
             </a>
+
             {% endfor %}
+            {% if popular == [] %}
+            <p class="tw-text-3xl tw-mt-4 tw-font-semibold tw-text-center">No results</p>
+            {% endif %}
+
         </div>
     </div>
 
@@ -223,7 +228,7 @@
     <!-- -- Popular Brands -- -->
     <div class="container tw-my-5">
         <div class="container-title tw-flex tw-gap-6">
-            <h1 class="tw-font-semibold tw-text-4xl tw-mb-4 tw-inline-block"> Bussiness with this product by price</h1>
+            <h1 class="tw-font-semibold tw-text-4xl tw-mb-4 tw-inline-block"> Popular brands with this product</h1>
             <div class="tw-inline-block tw-h-[3px] tw-grow tw-shrink tw-self-center tw-bg-baseblue">
             </div>
             <a class="btn btn-outline-primary tw-h-fit tw-self-center"

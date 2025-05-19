@@ -175,7 +175,7 @@ def get_by_slug(slug, lat, lon):
 
 # DONE: Popular Bussiness with that brand
 def get_popular_by_brand(
-    city, slug, limited=False, start_page=None, end_page=None, order="DESC"
+    city, slug, limited=False, start_page=None, end_page=None, order="ASC"
 ):
     try:
         with sqlite3.connect("database.db") as connection:
@@ -429,7 +429,7 @@ def get_by_most_discount_limited(city):
 
 # DONE Top discounts of that bussiness
 def get_most_discount_by_bussiness(
-    slug, bussiness, limited=False, start_page=None, end_page=None, order="DESC"
+    slug, bussiness, limited=False, start_page=None, end_page=None, order="ASC"
 ):
     try:
         with sqlite3.connect("database.db") as connection:
@@ -480,7 +480,7 @@ def get_by_owner_popular(
     limited=False,
     start_page=None,
     end_page=None,
-    order="DESC",
+    order="ASC",
     word="",
     status="approved",
 ):
@@ -530,7 +530,7 @@ def get_by_owner_top_rated(
     limited=False,
     start_page=None,
     end_page=None,
-    order="DESC",
+    order="ASC",
     word="",
     status="approved",
 ):
@@ -729,7 +729,7 @@ LIMIT 5""",
 
 # DONE: Bussiness which have that product by cheap
 def get_bussiness_has_product_by_price(
-    product_id, limited=False, start_page=None, end_page=None, order="DESC"
+    product_id, limited=False, start_page=None, end_page=None, order="ASC"
 ):
     try:
         with sqlite3.connect("database.db") as connection:
@@ -777,7 +777,7 @@ def get_bussiness_has_product_by_distance(
     limited=False,
     start_page=None,
     end_page=None,
-    order="DESC",
+    order="ASC",
 ):
     try:
         with sqlite3.connect("database.db") as connection:
