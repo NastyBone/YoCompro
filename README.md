@@ -22,6 +22,10 @@ Maturín, Monagas, Venezuela.
 
 2025-05-20
 
+#### Video Demo
+
+[Youtube](https://youtu.be/80H7VLUhbbI)
+
 ## About
 
 This project was built as part of my journey through CS50. While the complexity and scope of Promo Radar go beyond the requirements of the course, it was a valuable learning experience. I encountered and learned from many design challenges, especially regarding planning, setting boundaries, and defining clear goals for the application. These lessons were as important as the technical skills gained.
