@@ -183,6 +183,7 @@
                     const data = await result.json()
                     updateStars(data.avg)
                     document.getElementById('average').innerHTML = data.avg.toFixed(1);
+                    average = data.avg;
                     document.getElementById('count').innerHTML = data.count;
                     alert(`Rating ${data.count == count ? 'Updated' : 'Created'}`);
                 } else {

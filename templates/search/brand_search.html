@@ -86,7 +86,7 @@
         console.log(pages, index)
 
         const paginationArea = document.getElementById('pagination');
-        const pagesCount = pages < 1 ? 1 : pages;
+        const pagesCount = Math.trunc(pages) <= 1 ? 1 : pages;
         index = index < 1 ? 1 : index;
 
         // Clear previous pagination

@@ -48,7 +48,7 @@
 
                         <div>
                             <p>Favorite Count</p>
-                            <p class="tw-font-bold" id="count">{{bussiness.fav_count}}</p>
+                            <p class="tw-font-bold" id="fav_count">{{bussiness.fav_count}}</p>
                         </div>
                     </div>
                     <div class="tw-flex tw-justify-evenly tw-flex-col">
@@ -293,8 +293,9 @@
                 if (result.ok) {
                     const count = `{{ rating.count }}`
                     const data = await result.json()
-                    updateStars(data.avg)
                     document.getElementById('average').innerHTML = data.avg.toFixed(1);
+                    average = data.avg;
+                    updateStars(data.avg)
                     document.getElementById('count').innerHTML = data.count;
                     alert(`Rating ${data.count == count ? 'Updated' : 'Created'}`);
                 } else {

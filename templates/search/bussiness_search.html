@@ -111,7 +111,7 @@
     function setPaginationElement(pages, index) {
 
         const paginationArea = document.getElementById('pagination');
-        const pagesCount = pages < 1 ? 1 : pages;
+        const pagesCount = Math.trunc(pages) <= 1 ? 1 : pages;
         // Clear previous pagination
         paginationArea.innerHTML = '';
 

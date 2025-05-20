@@ -170,6 +170,7 @@
                     const data = await result.json()
                     updateStars(data.avg)
                     document.getElementById('average').innerHTML = data.avg.toFixed(1);
+                    average = data.avg;
                     document.getElementById('count').innerHTML = data.count;
                     alert(`Rating ${data.count == count ? 'Updated' : 'Created'}`);
                     document.getElementById('ratings__form').dispatchEvent(new Event('change'))
@@ -187,7 +188,7 @@
         function setPaginationElement(pages, index) {
 
             const paginationArea = document.getElementById('pagination');
-            const pagesCount = pages < 1 ? 1 : pages;
+            const pagesCount = Math.trunc(pages) <= 1 ? 1 : pages;
             // Clear previous pagination
             paginationArea.innerHTML = '';
 
